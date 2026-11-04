@@ -1,0 +1,56 @@
+2026-11-04 13:05:34,717 INFO sourcing.job: Run local-20261104-073534-3948: mode=REAL, browser=local, store=file (/media/pragnakalpl19/projects1/Backup/sourcing-proto_share_2026-10-15/sourcing-proto/.local_store.json), llm=anthropic/claude-opus-5-5 (effort medium), chat=on, vendor secret overrides=sourcing-vendor-proponent=sourcing-vendor-test
+2026-11-04 13:05:34,717 INFO sourcing.job: Vendor config for this run: {'*': {'bulk_min_parts': 2}}
+2026-11-04 13:05:35,835 INFO sourcing.job: Processing 1 sheet(s): test_runs/21_2026-11-04__aar__4-parts__local-headed__human-typing/aar_4parts.xlsx
+2026-11-04 13:05:35,884 INFO sourcing.sheets: Opened local Excel file /media/pragnakalpl19/projects1/Backup/sourcing-proto_share_2026-10-15/sourcing-proto/test_runs/21_2026-11-04__aar__4-parts__local-headed__human-typing/aar_4parts.xlsx (tabs: Requests, Results)
+2026-11-04 13:05:35,894 INFO sourcing.sheets: Requests in /media/pragnakalpl19/projects1/Backup/sourcing-proto_share_2026-10-15/sourcing-proto/test_runs/21_2026-11-04__aar__4-parts__local-headed__human-typing/aar_4parts.xlsx: 4 data row(s), 4 to process (Status empty/NEW/RUNNING), skipped by Status: none, rows without a part number: 0
+2026-11-04 13:05:35,894 INFO sourcing.pipeline: Run local-20261104-073534-3948__aar_4parts picked up 4 NEW rows
+2026-11-04 13:05:40,583 INFO sourcing.pipeline: aar / you@example.com: using shared login (secret key sourcing-vendor-aar, totp=no) for 4 row(s)
+2026-11-04 13:05:40,605 INFO sourcing.pipeline: [aar___shared] Bulk search: 4 parts (bulk from 2), up to 10 per search
+2026-11-04 13:05:40,605 INFO sourcing.auth: [aar___shared] Reusing saved browser Context 9799f387-c9e8-46a1-bf7e-b3493983f432 (state=NEEDS_LOGIN)
+2026-11-04 13:05:41,352 INFO sourcing.browser: Opened local Chromium 156.0.8078.4 (session local-b9542227f7f6, headless=False, live view=off; no saved cookies, context label 9799f387-c9e8-46a1-bf7e-b3493983f432)
+2026-11-04 13:05:41,352 INFO sourcing.auth: [aar___shared] Context 9799f387-c9e8-46a1-bf7e-b3493983f432 has no active sign-in (never signed in); logging in
+2026-11-04 13:05:41,352 INFO sourcing.auth: [aar___shared] Automatic login attempt 1/2
+2026-11-04 13:05:41,364 INFO sourcing.vendors.generic: Login: AAR as purchasing@skylinkintl.com
+2026-11-04 13:05:41,365 INFO sourcing.vendors.aar: Login: opening https://shop.aarcorp.com (AAR landing page)
+2026-11-04 13:05:46,620 INFO sourcing.vendors.web: Consent popup [role='dialog'][aria-label*='cookie' i]: clicking 'Reject all (OneTrust)'
+2026-11-04 13:05:51,628 INFO sourcing.vendors.web: Consent popup answered; no reload
+2026-11-04 13:05:52,460 INFO sourcing.vendors.aar: AAR account check: 302 to https://shop.aarcorp.com/customer/account/login/referer/aHR0cHM6Ly9zaG9wLmFhcmNvcnAuY29tL2N1c3RvbWVyL2FjY291bnQvaW5kZXgv/ -> signed out
+2026-11-04 13:05:52,509 INFO sourcing.vendors.aar: Login: avatar clicked; following 'Sign In or Register'
+2026-11-04 13:05:52,549 INFO sourcing.vendors.web: AAR Sign In link: submitted; waiting up to 90s for the page
+2026-11-04 13:05:55,647 INFO sourcing.vendors.web: AAR Sign In link: page ready after 3.1s (https://shop.aarcorp.com/customer/account/login)
+2026-11-04 13:05:55,691 INFO sourcing.vendors.aar: AAR step 1 (sign in): the sign-in form at https://shop.aarcorp.com/customer/account/login
+2026-11-04 13:05:55,719 INFO sourcing.vendors.generic: Login step 1 at https://shop.aarcorp.com/customer/account/login: username=form#login-form input#email password=form#login-form input#pass
+2026-11-04 13:06:05,765 INFO sourcing.vendors.generic: Login: submitting with form#login-form button#send2
+2026-11-04 13:06:06,061 INFO sourcing.vendors.web: Login submit: submitted; waiting up to 90s for the page
+2026-11-04 13:06:12,459 INFO sourcing.vendors.web: Login submit: page ready after 6.7s (https://shop.aarcorp.com/)
+2026-11-04 13:06:13,602 INFO sourcing.vendors.aar: AAR account check: 200 -> signed in
+2026-11-04 13:06:13,602 INFO sourcing.vendors.aar: Login: signed in (AAR account page opens; now at https://shop.aarcorp.com/)
+2026-11-04 13:06:13,602 INFO sourcing.auth: [aar___shared] Sign-in seen by the login (account page https://shop.aarcorp.com/customer/account/); no separate probe
+2026-11-04 13:06:13,631 INFO sourcing.auth: [aar___shared] Login OK
+2026-11-04 13:06:13,641 INFO sourcing.pipeline: Rows 2,3,4,5: bulk searching AAR for 4 parts
+2026-11-04 13:06:13,641 INFO sourcing.vendors.aar: AAR step 2 (search): 4 part(s): https://shop.aarcorp.com/catalogsearch/result/?q=44066%2C+1381-1176%2C+3880938-1%2C+C100-013080
+2026-11-04 13:06:45,284 INFO sourcing.vendors.aar: AAR step 3 (read): 50 card(s) from 5 page(s) starting https://shop.aarcorp.com/catalogsearch/result/?q=44066%2C+1381-1176%2C+3880938-1%2C+C100-013080 - more results pages not read
+2026-11-04 13:06:45,284 WARNING sourcing.vendors.aar: AAR: more than 5 results pages for 44066, 1381-1176, 3880938-1, C100-013080
+2026-11-04 13:06:45,325 INFO sourcing.vendors.web: Saved results page to /media/pragnakalpl19/projects1/Backup/sourcing-proto_share_2026-10-15/sourcing-proto/debug_pages/20261104-130645-aar-bulk.(txt|html)
+2026-11-04 13:06:45,325 INFO sourcing.vendors.aar: Saved the text read for aar-bulk to /media/pragnakalpl19/projects1/Backup/sourcing-proto_share_2026-10-15/sourcing-proto/debug_pages/20261104-130645-aar-bulk-aar-read.txt
+2026-11-04 13:07:02,854 INFO sourcing.vendors.aar: AAR multi-part search: offers for 4 of 4 parts
+2026-11-04 13:07:02,854 INFO sourcing.pipeline: Bulk search: 4 found, 0 not found, 49.2s, LLM 1 call(s) $0.1036
+2026-11-04 13:07:02,854 INFO sourcing.pipeline: Row 2: found, 1 offer(s), 49.2s, LLM 0 call(s) $0.0000
+2026-11-04 13:07:02,854 INFO sourcing.pipeline: Row 2 offer: pn=44066 price=27.18  qty=Out of stock cond=FN lead=None | removed: LEAD_TIME_NOT_ON_PAGE
+2026-11-04 13:07:02,854 INFO sourcing.pipeline: Row 3: found, 1 offer(s), 49.2s, LLM 0 call(s) $0.0000
+2026-11-04 13:07:02,854 INFO sourcing.pipeline: Row 3 offer: pn=1381-1176 price=147.00  qty=289 cond=FN lead=In stock
+2026-11-04 13:07:02,855 INFO sourcing.pipeline: Row 4: found, 1 offer(s), 49.2s, LLM 0 call(s) $0.0000
+2026-11-04 13:07:02,855 INFO sourcing.pipeline: Row 4 offer: pn=3880938-1 price=2266.00  qty=656 cond=FN lead=In stock
+2026-11-04 13:07:02,855 INFO sourcing.pipeline: Row 5: found, 1 offer(s), 49.2s, LLM 0 call(s) $0.0000
+2026-11-04 13:07:02,855 INFO sourcing.pipeline: Row 5 offer: pn=C100-013080 price=None  qty=938 cond=FN lead=In stock
+2026-11-04 13:07:02,885 INFO sourcing.pipeline: Row 2 44066 (aar corp): -> DONE
+2026-11-04 13:07:02,894 INFO sourcing.pipeline: Row 3 1381-1176 (aar corp): -> DONE
+2026-11-04 13:07:02,903 INFO sourcing.pipeline: Row 4 3880938-1 (aar corp): -> DONE
+2026-11-04 13:07:02,912 INFO sourcing.pipeline: Row 5 C100-013080 (aar corp): -> DONE
+2026-11-04 13:07:02,931 INFO sourcing.vendors.aar: Logout: opening https://shop.aarcorp.com/customer/account/logout/
+2026-11-04 13:07:14,129 INFO sourcing.vendors.aar: AAR account check: 302 to https://shop.aarcorp.com/customer/account/login/referer/aHR0cHM6Ly9zaG9wLmFhcmNvcnAuY29tL2N1c3RvbWVyL2FjY291bnQvaW5kZXgv/ -> signed out
+2026-11-04 13:07:14,130 INFO sourcing.vendors.aar: Logout: signed out (now at https://shop.aarcorp.com/customer/account/login/)
+2026-11-04 13:07:14,157 INFO sourcing.pipeline: [aar___shared] Signed out of AAR
+2026-11-04 13:07:14,254 INFO sourcing.pipeline: [aar___shared] Browser session local-b9542227f7f6 released
+2026-11-04 13:07:14,265 INFO sourcing.sheets: Requests in /media/pragnakalpl19/projects1/Backup/sourcing-proto_share_2026-10-15/sourcing-proto/test_runs/21_2026-11-04__aar__4-parts__local-headed__human-typing/aar_4parts.xlsx: 4 data row(s), 0 to process (Status empty/NEW), skipped by Status: DONE=4, rows without a part number: 0
+2026-11-04 13:07:14,275 INFO sourcing.pipeline: Run summary: {'run_id': 'local-20261104-073534-3948__aar_4parts', 'rows_total': 4, 'counts': {'DONE': 4}, 'llm': {'calls': 1, 'input_tokens': 19171, 'output_tokens': 1345, 'cache_read_tokens': 0, 'cost_usd': 0.103584}, 'seconds': 98.4}

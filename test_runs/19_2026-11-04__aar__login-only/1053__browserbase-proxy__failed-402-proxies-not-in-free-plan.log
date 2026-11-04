@@ -1,0 +1,40 @@
+Onboarding aar with AarAdapter: login from secret sourcing-vendor-aar, browser browserbase, LLM anthropic claude-opus-5-5 (effort medium), with saved selectors
+2FA: Live View link sent in Chat; the person logs in there; wait 600s
+2026-11-04 10:53:56,936 WARNING sourcing.browser: Browserbase session recording is ON: recordings show the vendor pages, login screens included. Use for local debugging only.
+2026-11-04 10:53:58,356 ERROR sourcing.onboarding: Onboarding stopped
+Traceback (most recent call last):
+  File "/media/pragnakalpl19/projects1/Backup/sourcing-proto_share_2026-10-15/sourcing-proto/sourcing/onboarding.py", line 122, in onboard
+    handle = await browser.open(await browser.create_context(),
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/media/pragnakalpl19/projects1/Backup/sourcing-proto_share_2026-10-15/sourcing-proto/sourcing/browser/browserbase.py", line 57, in open
+    session = await self._create_session(context_id, keep_alive, timeout_seconds,
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/media/pragnakalpl19/projects1/Backup/sourcing-proto_share_2026-10-15/sourcing-proto/sourcing/browser/browserbase.py", line 106, in _create_session
+    return await asyncio.to_thread(
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/pragnakalpl19/.local/share/uv/python/cpython-3.11.15-linux-x86_64-gnu/lib/python3.11/asyncio/threads.py", line 25, in to_thread
+    return await loop.run_in_executor(None, func_call)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/pragnakalpl19/.local/share/uv/python/cpython-3.11.15-linux-x86_64-gnu/lib/python3.11/concurrent/futures/thread.py", line 58, in run
+    result = self.fn(*self.args, **self.kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/media/pragnakalpl19/projects1/Backup/sourcing-proto_share_2026-10-15/sourcing-proto/.venv/lib/python3.11/site-packages/browserbase/resources/sessions/sessions.py", line 167, in create
+    return self._post(
+           ^^^^^^^^^^^
+  File "/media/pragnakalpl19/projects1/Backup/sourcing-proto_share_2026-10-15/sourcing-proto/.venv/lib/python3.11/site-packages/browserbase/_base_client.py", line 1299, in post
+    return cast(ResponseT, self.request(cast_to, opts, stream=stream, stream_cls=stream_cls))
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/media/pragnakalpl19/projects1/Backup/sourcing-proto_share_2026-10-15/sourcing-proto/.venv/lib/python3.11/site-packages/browserbase/_base_client.py", line 1086, in request
+    raise self._make_status_error_from_response(err.response) from None
+browserbase.APIStatusError: Error code: 402 - {'statusCode': 402, 'error': 'Payment Required', 'message': 'Proxies are not included in the free plan. Please upgrade to a paid plan to continue https://browserbase.com/plans'}
+
+Onboarding aar (AarAdapter): NOT OK
+  login: not signed in
+  sign-in check on the next page: None
+  logout: None
+  STOPPED: unexpected error: APIStatusError: Error code: 402 - {'statusCode': 402, 'error': 'Payment Required', 'message': 'Proxies are not included in the free plan. Please upgrade to a paid plan to continue https://browserbase.com/plans'}
+  found by: -
+  learned selectors (confirmed; --save saves these):
+  LLM: 0 call(s) (0 to find elements), $0.0000; whole run 1.4s
+
+Saved test_runs/19_2026-11-04__aar__login-only__browserbase-proxy/onboarding.json

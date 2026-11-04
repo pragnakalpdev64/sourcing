@@ -1,0 +1,150 @@
+2026-10-16 12:42:12,553 INFO sourcing.job: Run local-20261016-071212-c511: mode=REAL, browser=local, store=file (/media/pragnakalpl19/projects1/Backup/sourcing-proto_share_2026-10-15/sourcing-proto/.local_store.json), llm=anthropic/claude-opus-5-5 (effort medium), chat=on, vendor secret overrides=sourcing-vendor-proponent=sourcing-vendor-test
+2026-10-16 12:42:12,553 INFO sourcing.job: Vendor config for this run: {'*': {'bulk_min_parts': 2}}
+2026-10-16 12:42:13,421 INFO sourcing.job: Processing 1 sheet(s): bulk_test_100.xlsx
+2026-10-16 12:42:13,528 INFO sourcing.sheets: Opened local Excel file /media/pragnakalpl19/projects1/Backup/sourcing-proto_share_2026-10-15/sourcing-proto/bulk_test_100.xlsx (tabs: Requests, Results, sonnet-medium-bulk-local-100, opus-medium-bulk-local-100)
+2026-10-16 12:42:13,532 INFO sourcing.sheets: Requests in /media/pragnakalpl19/projects1/Backup/sourcing-proto_share_2026-10-15/sourcing-proto/bulk_test_100.xlsx: 100 data row(s), 29 to process (Status empty/NEW/RUNNING), skipped by Status: none, rows without a part number: 71
+2026-10-16 12:42:13,532 INFO sourcing.pipeline: Run local-20261016-071212-c511__bulk_test_100 picked up 29 NEW rows
+2026-10-16 12:42:16,371 INFO sourcing.pipeline: proponent / (no requester): using shared login (secret key sourcing-vendor-proponent, totp=no) for 29 row(s)
+2026-10-16 12:42:16,377 INFO sourcing.pipeline: [proponent___shared] Bulk search: 29 parts (bulk from 2), up to 25 per search
+2026-10-16 12:42:16,377 INFO sourcing.auth: [proponent___shared] Reusing saved browser Context local-30a1512fdf314cbaa2814093083cd6ea (state=NEEDS_LOGIN)
+2026-10-16 12:42:16,790 INFO sourcing.browser: Opened local Chromium 156.0.8078.4 (session local-e1f175e8470c, headless=True; no saved cookies, context label local-30a1512fdf314cbaa2814093083cd6ea)
+2026-10-16 12:42:16,790 INFO sourcing.auth: [proponent___shared] Context local-30a1512fdf314cbaa2814093083cd6ea has no active sign-in (signed out at the end of the run 4m ago); logging in
+2026-10-16 12:42:16,790 INFO sourcing.auth: [proponent___shared] Automatic login attempt 1/2
+2026-10-16 12:42:16,790 INFO sourcing.vendors.proponent: Login: Proponent as purchasing@skylinkintl.com
+2026-10-16 12:42:16,790 INFO sourcing.vendors.proponent: Login: opening https://procart.proponent.com/Login.aspx (from login page found on an earlier run)
+2026-10-16 12:42:30,619 INFO sourcing.vendors.proponent: Consent popup dialog[aria-label*='cookie' i]: clicking 'Accept'
+2026-10-16 12:42:35,626 INFO sourcing.vendors.proponent: Consent popup answered; no reload
+2026-10-16 12:42:35,661 INFO sourcing.vendors.proponent: Login: form found at https://procart.proponent.com/Login.aspx (username=#MainContent_txtUserName, password=#MainContent_txtPassword)
+2026-10-16 12:42:35,713 INFO sourcing.vendors.proponent: Login: submitting with #MainContent_btnLogin
+2026-10-16 12:42:35,807 INFO sourcing.vendors.proponent: Login submit: submitted; waiting up to 90s for the page
+2026-10-16 12:42:41,201 INFO sourcing.vendors.proponent: Login submit: page ready after 5.5s (https://procart.proponent.com/Home.aspx)
+2026-10-16 12:42:41,202 INFO sourcing.vendors.proponent: Login: after submit, at https://procart.proponent.com/Home.aspx
+2026-10-16 12:42:41,257 INFO sourcing.vendors.proponent: Login: form gone and no Login button -> looks signed in (https://procart.proponent.com/Home.aspx)
+2026-10-16 12:42:44,045 INFO sourcing.vendors.proponent: Auth probe https://procart.proponent.com/: no Login button -> signed in
+2026-10-16 12:42:44,052 INFO sourcing.auth: [proponent___shared] Login OK
+2026-10-16 12:42:44,052 INFO sourcing.pipeline: Rows 2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26: bulk searching Proponent for 25 parts
+2026-10-16 12:42:44,052 INFO sourcing.vendors.proponent: Bulk search: 25 parts in one search (https://procart.proponent.com/)
+2026-10-16 12:42:46,841 INFO sourcing.vendors.proponent: Bulk search: submitted; waiting up to 90s for the page
+2026-10-16 12:43:06,561 INFO sourcing.vendors.proponent: Bulk search: page ready after 19.8s (https://procart.proponent.com/PartSearchResults.aspx)
+2026-10-16 12:43:06,561 INFO sourcing.vendors.proponent: Bulk search: results at https://procart.proponent.com/PartSearchResults.aspx
+2026-10-16 12:43:07,622 INFO sourcing.vendors.proponent: Bulk search: setting results per page to 50 (33 results wanted)
+2026-10-16 12:43:18,458 INFO sourcing.vendors.proponent: Results: expanded all details
+2026-10-16 12:43:19,062 INFO sourcing.vendors.proponent: Results: read 33 records from the results grid
+2026-10-16 12:44:02,701 INFO httpx2: HTTP Request: POST https://api.anthropic.com/v1/messages?beta=true "HTTP/1.1 200 OK"
+2026-10-16 12:44:18,908 INFO httpx2: HTTP Request: POST https://api.anthropic.com/v1/messages?beta=true "HTTP/1.1 200 OK"
+2026-10-16 12:44:18,939 INFO sourcing.vendors.proponent: Bulk search: offers for 25 of 25 parts
+2026-10-16 12:44:18,939 INFO sourcing.pipeline: Bulk search: 25 found, 0 not found, 94.9s, LLM 2 call(s) $0.3605
+2026-10-16 12:44:18,939 INFO sourcing.pipeline: Row 2: found, 1 offer(s), 94.9s, LLM 0 call(s) $0.0000
+2026-10-16 12:44:18,939 INFO sourcing.pipeline: Row 2 offer: pn=40467-10-144 price=709.5  qty=45 cond=FN lead=In stock (186 days if out of stock)
+2026-10-16 12:44:19,055 INFO sourcing.pipeline: Row 2 40467-10-144 (proponent): -> DONE
+2026-10-16 12:44:19,058 INFO sourcing.pipeline: Row 3: found, 1 offer(s), 94.9s, LLM 0 call(s) $0.0000
+2026-10-16 12:44:19,058 INFO sourcing.pipeline: Row 3 offer: pn=4066-0014 price=2774.16  qty=22 cond=FN lead=In stock (132 days if out of stock)
+2026-10-16 12:44:19,171 INFO sourcing.pipeline: Row 3 4066-0014 (proponent): -> DONE
+2026-10-16 12:44:19,173 INFO sourcing.pipeline: Row 4: found, 1 offer(s), 94.9s, LLM 0 call(s) $0.0000
+2026-10-16 12:44:19,173 INFO sourcing.pipeline: Row 4 offer: pn=406Q80-1 price=None  qty=Out of stock cond=None lead=336 days
+2026-10-16 12:44:19,291 INFO sourcing.pipeline: Row 4 406Q80-1 (proponent): -> DONE
+2026-10-16 12:44:19,293 INFO sourcing.pipeline: Row 5: found, 1 offer(s), 94.9s, LLM 0 call(s) $0.0000
+2026-10-16 12:44:19,293 INFO sourcing.pipeline: Row 5 offer: pn=4085-10 price=124.29  qty=60 cond=FN lead=In stock (82 days if out of stock)
+2026-10-16 12:44:19,408 INFO sourcing.pipeline: Row 5 4085-10 (proponent): -> DONE
+2026-10-16 12:44:19,411 INFO sourcing.pipeline: Row 6: found, 1 offer(s), 94.9s, LLM 0 call(s) $0.0000
+2026-10-16 12:44:19,411 INFO sourcing.pipeline: Row 6 offer: pn=40P6050 price=392.84  qty=64 cond=FN lead=In stock (53 days if out of stock)
+2026-10-16 12:44:19,530 INFO sourcing.pipeline: Row 6 40P6050 (proponent): -> DONE
+2026-10-16 12:44:19,533 INFO sourcing.pipeline: Row 7: found, 1 offer(s), 94.9s, LLM 0 call(s) $0.0000
+2026-10-16 12:44:19,533 INFO sourcing.pipeline: Row 7 offer: pn=41004509-1 price=20118.83  qty=2 cond=FN lead=In stock (363 days if out of stock)
+2026-10-16 12:44:19,650 INFO sourcing.pipeline: Row 7 41004509-1 (proponent): -> DONE
+2026-10-16 12:44:19,652 INFO sourcing.pipeline: Row 8: found, 2 offer(s), 94.9s, LLM 0 call(s) $0.0000
+2026-10-16 12:44:19,653 INFO sourcing.pipeline: Row 8 offer: pn=2758 price=8460.95  qty=147 cond=FN lead=In stock (379 days if out of stock)
+2026-10-16 12:44:19,653 INFO sourcing.pipeline: Row 8 offer: pn=2758 CHARGED price=8693.81  qty=147 cond=FN lead=In stock (17 days if out of stock)
+2026-10-16 12:44:19,772 INFO sourcing.pipeline: Row 8 410946 (proponent): -> DONE
+2026-10-16 12:44:19,776 INFO sourcing.pipeline: Row 9: found, 2 offer(s), 94.9s, LLM 0 call(s) $0.0000
+2026-10-16 12:44:19,776 INFO sourcing.pipeline: Row 9 offer: pn=411A2117-1 price=129.02  qty=663 cond=FN lead=In stock (136 days if out of stock)
+2026-10-16 12:44:19,776 INFO sourcing.pipeline: Row 9 offer: pn=411A2117-13 price=None  qty=Out of stock cond=None lead=28 days
+2026-10-16 12:44:19,890 INFO sourcing.pipeline: Row 9 411A2117-1 (proponent): -> DONE
+2026-10-16 12:44:19,892 INFO sourcing.pipeline: Row 10: found, 1 offer(s), 94.9s, LLM 0 call(s) $0.0000
+2026-10-16 12:44:19,892 INFO sourcing.pipeline: Row 10 offer: pn=4132A-934-ZB price=86.95  qty=220 cond=FN lead=In stock (238 days if out of stock)
+2026-10-16 12:44:20,014 INFO sourcing.pipeline: Row 10 4132A-934-ZB (proponent): -> DONE
+2026-10-16 12:44:20,017 INFO sourcing.pipeline: Row 11: found, 1 offer(s), 94.9s, LLM 0 call(s) $0.0000
+2026-10-16 12:44:20,017 INFO sourcing.pipeline: Row 11 offer: pn=41391400 price=None  qty=Out of stock cond=None lead=70 days (next due Dec 7, 2026, qty 504)
+2026-10-16 12:44:20,137 INFO sourcing.pipeline: Row 11 41391400 (proponent): -> DONE
+2026-10-16 12:44:20,141 INFO sourcing.pipeline: Row 12: found, 1 offer(s), 94.9s, LLM 0 call(s) $0.0000
+2026-10-16 12:44:20,142 INFO sourcing.pipeline: Row 12 offer: pn=4140073-1 price=None  qty=Out of stock cond=None lead=164 days (next due Dec 7, 2026, qty 75)
+2026-10-16 12:44:20,255 INFO sourcing.pipeline: Row 12 4140073-1 (proponent): -> DONE
+2026-10-16 12:44:20,259 INFO sourcing.pipeline: Row 13: found, 1 offer(s), 94.9s, LLM 0 call(s) $0.0000
+2026-10-16 12:44:20,259 INFO sourcing.pipeline: Row 13 offer: pn=415-654-1 price=3006.37  qty=6 cond=FN lead=In stock (151 days if out of stock)
+2026-10-16 12:44:20,378 INFO sourcing.pipeline: Row 13 415-654-1 (proponent): -> DONE
+2026-10-16 12:44:20,381 INFO sourcing.pipeline: Row 14: found, 3 offer(s), 94.9s, LLM 0 call(s) $0.0000
+2026-10-16 12:44:20,381 INFO sourcing.pipeline: Row 14 offer: pn=416F25-4 price=825.06  qty=7 cond=FN lead=In stock (203 days if out of stock)
+2026-10-16 12:44:20,381 INFO sourcing.pipeline: Row 14 offer: pn=337-080-102-0 price=None  qty=Out of stock cond=None lead=21 days
+2026-10-16 12:44:20,381 INFO sourcing.pipeline: Row 14 offer: pn=QA06663ISS6 price=None  qty=Out of stock cond=None lead=21 days
+2026-10-16 12:44:20,506 INFO sourcing.pipeline: Row 14 416F25-4 (proponent): -> DONE
+2026-10-16 12:44:20,509 INFO sourcing.pipeline: Row 15: found, 1 offer(s), 94.9s, LLM 0 call(s) $0.0000
+2026-10-16 12:44:20,509 INFO sourcing.pipeline: Row 15 offer: pn=418-09104 price=None  qty=Out of stock cond=None lead=460 days (next due Nov 27, 2027, qty 5; Feb 27, 2028, qty 5; May 28, 2028, qty 8)
+2026-10-16 12:44:20,625 INFO sourcing.pipeline: Row 15 418-09104 (proponent): -> DONE
+2026-10-16 12:44:20,628 INFO sourcing.pipeline: Row 16: found, 2 offer(s), 94.9s, LLM 0 call(s) $0.0000
+2026-10-16 12:44:20,628 INFO sourcing.pipeline: Row 16 offer: pn=424B200-7 price=322  qty=1836 cond=FN lead=In stock (153 days if out of stock)
+2026-10-16 12:44:20,628 INFO sourcing.pipeline: Row 16 offer: pn=CA02020A price=None  qty=Out of stock cond=None lead=146 days
+2026-10-16 12:44:20,751 INFO sourcing.pipeline: Row 16 424B200-7 (proponent): -> DONE
+2026-10-16 12:44:20,754 INFO sourcing.pipeline: Row 17: found, 2 offer(s), 94.9s, LLM 0 call(s) $0.0000
+2026-10-16 12:44:20,754 INFO sourcing.pipeline: Row 17 offer: pn=426EN10-8 price=3014.37  qty=10 cond=FN lead=In stock (182 days if out of stock)
+2026-10-16 12:44:20,754 INFO sourcing.pipeline: Row 17 offer: pn=426EN9-8 price=None  qty=Out of stock cond=None lead=154 days (next due Feb 26, 2027, qty 10)
+2026-10-16 12:44:20,900 INFO sourcing.pipeline: Row 17 426EN10-8 (proponent): -> DONE
+2026-10-16 12:44:20,903 INFO sourcing.pipeline: Row 18: found, 2 offer(s), 94.9s, LLM 0 call(s) $0.0000
+2026-10-16 12:44:20,903 INFO sourcing.pipeline: Row 18 offer: pn=42TC12-2 price=4713.86  qty=3 cond=FN lead=In stock (379 days if out of stock)
+2026-10-16 12:44:20,903 INFO sourcing.pipeline: Row 18 offer: pn=101-00114 price=None  qty=Out of stock cond=None lead=21 days
+2026-10-16 12:44:21,031 INFO sourcing.pipeline: Row 18 42TC12-2 (proponent): -> DONE
+2026-10-16 12:44:21,036 INFO sourcing.pipeline: Row 19: found, 1 offer(s), 94.9s, LLM 0 call(s) $0.0000
+2026-10-16 12:44:21,036 INFO sourcing.pipeline: Row 19 offer: pn=43-1329 price=100.61  qty=129 cond=FN lead=In stock (104 days if out of stock)
+2026-10-16 12:44:21,154 INFO sourcing.pipeline: Row 19 43-1329 (proponent): -> DONE
+2026-10-16 12:44:21,156 INFO sourcing.pipeline: Row 20: found, 1 offer(s), 94.9s, LLM 0 call(s) $0.0000
+2026-10-16 12:44:21,156 INFO sourcing.pipeline: Row 20 offer: pn=432004031 price=843.57  qty=49 cond=FN lead=In stock (74 days if out of stock)
+2026-10-16 12:44:21,281 INFO sourcing.pipeline: Row 20 432004031 (proponent): -> DONE
+2026-10-16 12:44:21,285 INFO sourcing.pipeline: Row 21: found, 1 offer(s), 94.9s, LLM 0 call(s) $0.0000
+2026-10-16 12:44:21,285 INFO sourcing.pipeline: Row 21 offer: pn=44267KS-10SL-4SN price=375.52  qty=120 cond=FN lead=In stock (239 days if out of stock)
+2026-10-16 12:44:21,408 INFO sourcing.pipeline: Row 21 44267KS-10SL-4SN (proponent): -> DONE
+2026-10-16 12:44:21,411 INFO sourcing.pipeline: Row 22: found, 2 offer(s), 94.9s, LLM 0 call(s) $0.0000
+2026-10-16 12:44:21,412 INFO sourcing.pipeline: Row 22 offer: pn=57230-630-2 price=162.33  qty=49 cond=FN lead=In stock (137 days if out of stock)
+2026-10-16 12:44:21,412 INFO sourcing.pipeline: Row 22 offer: pn=M83248/1-010 price=1.85  qty=67893 cond=FN lead=In stock (84 days if out of stock)
+2026-10-16 12:44:21,625 INFO sourcing.pipeline: Row 22 57230-630-2 (proponent): -> DONE
+2026-10-16 12:44:21,628 INFO sourcing.pipeline: Row 23: found, 1 offer(s), 94.9s, LLM 0 call(s) $0.0000
+2026-10-16 12:44:21,628 INFO sourcing.pipeline: Row 23 offer: pn=453A1810-10 price=416.9  qty=189 cond=FN lead=In stock (114 days if out of stock)
+2026-10-16 12:44:21,756 INFO sourcing.pipeline: Row 23 453A1810-10 (proponent): -> DONE
+2026-10-16 12:44:21,758 INFO sourcing.pipeline: Row 24: found, 1 offer(s), 94.9s, LLM 0 call(s) $0.0000
+2026-10-16 12:44:21,758 INFO sourcing.pipeline: Row 24 offer: pn=465-000092-2ADSTC price=None  qty=Out of stock cond=None lead=59 days (next due Jan 8, 2027, qty 2)
+2026-10-16 12:44:21,878 INFO sourcing.pipeline: Row 24 465-000092-2ADSTC (proponent): -> DONE
+2026-10-16 12:44:21,881 INFO sourcing.pipeline: Row 25: found, 1 offer(s), 94.9s, LLM 0 call(s) $0.0000
+2026-10-16 12:44:21,881 INFO sourcing.pipeline: Row 25 offer: pn=4900397-7 price=1170.7  qty=2 cond=FN lead=In stock (62 days if out of stock)
+2026-10-16 12:44:22,004 INFO sourcing.pipeline: Row 25 4900397-7 (proponent): -> DONE
+2026-10-16 12:44:22,006 INFO sourcing.pipeline: Row 26: found, 1 offer(s), 94.9s, LLM 0 call(s) $0.0000
+2026-10-16 12:44:22,006 INFO sourcing.pipeline: Row 26 offer: pn=4951114 price=1785.44  qty=29 cond=FN lead=In stock (74 days if out of stock)
+2026-10-16 12:44:22,127 INFO sourcing.pipeline: Row 26 4951114 (proponent): -> DONE
+2026-10-16 12:44:22,131 INFO sourcing.pipeline: Rows 27,28,29,30: bulk searching Proponent for 4 parts
+2026-10-16 12:44:22,131 INFO sourcing.vendors.proponent: Bulk search: 4 parts in one search (https://procart.proponent.com/)
+2026-10-16 12:44:25,032 INFO sourcing.vendors.proponent: Bulk search: submitted; waiting up to 90s for the page
+2026-10-16 12:44:32,537 INFO sourcing.vendors.proponent: Bulk search: page ready after 7.6s (https://procart.proponent.com/PartSearchResults.aspx)
+2026-10-16 12:44:32,537 INFO sourcing.vendors.proponent: Bulk search: results at https://procart.proponent.com/PartSearchResults.aspx
+2026-10-16 12:44:34,182 INFO sourcing.vendors.proponent: Results: expanded all details
+2026-10-16 12:44:34,698 INFO sourcing.vendors.proponent: Results: read 4 records from the results grid
+2026-10-16 12:44:49,686 INFO httpx2: HTTP Request: POST https://api.anthropic.com/v1/messages?beta=true "HTTP/1.1 200 OK"
+2026-10-16 12:44:49,700 INFO sourcing.vendors.proponent: Bulk search: offers for 4 of 4 parts
+2026-10-16 12:44:49,700 INFO sourcing.pipeline: Bulk search: 4 found, 0 not found, 27.6s, LLM 1 call(s) $0.0549
+2026-10-16 12:44:49,701 INFO sourcing.pipeline: Row 27: found, 1 offer(s), 27.6s, LLM 0 call(s) $0.0000
+2026-10-16 12:44:49,701 INFO sourcing.pipeline: Row 27 offer: pn=4E4140-1 price=15993.51  qty=1 cond=FN lead=In stock
+2026-10-16 12:44:49,837 INFO sourcing.pipeline: Row 27 4E4140-1 (proponent): -> DONE
+2026-10-16 12:44:49,839 INFO sourcing.pipeline: Row 28: found, 1 offer(s), 27.6s, LLM 0 call(s) $0.0000
+2026-10-16 12:44:49,839 INFO sourcing.pipeline: Row 28 offer: pn=4PB717-T2 price=538.39  qty=23 cond=FN lead=In stock (266 days if out of stock)
+2026-10-16 12:44:49,963 INFO sourcing.pipeline: Row 28 4PB717-T2 (proponent): -> DONE
+2026-10-16 12:44:49,966 INFO sourcing.pipeline: Row 29: found, 1 offer(s), 27.6s, LLM 0 call(s) $0.0000
+2026-10-16 12:44:49,966 INFO sourcing.pipeline: Row 29 offer: pn=5-86557-203 price=114.8  qty=11 cond=FN lead=In stock (18 days if out of stock)
+2026-10-16 12:44:50,092 INFO sourcing.pipeline: Row 29 5-86557-203 (proponent): -> DONE
+2026-10-16 12:44:50,096 INFO sourcing.pipeline: Row 30: found, 1 offer(s), 27.6s, LLM 0 call(s) $0.0000
+2026-10-16 12:44:50,096 INFO sourcing.pipeline: Row 30 offer: pn=503274-415 price=1876.27  qty=2 cond=FN lead=In stock (98 days if out of stock)
+2026-10-16 12:44:50,237 INFO sourcing.pipeline: Row 30 503274-415 (proponent): -> DONE
+2026-10-16 12:44:50,294 INFO sourcing.vendors.proponent: Logout: clicking a:has-text('Log out')
+2026-10-16 12:44:50,602 INFO sourcing.vendors.proponent: Logout: submitted; waiting up to 90s for the page
+2026-10-16 12:44:52,626 INFO sourcing.vendors.proponent: Logout: page ready after 2.3s (https://procart.proponent.com/)
+2026-10-16 12:44:52,668 INFO sourcing.vendors.proponent: Logout: signed out (now at https://procart.proponent.com/)
+2026-10-16 12:44:52,675 INFO sourcing.pipeline: [proponent___shared] Signed out of Proponent
+2026-10-16 12:44:52,735 INFO sourcing.pipeline: [proponent___shared] Browser session local-e1f175e8470c released
+2026-10-16 12:44:52,741 INFO sourcing.sheets: Requests in /media/pragnakalpl19/projects1/Backup/sourcing-proto_share_2026-10-15/sourcing-proto/bulk_test_100.xlsx: 100 data row(s), 0 to process (Status empty/NEW), skipped by Status: DONE=29, rows without a part number: 71
+2026-10-16 12:44:52,746 INFO sourcing.pipeline: Run summary: {'run_id': 'local-20261016-071212-c511__bulk_test_100', 'rows_total': 29, 'counts': {'DONE': 29}, 'llm': {'calls': 3, 'input_tokens': 56437, 'output_tokens': 9481, 'cache_read_tokens': 0, 'cost_usd': 0.415368}, 'seconds': 159.2}
+2026-10-16 12:44:54,440 INFO httpx: HTTP Request: POST https://chat.googleapis.com/v1/spaces/REDACTED/messages?key=REDACTED&token=REDACTED "HTTP/1.1 200 OK"

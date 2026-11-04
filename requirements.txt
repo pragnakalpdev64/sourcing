@@ -1,0 +1,23 @@
+anthropic>=1.0.0
+# Only needed for LLM_PROVIDER=openai / =gemini (sourcing/llm/ imports these lazily):
+# openai>=1.40.0
+# google-genai>=0.3.0
+browserbase>=1.17.0
+# Pinned: the Dockerfile installs the Chromium build that matches this version
+# (BROWSER_BACKEND=local), and Browserbase's CDP endpoint is tested with it.
+playwright==1.64.0
+google-cloud-secret-manager>=2.20.0
+pyotp>=2.9.0
+google-auth>=2.30.0
+# Encrypts an admin's short-lived Google Cloud token in a cookie (service/web_auth.py).
+cryptography>=42.0.0
+google-cloud-firestore>=2.16.0
+google-cloud-run>=0.10.0
+gspread>=6.1.0
+openpyxl>=3.1.0
+fastapi>=0.115.0
+uvicorn[standard]>=0.30.0
+httpx>=0.27.0
+python-dotenv>=1.0.0
+# Time zones for per-vendor limits (sourcing/limits.py); slim images may lack the system database.
+tzdata>=2024.1

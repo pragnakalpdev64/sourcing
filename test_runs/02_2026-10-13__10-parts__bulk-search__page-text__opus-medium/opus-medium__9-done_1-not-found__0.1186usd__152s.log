@@ -1,0 +1,96 @@
+2026-10-13 13:33:05,607 INFO sourcing.job: Run local-20261013-080305-9dd5: mode=REAL, store=file (/home/pragnakalpl19/stagehand-browser-mcp/sourcing-proto/.local_store.json), llm=anthropic/claude-opus-5-5 (effort medium), chat=off, vendor secret overrides=sourcing-vendor-proponent=sourcing-vendor-test
+2026-10-13 13:33:05,757 WARNING sourcing.browser: Browserbase session recording is ON: recordings show the vendor pages, login screens included. Use for local debugging only.
+2026-10-13 13:33:06,498 INFO sourcing.job: Processing 1 registered sheet(s): 1V-S8J4bFqw1w_WvrsQjFqR4gNhPwFyd-YS_aF7CVqak
+2026-10-13 13:33:09,156 INFO sourcing.sheets: Requests in 1V-S8J4bFqw1w_WvrsQjFqR4gNhPwFyd-YS_aF7CVqak: 10 data row(s), 10 to process (Status empty/NEW/RUNNING), skipped by Status: none, rows without a part number: 0
+2026-10-13 13:33:09,156 INFO sourcing.pipeline: Run local-20261013-080305-9dd5__aF7CVqak picked up 10 NEW rows
+/home/pragnakalpl19/stagehand-browser-mcp/sourcing-proto/.venv/lib/python3.10/site-packages/google/api_core/_python_version_support.py:223: FutureWarning: You are using a non-supported Python version (3.10.12). Google will not post any further updates to google.api_core supporting this Python version. Please upgrade to the latest Python version, or at least Python 3.11, and then update google.api_core.
+  warnings.warn(message, FutureWarning)
+/home/pragnakalpl19/stagehand-browser-mcp/sourcing-proto/.venv/lib/python3.10/site-packages/google/api_core/_python_version_support.py:223: FutureWarning: You are using a non-supported Python version (3.10.12). Google will not post any further updates to google.cloud.secretmanager_v1 supporting this Python version. Please upgrade to the latest Python version, or at least Python 3.11, and then update google.cloud.secretmanager_v1.
+  warnings.warn(message, FutureWarning)
+2026-10-13 13:33:11,035 INFO sourcing.pipeline: proponent / (no requester): using shared login (secret key sourcing-vendor-proponent, totp=no) for 10 row(s)
+2026-10-13 13:33:11,039 INFO sourcing.pipeline: [proponent___shared] Bulk search on: up to 25 parts per search
+2026-10-13 13:33:11,039 INFO sourcing.auth: [proponent___shared] Reusing saved Browserbase Context 94bace48-54af-441a-b89f-bb38a85f6f64 (state=NEEDS_LOGIN)
+2026-10-13 13:33:12,036 INFO httpx: HTTP Request: POST https://api.browserbase.com/v1/sessions "HTTP/1.1 201 Created"
+2026-10-13 13:33:14,138 INFO sourcing.browser: Opened Browserbase session b8588699-9856-4ea3-8965-51116523b898 (context=94bace48-54af-441a-b89f-bb38a85f6f64, keep_alive=False, recording=on)
+2026-10-13 13:33:14,138 INFO sourcing.browser: Session replay: https://www.browserbase.com/sessions/b8588699-9856-4ea3-8965-51116523b898
+2026-10-13 13:33:14,138 INFO sourcing.auth: [proponent___shared] Context 94bace48-54af-441a-b89f-bb38a85f6f64 has no active sign-in (signed out at the end of the run 10m ago); logging in
+2026-10-13 13:33:14,138 INFO sourcing.auth: [proponent___shared] Automatic login attempt 1/2
+2026-10-13 13:33:14,138 INFO sourcing.vendors.proponent: Login: Proponent as purchasing@skylinkintl.com
+2026-10-13 13:33:14,138 INFO sourcing.vendors.proponent: Login: opening https://procart.proponent.com/Login.aspx?_gl=1*1mc7rxi*_up*MQ..*_ga*MTUwMDM3MTExMC4xNzkxNTUxMzUy*_ga_H75PGQT6EM*czE3OTE1NTEzNTEkbzEkZzAkdDE3OTE1NTEzNTEkajYwJGwwJGgyNzIyNDA1OTY. (from login page found on an earlier run)
+2026-10-13 13:33:22,507 INFO sourcing.vendors.proponent: Login: form found at https://procart.proponent.com/Login.aspx?_gl=1*1mc7rxi*_up*MQ..*_ga*MTUwMDM3MTExMC4xNzkxNTUxMzUy*_ga_H75PGQT6EM*czE3OTE1NTEzNTEkbzEkZzAkdDE3OTE1NTEzNTEkajYwJGwwJGgyNzIyNDA1OTY. (username=#MainContent_txtUserName, password=#MainContent_txtPassword)
+2026-10-13 13:33:25,788 INFO sourcing.vendors.proponent: Login: submitting with #MainContent_btnLogin
+2026-10-13 13:33:28,039 INFO sourcing.vendors.proponent: Login submit: submitted; waiting up to 90s for the page
+2026-10-13 13:33:29,434 INFO sourcing.vendors.proponent: Login submit: page ready after 3.6s (https://procart.proponent.com/Home.aspx)
+2026-10-13 13:33:29,434 INFO sourcing.vendors.proponent: Login: after submit, at https://procart.proponent.com/Home.aspx
+2026-10-13 13:33:33,244 INFO sourcing.vendors.proponent: Login: form gone and no Login button -> looks signed in (https://procart.proponent.com/Home.aspx)
+2026-10-13 13:33:40,589 INFO sourcing.vendors.proponent: Auth probe https://procart.proponent.com/: no Login button -> signed in
+2026-10-13 13:33:40,599 INFO sourcing.auth: [proponent___shared] Login OK
+2026-10-13 13:33:40,599 INFO sourcing.pipeline: Rows 2,3,4,5,6,7,8,9,10,11: bulk searching Proponent for 10 parts
+2026-10-13 13:33:40,599 INFO sourcing.vendors.proponent: Bulk search: 10 parts in one search (https://procart.proponent.com/)
+2026-10-13 13:33:52,390 INFO sourcing.vendors.proponent: Bulk search: submitted; waiting up to 90s for the page
+2026-10-13 13:34:00,686 INFO sourcing.vendors.proponent: Bulk search: page ready after 10.6s (https://procart.proponent.com/PartSearchResults.aspx)
+2026-10-13 13:34:00,686 INFO sourcing.vendors.proponent: Bulk search: results at https://procart.proponent.com/PartSearchResults.aspx
+2026-10-13 13:34:08,996 INFO sourcing.vendors.proponent: Results: expanded all details
+2026-10-13 13:34:10,169 INFO sourcing.vendors.proponent: Saved results page to /home/pragnakalpl19/stagehand-browser-mcp/sourcing-proto/debug_pages/20261013-133409-bulk.(txt|html)
+2026-10-13 13:34:11,923 INFO sourcing.vendors.proponent: Bulk search: setting results per page to 20 (14 results wanted)
+2026-10-13 13:34:21,128 INFO sourcing.vendors.proponent: Results: expanded all details
+2026-10-13 13:34:22,351 INFO sourcing.vendors.proponent: Saved results page to /home/pragnakalpl19/stagehand-browser-mcp/sourcing-proto/debug_pages/20261013-133421-bulk.(txt|html)
+2026-10-13 13:34:23,194 INFO sourcing.vendors.proponent: Bulk search: results 1-14 of 14 on page 1
+2026-10-13 13:34:38,329 INFO httpx2: HTTP Request: POST https://api.anthropic.com/v1/messages?beta=true "HTTP/1.1 200 OK"
+2026-10-13 13:34:38,431 INFO sourcing.vendors.proponent: Bulk search: offers for 9 of 10 parts
+2026-10-13 13:34:45,389 INFO sourcing.vendors.proponent: Auth probe https://procart.proponent.com/: no Login button -> signed in
+2026-10-13 13:34:45,391 INFO sourcing.pipeline: Bulk search: 9 found, 1 not found, 64.8s, LLM 1 call(s) $0.1052
+2026-10-13 13:34:45,392 INFO sourcing.pipeline: Row 2: found, 1 offer(s), 64.8s, LLM 0 call(s) $0.0000
+2026-10-13 13:34:45,395 INFO sourcing.pipeline: Row 2 offer: pn=F1101385-01 price=188.84 USD qty=12 cond=FN lead=59 days
+2026-10-13 13:34:47,825 INFO sourcing.pipeline: Row 2 F1101385-01 (proponent): -> DONE
+2026-10-13 13:34:47,836 INFO sourcing.pipeline: Row 3: found, 1 offer(s), 64.8s, LLM 0 call(s) $0.0000
+2026-10-13 13:34:47,836 INFO sourcing.pipeline: Row 3 offer: pn=4066-0014 price=2,774.16 USD qty=22 cond=FN lead=132 days
+2026-10-13 13:34:48,759 INFO sourcing.pipeline: Row 3 4066-0014 (proponent): -> DONE
+2026-10-13 13:34:48,795 INFO sourcing.pipeline: Row 4: found, 1 offer(s), 64.8s, LLM 0 call(s) $0.0000
+2026-10-13 13:34:48,796 INFO sourcing.pipeline: Row 4 offer: pn=AS15001-1P price=6.33 USD qty=151682 cond=FN lead=518 days
+2026-10-13 13:34:49,656 INFO sourcing.pipeline: Row 4 AS15001-1P (proponent): -> DONE
+2026-10-13 13:34:49,675 INFO sourcing.pipeline: Row 5: found, 1 offer(s), 64.8s, LLM 0 call(s) $0.0000
+2026-10-13 13:34:49,676 INFO sourcing.pipeline: Row 5 offer: pn=5934001-217 price=2,719.21 USD qty=Out of stock cond=FN lead=129 days (next due 2026-11-20, qty 65)
+2026-10-13 13:34:50,559 INFO sourcing.pipeline: Row 5 5934001-217 (proponent): -> DONE
+2026-10-13 13:34:50,745 INFO sourcing.pipeline: Row 6: found, 3 offer(s), 64.8s, LLM 0 call(s) $0.0000
+2026-10-13 13:34:50,747 INFO sourcing.pipeline: Row 6 offer: pn=60B40018-32 price=1,757.47 USD qty=Out of stock cond=FN lead=117 days (next due 2027-02-12, qty 10)
+2026-10-13 13:34:50,748 INFO sourcing.pipeline: Row 6 offer: pn=8112-0401 price=None  qty=0 cond=FN lead=112 days
+2026-10-13 13:34:50,749 INFO sourcing.pipeline: Row 6 offer: pn=8112-0401AEC price=842.22 USD qty=2 cond=FN lead=77 days
+2026-10-13 13:34:51,768 INFO sourcing.pipeline: Row 6 60B40018-32 (proponent): -> DONE
+2026-10-13 13:34:51,775 INFO sourcing.pipeline: Row 7: found, 1 offer(s), 64.8s, LLM 0 call(s) $0.0000
+2026-10-13 13:34:51,775 INFO sourcing.pipeline: Row 7 offer: pn=4132A-934-ZB price=86.95 USD qty=220 cond=FN lead=238 days
+2026-10-13 13:34:52,761 INFO sourcing.pipeline: Row 7 4132A-934-ZB (proponent): -> DONE
+2026-10-13 13:34:52,766 INFO sourcing.pipeline: Row 8: found, 2 offer(s), 64.8s, LLM 0 call(s) $0.0000
+2026-10-13 13:34:52,766 INFO sourcing.pipeline: Row 8 offer: pn=2758 price=8,460.95 USD qty=None cond=FN lead=379 days
+2026-10-13 13:34:52,766 INFO sourcing.pipeline: Row 8 offer: pn=2758 CHARGED price=8,693.81 USD qty=None cond=FN lead=17 days
+2026-10-13 13:34:53,627 INFO sourcing.pipeline: Row 8 410946 (proponent): -> DONE
+2026-10-13 13:34:53,632 INFO sourcing.pipeline: Row 9: found, 2 offer(s), 64.8s, LLM 0 call(s) $0.0000
+2026-10-13 13:34:53,633 INFO sourcing.pipeline: Row 9 offer: pn=ACHC-3-13 price=406.07 USD qty=379 cond=FN lead=249 days
+2026-10-13 13:34:53,633 INFO sourcing.pipeline: Row 9 offer: pn=ACHC3-13 price=8,004.22 USD qty=10 cond=FN lead=224 days
+2026-10-13 13:34:54,526 INFO sourcing.pipeline: Row 9 ACHC-3-13 (proponent): -> DONE
+2026-10-13 13:34:54,536 INFO sourcing.pipeline: Row 10: found, 1 offer(s), 64.8s, LLM 0 call(s) $0.0000
+2026-10-13 13:34:54,536 INFO sourcing.pipeline: Row 10 offer: pn=624018-1 price=None  qty=Out of stock cond=FN lead=109 days
+2026-10-13 13:34:55,394 INFO sourcing.pipeline: Row 10 B7210 (proponent): -> DONE
+2026-10-13 13:34:55,403 INFO sourcing.pipeline: [proponent___shared] Searching 1 part(s) the bulk search didn't find one by one before logout
+2026-10-13 13:34:55,403 INFO sourcing.pipeline: Row 11: searching Proponent for 50831-1
+2026-10-13 13:34:55,406 INFO sourcing.vendors.proponent: Bulk search: 1 parts in one search (https://procart.proponent.com/)
+2026-10-13 13:35:06,875 INFO sourcing.vendors.proponent: Bulk search: submitted; waiting up to 90s for the page
+2026-10-13 13:35:08,377 INFO sourcing.vendors.proponent: Bulk search: page ready after 3.8s (https://procart.proponent.com/PartSearchResults.aspx)
+2026-10-13 13:35:08,377 INFO sourcing.vendors.proponent: Bulk search: results at https://procart.proponent.com/PartSearchResults.aspx
+2026-10-13 13:35:15,779 INFO sourcing.vendors.proponent: Results: expanded all details
+2026-10-13 13:35:16,615 INFO sourcing.vendors.proponent: Saved results page to /home/pragnakalpl19/stagehand-browser-mcp/sourcing-proto/debug_pages/20261013-133516-bulk.(txt|html)
+2026-10-13 13:35:20,985 INFO httpx2: HTTP Request: POST https://api.anthropic.com/v1/messages?beta=true "HTTP/1.1 200 OK"
+2026-10-13 13:35:20,986 INFO sourcing.vendors.proponent: Bulk search: offers for 0 of 1 parts
+2026-10-13 13:35:28,053 INFO sourcing.vendors.proponent: Auth probe https://procart.proponent.com/: no Login button -> signed in
+2026-10-13 13:35:28,053 INFO sourcing.pipeline: Row 11: no results, 0 offer(s), 25.6s, LLM 1 call(s) $0.0134
+2026-10-13 13:35:28,865 INFO sourcing.pipeline: Row 11 50831-1 (proponent): -> NOT_FOUND
+2026-10-13 13:35:32,757 INFO sourcing.vendors.proponent: Logout: clicking a:has-text('Log out')
+2026-10-13 13:35:34,976 INFO sourcing.vendors.proponent: Logout: submitted; waiting up to 90s for the page
+2026-10-13 13:35:36,278 INFO sourcing.vendors.proponent: Logout: page ready after 3.5s (https://procart.proponent.com/)
+2026-10-13 13:35:39,063 INFO sourcing.vendors.proponent: Logout: signed out (now at https://procart.proponent.com/)
+2026-10-13 13:35:39,073 INFO sourcing.pipeline: [proponent___shared] Signed out of Proponent
+2026-10-13 13:35:40,346 INFO httpx: HTTP Request: POST https://api.browserbase.com/v1/sessions/b8588699-9856-4ea3-8965-51116523b898 "HTTP/1.1 200 OK"
+2026-10-13 13:35:40,350 INFO sourcing.pipeline: [proponent___shared] Browser session b8588699-9856-4ea3-8965-51116523b898 released
+2026-10-13 13:35:40,805 INFO sourcing.sheets: Requests in 1V-S8J4bFqw1w_WvrsQjFqR4gNhPwFyd-YS_aF7CVqak: 10 data row(s), 0 to process (Status empty/NEW), skipped by Status: DONE=9, NOT_FOUND=1, rows without a part number: 0
+2026-10-13 13:35:40,809 INFO sourcing.pipeline: Run summary: {'run_id': 'local-20261013-080305-9dd5__aF7CVqak', 'rows_total': 10, 'counts': {'DONE': 9, 'NOT_FOUND': 1}, 'llm': {'calls': 2, 'input_tokens': 19693, 'output_tokens': 1990, 'cache_read_tokens': 0, 'cost_usd': 0.118572}, 'seconds': 152.1}
+2026-10-13 13:35:40,809 INFO sourcing.notify: [chat disabled] Sourcing run local-20261013-080305-9dd5__aF7CVqak: 10 rows (DONE 9, NOT_FOUND 1). LLM cost $0.1186, 152.1s.

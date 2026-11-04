@@ -1,0 +1,81 @@
+2026-11-03 16:46:53,582 INFO sourcing.job: Run local-20261103-111653-3667: mode=REAL, browser=browserbase, store=file (/media/pragnakalpl19/projects1/Backup/sourcing-proto_share_2026-10-15/sourcing-proto/.local_store.json), llm=anthropic/claude-opus-5-5 (effort medium), chat=on, vendor secret overrides=sourcing-vendor-proponent=sourcing-vendor-test
+2026-11-03 16:46:53,582 INFO sourcing.job: Vendor config for this run: {'*': {'bulk_min_parts': 2}}
+2026-11-03 16:46:53,884 WARNING sourcing.browser: Browserbase session recording is ON: recordings show the vendor pages, login screens included. Use for local debugging only.
+2026-11-03 16:46:55,397 INFO sourcing.job: Processing 1 sheet(s): 1V-S8J4bFqw1w_WvrsQjFqR4gNhPwFyd-YS_aF7CVqak
+2026-11-03 16:46:59,187 INFO sourcing.sheets: Requests in 1V-S8J4bFqw1w_WvrsQjFqR4gNhPwFyd-YS_aF7CVqak: 35 data row(s), 5 to process (Status empty/NEW/RUNNING), skipped by Status: DONE=25, NOT_FOUND=3, NOT_SOLD=2, rows without a part number: 0
+2026-11-03 16:46:59,187 INFO sourcing.pipeline: Run local-20261103-111653-3667__aF7CVqak picked up 5 NEW rows
+/media/pragnakalpl19/projects1/Backup/sourcing-proto_share_2026-10-15/sourcing-proto/.venv/lib/python3.11/site-packages/google/api_core/_python_version_support.py:254: FutureWarning: You are using a Python version (3.11.15) which Google will stop supporting in new releases of google.api_core once it reaches its end of life (2027-10-24). Please upgrade to the latest Python version, or at least Python 3.12, to continue receiving updates for google.api_core past that date.
+  warnings.warn(message, FutureWarning)
+/media/pragnakalpl19/projects1/Backup/sourcing-proto_share_2026-10-15/sourcing-proto/.venv/lib/python3.11/site-packages/google/api_core/_python_version_support.py:254: FutureWarning: You are using a Python version (3.11.15) which Google will stop supporting in new releases of google.cloud.secretmanager_v1 once it reaches its end of life (2027-10-24). Please upgrade to the latest Python version, or at least Python 3.12, to continue receiving updates for google.cloud.secretmanager_v1 past that date.
+  warnings.warn(message, FutureWarning)
+2026-11-03 16:47:02,303 INFO sourcing.pipeline: wencor / (no requester): using shared login (secret key sourcing-vendor-wencor, totp=no) for 1 row(s)
+2026-11-03 16:47:02,713 INFO sourcing.pipeline: aar / (no requester): using shared login (secret key sourcing-vendor-aar, totp=no) for 4 row(s)
+2026-11-03 16:47:02,744 INFO sourcing.pipeline: [wencor___shared] One search per part: 1 part(s) (bulk from 2)
+2026-11-03 16:47:02,744 INFO sourcing.auth: [wencor___shared] Reusing saved browser Context 08eda23d-b337-4244-838e-6c9ddb4bef66 (state=NEEDS_LOGIN)
+2026-11-03 16:47:02,820 INFO sourcing.pipeline: [aar___shared] Bulk search: 4 parts (bulk from 2), up to 10 per search
+2026-11-03 16:47:02,820 INFO sourcing.auth: [aar___shared] Reusing saved browser Context 902eecf8-a124-4823-8a11-003df1e812ac (state=NEEDS_LOGIN)
+2026-11-03 16:47:03,741 WARNING sourcing.auth: [wencor___shared] Saved Context 08eda23d-b337-4244-838e-6c9ddb4bef66 doesn't exist in this Browserbase project; starting a fresh one
+2026-11-03 16:47:04,054 INFO sourcing.auth: [wencor___shared] Created browser Context ade99380-e3c6-40ab-8222-f6990e33133a (saved one not found)
+2026-11-03 16:47:06,425 INFO sourcing.browser: Opened Browserbase session 2db79245-c076-438a-8ce9-2828444149bc (context=902eecf8-a124-4823-8a11-003df1e812ac, keep_alive=False, recording=on)
+2026-11-03 16:47:06,426 INFO sourcing.browser: Session page: https://www.browserbase.com/sessions/2db79245-c076-438a-8ce9-2828444149bc
+2026-11-03 16:47:06,776 INFO sourcing.browser: Session live view (while the run lasts): https://www.browserbase.com/devtools-fullscreen/inspector.html?wss=connect.browserbase.com/debug/2db79245-c076-438a-8ce9-2828444149bc/devtools/page/BF445EF87DAA0CD2BD8DFB4ACB1700FE?t=eyJhbGciOiJBMjU2S1ciLCJlbmMiOiJBMjU2R0NNIn0.O0X2z5leapIp0PCbN1FlvX_Sf-EHQZx-p8QW89NsW_m5CHlULNMlxA.ptRpRk5WZGFWZ3Qx.PMt7x7WoqptCIQZd_iYdLGPqHV2osqhyCsXkCR_jcNKH0LICR0GeEkyFcHngZ3kdWYSuW-eLlL2V__HyDZQLEJivGXyFUiOlzO1ZNl2vNPmCkdMLRlUHoz-RBXc0ZQL1-y3KkvkaewwYD5nVrw.AOmG7svsLSzgThkyLCgWPw&debug=true
+2026-11-03 16:47:06,777 INFO sourcing.auth: [aar___shared] Context 902eecf8-a124-4823-8a11-003df1e812ac has no active sign-in (never signed in); logging in
+2026-11-03 16:47:06,777 INFO sourcing.auth: [aar___shared] Automatic login attempt 1/2
+2026-11-03 16:47:06,805 INFO sourcing.vendors.generic: Login: AAR as purchasing@skylinkintl.com
+2026-11-03 16:47:06,805 INFO sourcing.vendors.aar: Login: opening https://shop.aarcorp.com (AAR landing page)
+2026-11-03 16:47:06,878 INFO sourcing.browser: Opened Browserbase session 294791f1-ea8c-49bf-a4a6-da831c516da6 (context=ade99380-e3c6-40ab-8222-f6990e33133a, keep_alive=False, recording=on)
+2026-11-03 16:47:06,878 INFO sourcing.browser: Session page: https://www.browserbase.com/sessions/294791f1-ea8c-49bf-a4a6-da831c516da6
+2026-11-03 16:47:07,224 INFO sourcing.browser: Session live view (while the run lasts): https://www.browserbase.com/devtools-fullscreen/inspector.html?wss=connect.browserbase.com/debug/294791f1-ea8c-49bf-a4a6-da831c516da6/devtools/page/D408829E633FA62D2E8291BA3690B3BC?t=eyJhbGciOiJBMjU2S1ciLCJlbmMiOiJBMjU2R0NNIn0.TEXpaACaHogwI_E53-5RcQH5JArxk3_Ff1H5wgX56IWQN1brYD-9hA.oWjB_8mofMqwVMzM.QTQf5rIUjaAd3MbWz9t5h2Ag-5qJj5-DDFTUgJdCVBqnsDuGkAxKXXdGOTlu4gsSARKuNsuWSo5nY83UuAQM-oxx3kGxTHIWGUBWyKj5r_TuQFJr4k2zW2HnXCABpaUBeoffntr7KU3S6R4Oqw.Q9-du451vbNDKuA3BIzr9g&debug=true
+2026-11-03 16:47:07,225 INFO sourcing.auth: [wencor___shared] Context ade99380-e3c6-40ab-8222-f6990e33133a has no active sign-in (never signed in); logging in
+2026-11-03 16:47:07,225 INFO sourcing.auth: [wencor___shared] Automatic login attempt 1/2
+2026-11-03 16:47:07,255 INFO sourcing.vendors.generic: Login: Wencor as carrie@skylinkintl.com
+2026-11-03 16:47:07,255 INFO sourcing.vendors.wencor: Login: opening https://fly.wencor.com/log-in (from secret sourcing-vendor-wencor url)
+2026-11-03 16:47:15,868 INFO sourcing.vendors.web: Consent popup [role='dialog'][aria-label*='cookie' i]: clicking 'Decline all'
+2026-11-03 16:47:19,295 INFO sourcing.vendors.aar: Login: avatar clicked; following 'Sign In or Register'
+2026-11-03 16:47:20,871 INFO sourcing.vendors.web: Consent popup answered; no reload
+2026-11-03 16:47:21,663 INFO sourcing.vendors.web: AAR Sign In link: submitted; waiting up to 90s for the page
+2026-11-03 16:47:22,778 INFO sourcing.vendors.wencor: Wencor step 1 (sign in): the page's own login form at https://fly.wencor.com/log-in
+2026-11-03 16:47:26,085 INFO sourcing.vendors.web: AAR Sign In link: page ready after 6.8s (https://shop.aarcorp.com/customer/account/login)
+2026-11-03 16:47:28,973 INFO sourcing.vendors.generic: Login step 1 at https://fly.wencor.com/log-in: username=form.login-form:not([id*='_INSTANCE_1234_']) input[id$='_username'] password=form.login-form:not([id*='_INSTANCE_1234_']) input[type='password']
+2026-11-03 16:47:29,596 INFO sourcing.vendors.aar: AAR step 1 (sign in): the sign-in form at https://shop.aarcorp.com/customer/account/login
+2026-11-03 16:47:35,147 INFO sourcing.vendors.generic: Login step 1 at https://shop.aarcorp.com/customer/account/login: username=form#login-form input#email password=form#login-form input#pass
+2026-11-03 16:47:35,271 INFO sourcing.vendors.generic: Login: submitting with form.login-form:not([id*='_INSTANCE_1234_']) button[type='submit']
+2026-11-03 16:47:37,475 INFO sourcing.vendors.web: Login submit: submitted; waiting up to 90s for the page
+2026-11-03 16:47:41,905 INFO sourcing.vendors.generic: Login: submitting with form#login-form button#send2
+2026-11-03 16:47:41,973 INFO sourcing.vendors.web: Login submit: page ready after 6.7s (https://fly.wencor.com/search)
+2026-11-03 16:47:44,537 INFO sourcing.vendors.web: Login submit: submitted; waiting up to 90s for the page
+2026-11-03 16:47:54,392 INFO sourcing.vendors.web: Login submit: page ready after 12.5s (https://shop.aarcorp.com/customer/account/login/)
+2026-11-03 16:47:56,447 WARNING sourcing.vendors.generic: Login: page mentions 'captcha' -> stopping (lockout / CAPTCHA / block)
+2026-11-03 16:47:57,643 INFO sourcing.vendors.web: Saved results page to /media/pragnakalpl19/projects1/Backup/sourcing-proto_share_2026-10-15/sourcing-proto/debug_pages/20261103-164757-aar-login-blocked.(txt|html)
+2026-11-03 16:47:57,705 WARNING sourcing.auth: [aar___shared] Stopping login: account -> SUSPENDED (Portal reports a lockout or block ('captcha'))
+2026-11-03 16:47:58,601 INFO sourcing.vendors.generic: Account menu button[aria-label*='account' i]: holds a:has-text('Log out')
+2026-11-03 16:47:59,137 INFO sourcing.vendors.generic: Login: signed in (a:has-text('Log out') visible)
+2026-11-03 16:47:59,137 INFO sourcing.auth: [wencor___shared] Sign-in seen by the login (a:has-text('Log out') at https://fly.wencor.com/search); no separate probe
+2026-11-03 16:47:59,225 INFO sourcing.auth: [wencor___shared] Login OK
+2026-11-03 16:47:59,253 INFO sourcing.pipeline: Row 32: searching Wencor for 39250-20629
+2026-11-03 16:48:00,114 INFO sourcing.vendors.web: Saved results page to /media/pragnakalpl19/projects1/Backup/sourcing-proto_share_2026-10-15/sourcing-proto/debug_pages/20261103-164759-wencor-dashboard.(txt|html)
+2026-11-03 16:48:00,115 INFO sourcing.vendors.generic: Search: opening https://fly.wencor.com/products/-/o/category/all/cn/All-Products/ecom-search/39250-20629 directly
+2026-11-03 16:48:00,321 INFO sourcing.pipeline: Row 33 44066 (aar corp): -> NEEDS_ATTENTION | Portal reports a lockout or block ('captcha')
+2026-11-03 16:48:00,387 INFO sourcing.pipeline: Row 34 1381-1176 (aar corp): -> NEEDS_ATTENTION | Portal reports a lockout or block ('captcha')
+2026-11-03 16:48:00,434 INFO sourcing.pipeline: Row 35 3880938-1 (aar corp): -> NEEDS_ATTENTION | Portal reports a lockout or block ('captcha')
+2026-11-03 16:48:00,480 INFO sourcing.pipeline: Row 36 C100-013080 (aar corp): -> NEEDS_ATTENTION | Portal reports a lockout or block ('captcha')
+2026-11-03 16:48:01,222 INFO sourcing.pipeline: [aar___shared] Not saved (no sign-in / search confirmed them): password_input, username_input
+2026-11-03 16:48:09,373 INFO sourcing.vendors.wencor: Wencor step 3 (open): 1 listed part(s) are 39250-20629: https://fly.wencor.com/product-details/-/o/cn/Bearings/d/39250-20629/ecom-item/10000664
+2026-11-03 16:48:17,924 INFO sourcing.vendors.wencor: Wencor: no stock link on https://fly.wencor.com/product-details/-/o/cn/Bearings/d/39250-20629/ecom-item/10000664
+2026-11-03 16:48:18,802 INFO sourcing.vendors.web: Saved results page to /media/pragnakalpl19/projects1/Backup/sourcing-proto_share_2026-10-15/sourcing-proto/debug_pages/20261103-164818-wencor-39250-20629-1.(txt|html)
+2026-11-03 16:48:18,803 INFO sourcing.vendors.wencor: Wencor step 4 (read): product page 1 of 1 at https://fly.wencor.com/product-details/-/o/cn/Bearings/d/39250-20629/ecom-item/10000664
+2026-11-03 16:48:29,471 INFO sourcing.vendors.web: Saved results page to /media/pragnakalpl19/projects1/Backup/sourcing-proto_share_2026-10-15/sourcing-proto/debug_pages/20261103-164828-wencor-39250-20629-sub1.(txt|html)
+2026-11-03 16:48:29,472 INFO sourcing.vendors.wencor: Wencor: substitute 39250 of 39250-20629 read (https://fly.wencor.com/product-details/-/o/cn/Bearings/ecom-item/10236374)
+2026-11-03 16:48:44,153 INFO sourcing.pipeline: Row 32: found, 2 offer(s), 44.9s, LLM 1 call(s) $0.0728
+2026-11-03 16:48:44,153 INFO sourcing.pipeline: Row 32 offer: pn=39250-20629 price=83.75  qty=Out of stock cond=NE lead=211 days
+2026-11-03 16:48:44,153 INFO sourcing.pipeline: Row 32 offer: pn=39250 price=None  qty=None cond=NE lead=None
+2026-11-03 16:48:46,570 INFO sourcing.pipeline: Row 32 39250-20629 (wencor): -> DONE
+2026-11-03 16:48:59,347 INFO sourcing.vendors.generic: Account menu button[aria-label*='account' i]: holds a:has-text('Log out')
+2026-11-03 16:48:59,347 INFO sourcing.vendors.generic: Logout: clicking a:has-text('Log out')
+2026-11-03 16:49:01,507 INFO sourcing.vendors.web: Logout: submitted; waiting up to 90s for the page
+2026-11-03 16:49:06,016 INFO sourcing.vendors.web: Logout: page ready after 6.7s (https://fly.wencor.com/home)
+2026-11-03 16:49:10,603 INFO sourcing.vendors.generic: Logout: signed out (now at https://fly.wencor.com/home)
+2026-11-03 16:49:10,652 INFO sourcing.pipeline: [wencor___shared] Signed out of Wencor
+2026-11-03 16:49:11,889 INFO sourcing.pipeline: [wencor___shared] Browser session 294791f1-ea8c-49bf-a4a6-da831c516da6 released
+2026-11-03 16:49:13,155 INFO sourcing.sheets: Requests in 1V-S8J4bFqw1w_WvrsQjFqR4gNhPwFyd-YS_aF7CVqak: 35 data row(s), 0 to process (Status empty/NEW), skipped by Status: DONE=26, NEEDS_ATTENTION=4, NOT_FOUND=3, NOT_SOLD=2, rows without a part number: 0
+2026-11-03 16:49:13,182 INFO sourcing.pipeline: Run summary: {'run_id': 'local-20261103-111653-3667__aF7CVqak', 'rows_total': 5, 'counts': {'NEEDS_ATTENTION': 4, 'DONE': 1}, 'llm': {'calls': 1, 'input_tokens': 13971, 'output_tokens': 848, 'cache_read_tokens': 0, 'cost_usd': 0.072844}, 'seconds': 134.4}

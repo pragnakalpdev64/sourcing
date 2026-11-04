@@ -1,0 +1,31 @@
+Run local-20261013-131443-68a1__aF7CVqak
+
+ Row  Part number          Status     Offers   Secs  In tok Out tok   Cost $
+   2  F1101385-01          DONE            1   17.6    6145     125   0.0271
+   3  4066-0014            DONE            1   19.9    6319     408   0.0334
+   4  AS15001-1P           DONE            1   19.8    6457     599   0.0378
+   5  5934001-217          DONE            1   19.7    6226     575   0.0364
+   6  60B40018-32          DONE            3   21.9    8231     792   0.0488
+   7  4132A-934-ZB         DONE            1   18.1    6299     437   0.0339
+   8  410946               DONE            2   21.3    8381     843   0.0504
+   9  ACHC-3-13            DONE            2   20.6    7568     734   0.0450
+  10  B7210                DONE            1   19.1    5884     410   0.0317
+  11  50831-1              DONE            1   17.7    5174     307   0.0268
+  12  ACO44521             DONE            1   15.2    6158     125   0.0271
+  13  ACO47189             DONE            1   19.9    6213     428   0.0334
+  14  ACR-6-33/B           DONE            1   19.5    6544     610   0.0384
+  15  AEC-145-69685-005    DONE            1   16.2    6163     130   0.0273
+  16  AF400                DONE            1   20.7    6523     688   0.0399
+  17  AG282000-03          DONE            1   15.3    6287     134   0.0278
+  18  AIS16P               DONE            1   16.9    6114     367   0.0318
+  19  AMC02RA03W           DONE            1   21.4    6312     473   0.0347
+  20  AN901-4C             DONE            1   18.2    6366     350   0.0325
+  21  AQC-5729             DONE            2   21.1    7063     607   0.0404
+
+Parts: 20   statuses: {'DONE': 20}
+Search time per part: avg 19.0s, min 15.2s, max 21.9s
+Tokens: 130427 in + 9142 out (avg 6521 in + 457 out per part)
+LLM cost: $0.7045 total, $0.0352 per part
+Whole run (login and sheet writes included): 471s, 23.6s per part
+
+Saved report_20_opus.csv

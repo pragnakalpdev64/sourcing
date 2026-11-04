@@ -1,0 +1,7 @@
+2026-11-03 17:01:58,575 INFO sourcing.job: Run local-20261103-113158-fc8e: mode=REAL, browser=browserbase, store=file (/media/pragnakalpl19/projects1/Backup/sourcing-proto_share_2026-10-15/sourcing-proto/.local_store.json), llm=anthropic/claude-opus-5-5 (effort medium), chat=on, vendor secret overrides=sourcing-vendor-proponent=sourcing-vendor-test
+2026-11-03 17:01:58,575 INFO sourcing.job: Vendor config for this run: {'*': {'bulk_min_parts': 2}}
+2026-11-03 17:01:58,986 WARNING sourcing.browser: Browserbase session recording is ON: recordings show the vendor pages, login screens included. Use for local debugging only.
+2026-11-03 17:02:01,060 INFO sourcing.job: Processing 1 sheet(s): 1V-S8J4bFqw1w_WvrsQjFqR4gNhPwFyd-YS_aF7CVqak
+2026-11-03 17:02:10,441 INFO sourcing.sheets: Requests in 1V-S8J4bFqw1w_WvrsQjFqR4gNhPwFyd-YS_aF7CVqak: 35 data row(s), 0 to process (Status empty/NEW/RUNNING), skipped by Status: DONE=26, NEEDS_ATTENTION=4, NOT_FOUND=3, NOT_SOLD=2, rows without a part number: 0
+2026-11-03 17:02:10,442 INFO sourcing.pipeline: Nothing to process: only rows with a part number and an empty or NEW Status are picked up
+2026-11-03 17:02:10,467 INFO sourcing.pipeline: Run summary: {'run_id': 'local-20261103-113158-fc8e__aF7CVqak', 'rows_total': 0, 'counts': {}, 'llm': {'calls': 0, 'input_tokens': 0, 'output_tokens': 0, 'cache_read_tokens': 0, 'cost_usd': 0.0}, 'seconds': 0.5}

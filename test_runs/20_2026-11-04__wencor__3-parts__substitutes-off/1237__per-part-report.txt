@@ -1,0 +1,14 @@
+Run local-20261104-070723-35bd__wencor_3parts
+
+ Row  Part number          Status     Offers   Secs  In tok Out tok   Cost $
+   2  N120-47934-071       DONE            1  168.2       0       0   0.0589
+   3  21FA407G             DONE            1  168.2       0       0   0.0589
+   4  AS3209-120           DONE            1  168.2       0       0   0.0589
+
+Parts: 3   statuses: {'DONE': 3}
+Search time per part: avg 168.2s, min 168.2s, max 168.2s
+Tokens: 0 in + 0 out (avg 0 in + 0 out per part)
+LLM cost: $0.1767 total, $0.0589 per part
+Whole run (login and sheet writes included): 305s, 101.5s per part
+
+Saved test_runs/20_2026-11-04__wencor__3-parts__substitutes-off/1237__per-part-report.csv

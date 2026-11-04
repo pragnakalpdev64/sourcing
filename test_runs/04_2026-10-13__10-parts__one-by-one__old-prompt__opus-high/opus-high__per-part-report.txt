@@ -1,0 +1,21 @@
+Run local-20261013-113111-71ec__aF7CVqak
+
+ Row  Part number          Status     Offers   Secs  In tok Out tok   Cost $
+   2  F1101385-01          DONE            1   26.8    6145     525   0.0351
+   3  4066-0014            DONE            1   25.6    6447     545   0.0367
+   4  AS15001-1P           DONE            1   27.1    6584     617   0.0387
+   5  5934001-217          DONE            1   23.9    6352     524   0.0359
+   6  60B40018-32          DONE            3   29.7    8360     955   0.0525
+   7  4132A-934-ZB         DONE            1   24.3    6424     516   0.0360
+   8  410946               DONE            2   26.9    8514     897   0.0520
+   9  ACHC-3-13            DONE            2   29.5    7694    1164   0.0541
+  10  B7210                DONE            1   24.2    6016     623   0.0365
+  11  50831-1              DONE            1   27.7    5303     449   0.0302
+
+Parts: 10   statuses: {'DONE': 10}
+Search time per part: avg 26.6s, min 23.9s, max 29.7s
+Tokens: 67839 in + 6815 out (avg 6783 in + 681 out per part)
+LLM cost: $0.4077 total, $0.0408 per part
+Whole run (login and sheet writes included): 330s, 33.0s per part
+
+Saved backups/20261013-1732-before-20-part-test/report_10_parts_old_prompt.csv

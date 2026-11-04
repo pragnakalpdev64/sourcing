@@ -1,0 +1,33 @@
+Onboarding aar with AarAdapter: login from secret sourcing-vendor-aar, browser browserbase, LLM anthropic claude-opus-5-5 (effort medium), with saved selectors
+2FA: Live View link sent in Chat; the person logs in there; wait 600s
+2026-11-04 11:58:24,557 WARNING sourcing.browser: Browserbase session recording is ON: recordings show the vendor pages, login screens included. Use for local debugging only.
+2026-11-04 11:58:28,777 INFO sourcing.browser: Opened Browserbase session 338a518b-b09e-4ff2-a962-f98177d23ab3 (context=5e3e4d7e-73c2-4914-a3bb-2f977ce25e97, keep_alive=False, recording=on, stealth=basic)
+2026-11-04 11:58:28,778 INFO sourcing.browser: Session page: https://www.browserbase.com/sessions/338a518b-b09e-4ff2-a962-f98177d23ab3
+2026-11-04 11:58:29,129 INFO sourcing.browser: Session live view (while the run lasts): https://www.browserbase.com/devtools-fullscreen/inspector.html?wss=connect.browserbase.com/debug/338a518b-b09e-4ff2-a962-f98177d23ab3/devtools/page/8639D59FF1B6D300412D0CC781A22F44?t=eyJhbGciOiJBMjU2S1ciLCJlbmMiOiJBMjU2R0NNIn0.SpoDRHR78qqp07SJmP8SsMBQeuJb1OOQbUppImPH4Ounjmq9jJRK4g.mdeboQ0Y5VCrmtfR.rT2KuTbVpsKXrWdC2QGex_94c1jgktjEERG5-_w-e_cYW0VRJidWkracmqKnbazFiU20AST0p4IY4m802k6Dp8OiNb2GuiGZXUoWgvivZBwnnXjcy6APqTc64APlBX8hs9BJdTc7pP1GUgqJmQ.g9U9umHZgWS_tNF9ewG0hg&debug=true
+2026-11-04 11:58:29,129 INFO sourcing.vendors.generic: Login: AAR as purchasing@skylinkintl.com
+2026-11-04 11:58:29,129 INFO sourcing.vendors.aar: Login: opening https://shop.aarcorp.com (AAR landing page)
+2026-11-04 11:58:45,970 INFO sourcing.vendors.web: Consent popup [role='dialog'][aria-label*='cookie' i]: clicking 'Close (OneTrust)'
+2026-11-04 11:58:50,975 INFO sourcing.vendors.web: Consent popup answered; no reload
+2026-11-04 11:58:54,709 INFO sourcing.vendors.aar: AAR account check: 302 to https://shop.aarcorp.com/customer/account/login/referer/aHR0cHM6Ly9zaG9wLmFhcmNvcnAuY29tL2N1c3RvbWVyL2FjY291bnQvaW5kZXgv/ -> signed out
+2026-11-04 11:59:02,036 INFO sourcing.vendors.aar: Login: avatar clicked; following 'Sign In or Register'
+2026-11-04 11:59:05,606 INFO sourcing.vendors.web: AAR Sign In link: submitted; waiting up to 90s for the page
+2026-11-04 11:59:18,738 INFO sourcing.vendors.web: AAR Sign In link: page ready after 16.7s (https://shop.aarcorp.com/customer/account/login)
+2026-11-04 11:59:22,327 INFO sourcing.vendors.aar: AAR step 1 (sign in): the sign-in form at https://shop.aarcorp.com/customer/account/login
+2026-11-04 11:59:28,226 INFO sourcing.vendors.generic: Login step 1 at https://shop.aarcorp.com/customer/account/login: username=form#login-form input#email password=form#login-form input#pass
+2026-11-04 12:00:27,825 INFO sourcing.vendors.generic: Login: submitting with form#login-form button#send2
+2026-11-04 12:00:30,448 INFO sourcing.vendors.web: Login submit: submitted; waiting up to 90s for the page
+2026-11-04 12:00:48,618 INFO sourcing.vendors.web: Login submit: page ready after 20.8s (https://shop.aarcorp.com/customer/account/login/referer/aHR0cHM6Ly9zaG9wLmFhcmNvcnAuY29tL2N1c3RvbWVyL2FjY291bnQvaW5kZXgv/)
+2026-11-04 12:01:02,506 WARNING sourcing.vendors.generic: Login: page mentions 'captcha' -> login failed, may be tried again
+2026-11-04 12:01:02,506 WARNING sourcing.onboarding: Onboarding stopped: the login could not be completed (Portal shows a CAPTCHA ('captcha'))
+
+Onboarding aar (AarAdapter): NOT OK
+  login: not signed in
+  sign-in check on the next page: None
+  logout: None
+  STOPPED: the login could not be completed (Portal shows a CAPTCHA ('captcha'))
+  found by: password_input=saved, submit_button=saved, username_input=saved
+  learned selectors (confirmed; --save saves these):
+  not saved (no sign-in or search confirmed them): password_input, username_input
+  LLM: 0 call(s) (0 to find elements), $0.0000; whole run 159.8s
+
+Saved test_runs/19_2026-11-04__aar__login-only/1157__browserbase__onboarding.json

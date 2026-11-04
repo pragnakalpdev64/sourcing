@@ -1,0 +1,25 @@
+{
+  "vendor_id": "aar",
+  "adapter": "AarAdapter",
+  "signed_in": false,
+  "login_seconds": 0.0,
+  "signed_in_check": null,
+  "parts": [],
+  "logged_out": false,
+  "stopped": "unexpected error: Error: Target page, context or browser has been closed\n=========================== logs ===========================\nwaiting for navigation until 'domcontentloaded'\n============================================================",
+  "login_only": true,
+  "learned": {},
+  "not_confirmed": [],
+  "found_by": {},
+  "llm_discovery_calls": 0,
+  "llm": {
+    "calls": 0,
+    "input_tokens": 0,
+    "output_tokens": 0,
+    "cache_read_tokens": 0,
+    "cost_usd": 0.0
+  },
+  "seconds": 8.8,
+  "ok": false,
+  "to_check": []
+}

@@ -1,0 +1,26 @@
+/media/pragnakalpl19/projects1/Backup/sourcing-proto_share_2026-10-15/sourcing-proto/.venv/lib/python3.11/site-packages/google/api_core/_python_version_support.py:254: FutureWarning: You are using a Python version (3.11.15) which Google will stop supporting in new releases of google.api_core once it reaches its end of life (2027-10-24). Please upgrade to the latest Python version, or at least Python 3.12, to continue receiving updates for google.api_core past that date.
+  warnings.warn(message, FutureWarning)
+/media/pragnakalpl19/projects1/Backup/sourcing-proto_share_2026-10-15/sourcing-proto/.venv/lib/python3.11/site-packages/google/api_core/_python_version_support.py:254: FutureWarning: You are using a Python version (3.11.15) which Google will stop supporting in new releases of google.cloud.secretmanager_v1 once it reaches its end of life (2027-10-24). Please upgrade to the latest Python version, or at least Python 3.12, to continue receiving updates for google.cloud.secretmanager_v1 past that date.
+  warnings.warn(message, FutureWarning)
+dasi: no record; using one built from secret sourcing-vendor-dasi (login sites dasi.com; saved only with --save)
+Onboarding dasi with GenericAdapter: login from secret sourcing-vendor-dasi, browser local (window shown), LLM anthropic claude-opus-5-5 (effort medium), fresh (saved selectors ignored)
+2FA: code form at https://moonlit-acquaint-enviable.ngrok-free.dev/hitl/code (the API must be running); the local browser has no Live View; wait 600s
+2026-10-28 11:38:14,561 INFO sourcing.browser: Opened local Chromium 156.0.8078.4 (session local-acc930b3a946, headless=False, live view=off; no saved cookies, context label local-569372b65d774e64998b1aa3956a3212)
+2026-10-28 11:38:14,561 INFO sourcing.vendors.generic: Login: dasi as purchasing@skylinkintl.com
+2026-10-28 11:38:14,561 INFO sourcing.vendors.generic: Login: opening https://store.dasi.com/login (from secret sourcing-vendor-dasi url)
+2026-10-28 11:38:25,426 INFO sourcing.vendors.generic: Login step 1 at https://store.dasi.com/login: username=input[autocomplete='username'] password=input[type='password']:not([aria-hidden='true']):not([tabindex='-1'])
+2026-10-28 11:38:25,475 INFO sourcing.vendors.generic: Login: submitting with button:has-text('Log in')
+2026-10-28 11:38:26,429 INFO sourcing.vendors.web: Login submit: submitted; waiting up to 90s for the page
+2026-10-28 11:38:27,546 INFO sourcing.vendors.web: Login submit: page ready after 2.1s (https://store.dasi.com/vforcesite/secur/frontdoor.jsp?allp=1&appkp=1&apv=1&cshc=o000006oMoHo000000wM6b&refURL=https%3A%2F%2Fstore.dasi.com%2Fvforcesite%2Fsecur%2Ffrontdoor.jsp&retURL=%2Fmyprofile&sid=00Dao000000wM6b%21AQEAQMxiXcFNexB7cja61mpqpMfsIl2Eg4nSlcXqTQg8zHB4z5FmyJMqtFGiDeTRmlRAq9mrE.wVUPt4TUp.DQaVb9XchZVM&untethered=)
+2026-10-28 11:38:32,438 INFO sourcing.vendors.generic: Login: rules can't tell what https://store.dasi.com/my-orders shows; LLM says unknown
+2026-10-28 11:38:32,438 WARNING sourcing.onboarding: Onboarding stopped: the login could not be completed (Couldn't tell whether the sign-in worked at https://store.dasi.com/my-orders)
+
+Onboarding dasi (GenericAdapter): NOT OK
+  login: not signed in
+  sign-in check on the next page: None
+  logout: None
+  STOPPED: the login could not be completed (Couldn't tell whether the sign-in worked at https://store.dasi.com/my-orders)
+  found by: password_input=generic list, submit_button=generic list, username_input=generic list
+  learned selectors (confirmed; --save saves these):
+  not saved (no sign-in or search confirmed them): password_input, username_input
+  LLM: 1 call(s) (1 to find elements), $0.0029; whole run 19.0s

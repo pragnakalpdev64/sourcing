@@ -1,0 +1,35 @@
+Onboarding aar with AarAdapter: login from secret sourcing-vendor-aar, browser local (window shown), LLM anthropic claude-opus-5-5 (effort medium), with saved selectors
+2FA: code form at https://moonlit-acquaint-enviable.ngrok-free.dev/hitl/code (the API must be running); the local browser has no Live View; wait 600s
+2026-11-04 11:00:44,600 INFO sourcing.browser: Vendor asks for browser stealth: only on Browserbase; ignored locally
+2026-11-04 11:00:45,667 INFO sourcing.browser: Opened local Chromium 156.0.8078.4 (session local-93cf0d2ac88c, headless=False, live view=off; no saved cookies, context label local-0c1a715db6024f69be4409152a9eb757)
+2026-11-04 11:00:45,667 INFO sourcing.vendors.generic: Login: AAR as purchasing@skylinkintl.com
+2026-11-04 11:00:45,667 INFO sourcing.vendors.aar: Login: opening https://shop.aarcorp.com (AAR landing page)
+2026-11-04 11:00:52,302 INFO sourcing.vendors.web: Consent popup [role='dialog'][aria-label*='cookie' i]: clicking 'Reject all (OneTrust)'
+2026-11-04 11:00:57,309 INFO sourcing.vendors.web: Consent popup answered; no reload
+2026-11-04 11:00:57,384 INFO sourcing.vendors.aar: Login: avatar clicked; following 'Sign In or Register'
+2026-11-04 11:00:57,435 INFO sourcing.vendors.web: AAR Sign In link: submitted; waiting up to 90s for the page
+2026-11-04 11:01:01,709 INFO sourcing.vendors.web: AAR Sign In link: page ready after 4.3s (https://shop.aarcorp.com/customer/account/login)
+2026-11-04 11:01:01,751 INFO sourcing.vendors.aar: AAR step 1 (sign in): the sign-in form at https://shop.aarcorp.com/customer/account/login
+2026-11-04 11:01:01,783 INFO sourcing.vendors.generic: Login step 1 at https://shop.aarcorp.com/customer/account/login: username=form#login-form input#email password=form#login-form input#pass
+2026-11-04 11:01:11,891 INFO sourcing.vendors.generic: Login: submitting with form#login-form button#send2
+2026-11-04 11:01:12,223 INFO sourcing.vendors.web: Login submit: submitted; waiting up to 90s for the page
+2026-11-04 11:01:18,708 INFO sourcing.vendors.web: Login submit: page ready after 6.8s (https://shop.aarcorp.com/)
+2026-11-04 11:01:26,308 INFO sourcing.vendors.generic: Login: rules can't tell what https://shop.aarcorp.com/ shows; LLM says unknown
+2026-11-04 11:01:26,308 WARNING sourcing.onboarding: Onboarding stopped: the login could not be completed (Couldn't tell whether the sign-in worked at https://shop.aarcorp.com/)
+2026-11-04 11:01:26,328 INFO sourcing.vendors.generic: Logout: no logout link on https://shop.aarcorp.com/
+2026-11-04 11:01:26,329 WARNING sourcing.hitl: [onboarding:aar] Logout attempt 1 of 2 not confirmed
+2026-11-04 11:01:26,345 INFO sourcing.vendors.generic: Logout: no logout link on https://shop.aarcorp.com/
+2026-11-04 11:01:26,345 WARNING sourcing.hitl: [onboarding:aar] Logout attempt 2 of 2 not confirmed
+2026-11-04 11:01:26,345 WARNING sourcing.hitl: [onboarding:aar] No Live View to ask a person to log out: Local browser started without live view (LOCAL_BROWSER_LIVE_VIEW=1 turns it on)
+
+Onboarding aar (AarAdapter): NOT OK
+  login: not signed in
+  sign-in check on the next page: None
+  logout: False
+  STOPPED: the login could not be completed (Couldn't tell whether the sign-in worked at https://shop.aarcorp.com/)
+  found by: password_input=saved, submit_button=saved, username_input=saved
+  learned selectors (confirmed; --save saves these):
+  not saved (no sign-in or search confirmed them): password_input, username_input
+  LLM: 2 call(s) (2 to find elements), $0.0129; whole run 41.9s
+
+Saved test_runs/19_2026-11-04__aar__login-only/local-headed-human-typing__onboarding.json

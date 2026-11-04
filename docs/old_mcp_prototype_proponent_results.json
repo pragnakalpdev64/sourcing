@@ -1,0 +1,82 @@
+{
+  "results": [
+    {
+      "row_index": 1,
+      "company_name": "Proponent",
+      "company_slug": "proponent",
+      "part_number": "BAC27DCC2753",
+      "website": "https://procart.proponent.com/Login.aspx",
+      "status": "not_found",
+      "price": null,
+      "currency": null,
+      "availability": null,
+      "lead_time": null,
+      "error": null
+    },
+    {
+      "row_index": 2,
+      "company_name": "Proponent",
+      "company_slug": "proponent",
+      "part_number": "BAC27DCC3467",
+      "website": "https://procart.proponent.com/Login.aspx",
+      "status": "not_found",
+      "price": null,
+      "currency": null,
+      "availability": null,
+      "lead_time": null,
+      "error": null
+    },
+    {
+      "row_index": 3,
+      "company_name": "Proponent",
+      "company_slug": "proponent",
+      "part_number": "233A5511-3",
+      "website": "https://procart.proponent.com/Login.aspx",
+      "status": "not_found",
+      "price": null,
+      "currency": null,
+      "availability": null,
+      "lead_time": null,
+      "error": null
+    },
+    {
+      "row_index": 4,
+      "company_name": "Proponent",
+      "company_slug": "proponent",
+      "part_number": "233A5511-11",
+      "website": "https://procart.proponent.com/Login.aspx",
+      "status": "not_found",
+      "price": null,
+      "currency": null,
+      "availability": null,
+      "lead_time": null,
+      "error": null
+    },
+    {
+      "row_index": 5,
+      "company_name": "Proponent",
+      "company_slug": "proponent",
+      "part_number": "BACB30MY8K7",
+      "website": "https://procart.proponent.com/Login.aspx",
+      "status": "not_found",
+      "price": null,
+      "currency": null,
+      "availability": null,
+      "lead_time": null,
+      "error": null
+    },
+    {
+      "row_index": 6,
+      "company_name": "Proponent",
+      "company_slug": "proponent",
+      "part_number": "HL10VAZ8-7",
+      "website": "https://procart.proponent.com/Login.aspx",
+      "status": "not_found",
+      "price": null,
+      "currency": null,
+      "availability": null,
+      "lead_time": null,
+      "error": null
+    }
+  ]
+}

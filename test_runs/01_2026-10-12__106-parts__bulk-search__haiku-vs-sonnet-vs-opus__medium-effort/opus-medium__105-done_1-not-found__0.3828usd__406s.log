@@ -1,0 +1,417 @@
+2026-10-12 18:01:42,515 INFO sourcing.job: Run local-20261012-123142-6dbe: mode=REAL, store=file (/home/pragnakalpl19/stagehand-browser-mcp/sourcing-proto/.local_store.json), llm=anthropic/claude-opus-5-5 (effort medium), chat=off, vendor secret overrides=sourcing-vendor-proponent=sourcing-vendor-test
+2026-10-12 18:01:42,664 WARNING sourcing.browser: Browserbase session recording is ON: recordings show the vendor pages, login screens included. Use for local debugging only.
+2026-10-12 18:01:43,399 INFO sourcing.job: Processing 1 registered sheet(s): test.xlsx
+2026-10-12 18:01:43,473 INFO sourcing.sheets: Opened local Excel file /home/pragnakalpl19/stagehand-browser-mcp/sourcing-proto/test.xlsx (tabs: Requests, Results)
+2026-10-12 18:01:43,480 INFO sourcing.sheets: Requests in /home/pragnakalpl19/stagehand-browser-mcp/sourcing-proto/test.xlsx: 114 data row(s), 106 to process (Status empty/NEW/RUNNING), skipped by Status: none, rows without a part number: 8
+2026-10-12 18:01:43,480 INFO sourcing.pipeline: Run local-20261012-123142-6dbe__test picked up 106 NEW rows
+/home/pragnakalpl19/stagehand-browser-mcp/sourcing-proto/.venv/lib/python3.10/site-packages/google/api_core/_python_version_support.py:223: FutureWarning: You are using a non-supported Python version (3.10.12). Google will not post any further updates to google.api_core supporting this Python version. Please upgrade to the latest Python version, or at least Python 3.11, and then update google.api_core.
+  warnings.warn(message, FutureWarning)
+/home/pragnakalpl19/stagehand-browser-mcp/sourcing-proto/.venv/lib/python3.10/site-packages/google/api_core/_python_version_support.py:223: FutureWarning: You are using a non-supported Python version (3.10.12). Google will not post any further updates to google.cloud.secretmanager_v1 supporting this Python version. Please upgrade to the latest Python version, or at least Python 3.11, and then update google.cloud.secretmanager_v1.
+  warnings.warn(message, FutureWarning)
+2026-10-12 18:01:45,589 INFO sourcing.pipeline: proponent / pragnakalp.dev16@gmail.com: using shared login (secret key sourcing-vendor-proponent, totp=no) for 106 row(s)
+2026-10-12 18:01:45,603 INFO sourcing.pipeline: [proponent___shared] Bulk search on: up to 25 parts per search
+2026-10-12 18:01:45,603 INFO sourcing.auth: [proponent___shared] Reusing saved Browserbase Context 94bace48-54af-441a-b89f-bb38a85f6f64 (state=NEEDS_LOGIN)
+2026-10-12 18:01:46,693 INFO httpx: HTTP Request: POST https://api.browserbase.com/v1/sessions "HTTP/1.1 201 Created"
+2026-10-12 18:01:49,265 INFO sourcing.browser: Opened Browserbase session 95064591-5cd7-46f0-9539-b2fe31088e0e (context=94bace48-54af-441a-b89f-bb38a85f6f64, keep_alive=False, recording=on)
+2026-10-12 18:01:49,265 INFO sourcing.browser: Session replay: https://www.browserbase.com/sessions/95064591-5cd7-46f0-9539-b2fe31088e0e
+2026-10-12 18:01:49,266 INFO sourcing.auth: [proponent___shared] Context 94bace48-54af-441a-b89f-bb38a85f6f64 has no active sign-in (signed out at the end of the run 2m ago); logging in
+2026-10-12 18:01:49,266 INFO sourcing.auth: [proponent___shared] Automatic login attempt 1/2
+2026-10-12 18:01:49,266 INFO sourcing.vendors.proponent: Login: Proponent as purchasing@skylinkintl.com
+2026-10-12 18:01:49,266 INFO sourcing.vendors.proponent: Login: opening https://procart.proponent.com/Login.aspx?_gl=1*1mc7rxi*_up*MQ..*_ga*MTUwMDM3MTExMC4xNzkxNTUxMzUy*_ga_H75PGQT6EM*czE3OTE1NTEzNTEkbzEkZzAkdDE3OTE1NTEzNTEkajYwJGwwJGgyNzIyNDA1OTY. (from login page found on an earlier run)
+2026-10-12 18:01:57,749 INFO sourcing.vendors.proponent: Login: form found at https://procart.proponent.com/Login.aspx?_gl=1*1mc7rxi*_up*MQ..*_ga*MTUwMDM3MTExMC4xNzkxNTUxMzUy*_ga_H75PGQT6EM*czE3OTE1NTEzNTEkbzEkZzAkdDE3OTE1NTEzNTEkajYwJGwwJGgyNzIyNDA1OTY. (username=#MainContent_txtUserName, password=#MainContent_txtPassword)
+2026-10-12 18:02:01,254 INFO sourcing.vendors.proponent: Login: submitting with #MainContent_btnLogin
+2026-10-12 18:02:03,567 INFO sourcing.vendors.proponent: Login submit: submitted; waiting up to 90s for the page
+2026-10-12 18:02:05,306 INFO sourcing.vendors.proponent: Login submit: page ready after 4.1s (https://procart.proponent.com/Home.aspx)
+2026-10-12 18:02:05,307 INFO sourcing.vendors.proponent: Login: after submit, at https://procart.proponent.com/Home.aspx
+2026-10-12 18:02:09,648 INFO sourcing.vendors.proponent: Login: form gone and no Login button -> looks signed in (https://procart.proponent.com/Home.aspx)
+2026-10-12 18:02:16,828 INFO sourcing.vendors.proponent: Auth probe https://procart.proponent.com/: no Login button -> signed in
+2026-10-12 18:02:16,843 INFO sourcing.auth: [proponent___shared] Login OK
+2026-10-12 18:02:16,843 INFO sourcing.pipeline: Rows 2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26: bulk searching Proponent for 25 parts
+2026-10-12 18:02:16,843 INFO sourcing.vendors.proponent: Bulk search: 25 parts in one search (https://procart.proponent.com/)
+2026-10-12 18:02:28,530 INFO sourcing.vendors.proponent: Bulk search: submitted; waiting up to 90s for the page
+2026-10-12 18:02:51,821 INFO sourcing.vendors.proponent: Bulk search: page ready after 25.8s (https://procart.proponent.com/PartSearchResults.aspx)
+2026-10-12 18:02:51,821 INFO sourcing.vendors.proponent: Bulk search: results at https://procart.proponent.com/PartSearchResults.aspx
+2026-10-12 18:02:58,365 INFO sourcing.vendors.proponent: Bulk search: setting results per page to 50 (33 results wanted)
+2026-10-12 18:03:11,773 INFO sourcing.vendors.proponent: Bulk search: results 1-33 of 33 on page 1
+2026-10-12 18:03:27,464 INFO httpx2: HTTP Request: POST https://api.anthropic.com/v1/messages?beta=true "HTTP/1.1 200 OK"
+2026-10-12 18:03:27,557 INFO sourcing.vendors.proponent: Bulk search: offers for 25 of 25 parts
+2026-10-12 18:03:27,557 INFO sourcing.pipeline: Bulk search: 25 found, 0 not found, 70.7s, LLM 1 call(s) $0.0834
+2026-10-12 18:03:27,557 INFO sourcing.pipeline: Row 2: found, 1 offer(s), 70.7s, LLM 0 call(s) $0.0000
+2026-10-12 18:03:27,557 INFO sourcing.pipeline: Row 2 offer: pn=F1101385-01 price=188.84 USD qty=12 cond=None lead=59 days
+2026-10-12 18:03:27,611 INFO sourcing.pipeline: Row 2 F1101385-01 (proponent): -> DONE
+2026-10-12 18:03:27,615 INFO sourcing.pipeline: Row 3: found, 1 offer(s), 70.7s, LLM 0 call(s) $0.0000
+2026-10-12 18:03:27,615 INFO sourcing.pipeline: Row 3 offer: pn=BACB30MY8K7 price=7.00 USD qty=2843 cond=None lead=574 days
+2026-10-12 18:03:27,669 INFO sourcing.pipeline: Row 3 BACB30MY8K7 (proponent): -> DONE
+2026-10-12 18:03:27,672 INFO sourcing.pipeline: Row 4: found, 1 offer(s), 70.7s, LLM 0 call(s) $0.0000
+2026-10-12 18:03:27,672 INFO sourcing.pipeline: Row 4 offer: pn=BACB30MY8K9 price=4.77 USD qty=8030 cond=None lead=574 days
+2026-10-12 18:03:27,726 INFO sourcing.pipeline: Row 4 BACB30MY8K9 (proponent): -> DONE
+2026-10-12 18:03:27,730 INFO sourcing.pipeline: Row 5: found, 1 offer(s), 70.7s, LLM 0 call(s) $0.0000
+2026-10-12 18:03:27,730 INFO sourcing.pipeline: Row 5 offer: pn=BACC30M10 price=13.25 USD qty=5349 cond=None lead=539 days
+2026-10-12 18:03:27,784 INFO sourcing.pipeline: Row 5 BACC30M10 (proponent): -> DONE
+2026-10-12 18:03:27,788 INFO sourcing.pipeline: Row 6: found, 1 offer(s), 70.7s, LLM 0 call(s) $0.0000
+2026-10-12 18:03:27,788 INFO sourcing.pipeline: Row 6 offer: pn=BACC30M8 price=7.42 USD qty=0 cond=None lead=539 days
+2026-10-12 18:03:27,842 INFO sourcing.pipeline: Row 6 BACC30M8 (proponent): -> DONE
+2026-10-12 18:03:27,846 INFO sourcing.pipeline: Row 7: found, 1 offer(s), 70.7s, LLM 0 call(s) $0.0000
+2026-10-12 18:03:27,846 INFO sourcing.pipeline: Row 7 offer: pn=NSA936830-22 price=59.95 USD qty=0 cond=None lead=159 days
+2026-10-12 18:03:27,899 INFO sourcing.pipeline: Row 7 NSA936830-22 (proponent): -> DONE
+2026-10-12 18:03:27,902 INFO sourcing.pipeline: Row 8: found, 1 offer(s), 70.7s, LLM 0 call(s) $0.0000
+2026-10-12 18:03:27,902 INFO sourcing.pipeline: Row 8 offer: pn=40467-10-144 price=709.50 USD qty=50 cond=None lead=186 days
+2026-10-12 18:03:27,956 INFO sourcing.pipeline: Row 8 40467-10-144 (proponent): -> DONE
+2026-10-12 18:03:27,961 INFO sourcing.pipeline: Row 9: found, 1 offer(s), 70.7s, LLM 0 call(s) $0.0000
+2026-10-12 18:03:27,961 INFO sourcing.pipeline: Row 9 offer: pn=4066-0014 price=2,774.16 USD qty=22 cond=None lead=None
+2026-10-12 18:03:28,015 INFO sourcing.pipeline: Row 9 4066-0014 (proponent): -> DONE
+2026-10-12 18:03:28,019 INFO sourcing.pipeline: Row 10: found, 1 offer(s), 70.7s, LLM 0 call(s) $0.0000
+2026-10-12 18:03:28,019 INFO sourcing.pipeline: Row 10 offer: pn=406Q80-1 price=387.04 USD qty=0 cond=None lead=None
+2026-10-12 18:03:28,073 INFO sourcing.pipeline: Row 10 406Q80-1 (proponent): -> DONE
+2026-10-12 18:03:28,077 INFO sourcing.pipeline: Row 11: found, 1 offer(s), 70.7s, LLM 0 call(s) $0.0000
+2026-10-12 18:03:28,077 INFO sourcing.pipeline: Row 11 offer: pn=4085-10 price=124.29 USD qty=60 cond=None lead=82 days
+2026-10-12 18:03:28,131 INFO sourcing.pipeline: Row 11 4085-10 (proponent): -> DONE
+2026-10-12 18:03:28,134 INFO sourcing.pipeline: Row 12: found, 1 offer(s), 70.7s, LLM 0 call(s) $0.0000
+2026-10-12 18:03:28,134 INFO sourcing.pipeline: Row 12 offer: pn=40P6050 price=392.84 USD qty=64 cond=None lead=53 days
+2026-10-12 18:03:28,188 INFO sourcing.pipeline: Row 12 40P6050 (proponent): -> DONE
+2026-10-12 18:03:28,192 INFO sourcing.pipeline: Row 13: found, 1 offer(s), 70.7s, LLM 0 call(s) $0.0000
+2026-10-12 18:03:28,192 INFO sourcing.pipeline: Row 13 offer: pn=41004509-1 price=20,118.83 USD qty=2 cond=None lead=363 days
+2026-10-12 18:03:28,247 INFO sourcing.pipeline: Row 13 41004509-1 (proponent): -> DONE
+2026-10-12 18:03:28,250 INFO sourcing.pipeline: Row 14: found, 1 offer(s), 70.7s, LLM 0 call(s) $0.0000
+2026-10-12 18:03:28,251 INFO sourcing.pipeline: Row 14 offer: pn=2758 price=8,460.95 USD qty=122 cond=None lead=379 days
+2026-10-12 18:03:28,306 INFO sourcing.pipeline: Row 14 410946 (proponent): -> DONE
+2026-10-12 18:03:28,311 INFO sourcing.pipeline: Row 15: found, 1 offer(s), 70.7s, LLM 0 call(s) $0.0000
+2026-10-12 18:03:28,311 INFO sourcing.pipeline: Row 15 offer: pn=411A2117-1 price=129.02 USD qty=663 cond=None lead=136 days
+2026-10-12 18:03:28,368 INFO sourcing.pipeline: Row 15 411A2117-1 (proponent): -> DONE
+2026-10-12 18:03:28,371 INFO sourcing.pipeline: Row 16: found, 1 offer(s), 70.7s, LLM 0 call(s) $0.0000
+2026-10-12 18:03:28,371 INFO sourcing.pipeline: Row 16 offer: pn=4132A-934-ZB price=86.95 USD qty=220 cond=None lead=238 days
+2026-10-12 18:03:28,426 INFO sourcing.pipeline: Row 16 4132A-934-ZB (proponent): -> DONE
+2026-10-12 18:03:28,430 INFO sourcing.pipeline: Row 17: found, 1 offer(s), 70.7s, LLM 0 call(s) $0.0000
+2026-10-12 18:03:28,430 INFO sourcing.pipeline: Row 17 offer: pn=41391400 price=18.88 USD qty=0 cond=None lead=70 days
+2026-10-12 18:03:28,488 INFO sourcing.pipeline: Row 17 41391400 (proponent): -> DONE
+2026-10-12 18:03:28,493 INFO sourcing.pipeline: Row 18: found, 1 offer(s), 70.7s, LLM 0 call(s) $0.0000
+2026-10-12 18:03:28,493 INFO sourcing.pipeline: Row 18 offer: pn=4140073-1 price=105.74 USD qty=41 cond=None lead=164 days
+2026-10-12 18:03:28,548 INFO sourcing.pipeline: Row 18 4140073-1 (proponent): -> DONE
+2026-10-12 18:03:28,551 INFO sourcing.pipeline: Row 19: found, 1 offer(s), 70.7s, LLM 0 call(s) $0.0000
+2026-10-12 18:03:28,551 INFO sourcing.pipeline: Row 19 offer: pn=415-654-1 price=3,006.37 USD qty=7 cond=None lead=151 days
+2026-10-12 18:03:28,609 INFO sourcing.pipeline: Row 19 415-654-1 (proponent): -> DONE
+2026-10-12 18:03:28,613 INFO sourcing.pipeline: Row 20: found, 1 offer(s), 70.7s, LLM 0 call(s) $0.0000
+2026-10-12 18:03:28,613 INFO sourcing.pipeline: Row 20 offer: pn=416F25-4 price=825.06 USD qty=8 cond=None lead=203 days
+2026-10-12 18:03:28,668 INFO sourcing.pipeline: Row 20 416F25-4 (proponent): -> DONE
+2026-10-12 18:03:28,672 INFO sourcing.pipeline: Row 21: found, 1 offer(s), 70.7s, LLM 0 call(s) $0.0000
+2026-10-12 18:03:28,672 INFO sourcing.pipeline: Row 21 offer: pn=418-09104 price=22,579.01 USD qty=0 cond=None lead=460 days
+2026-10-12 18:03:28,727 INFO sourcing.pipeline: Row 21 418-09104 (proponent): -> DONE
+2026-10-12 18:03:28,731 INFO sourcing.pipeline: Row 22: found, 1 offer(s), 70.7s, LLM 0 call(s) $0.0000
+2026-10-12 18:03:28,731 INFO sourcing.pipeline: Row 22 offer: pn=424B200-7 price=322.00 USD qty=1842 cond=None lead=153 days
+2026-10-12 18:03:28,789 INFO sourcing.pipeline: Row 22 424B200-7 (proponent): -> DONE
+2026-10-12 18:03:28,793 INFO sourcing.pipeline: Row 23: found, 1 offer(s), 70.7s, LLM 0 call(s) $0.0000
+2026-10-12 18:03:28,793 INFO sourcing.pipeline: Row 23 offer: pn=426EN10-8 price=3,014.37 USD qty=10 cond=None lead=182 days
+2026-10-12 18:03:28,852 INFO sourcing.pipeline: Row 23 426EN10-8 (proponent): -> DONE
+2026-10-12 18:03:28,856 INFO sourcing.pipeline: Row 24: found, 1 offer(s), 70.7s, LLM 0 call(s) $0.0000
+2026-10-12 18:03:28,856 INFO sourcing.pipeline: Row 24 offer: pn=42TC12-2 price=4,713.86 USD qty=3 cond=None lead=379 days
+2026-10-12 18:03:28,912 INFO sourcing.pipeline: Row 24 42TC12-2 (proponent): -> DONE
+2026-10-12 18:03:28,915 INFO sourcing.pipeline: Row 25: found, 1 offer(s), 70.7s, LLM 0 call(s) $0.0000
+2026-10-12 18:03:28,915 INFO sourcing.pipeline: Row 25 offer: pn=43-1329 price=100.61 USD qty=129 cond=None lead=104 days
+2026-10-12 18:03:28,974 INFO sourcing.pipeline: Row 25 43-1329 (proponent): -> DONE
+2026-10-12 18:03:28,977 INFO sourcing.pipeline: Row 26: found, 1 offer(s), 70.7s, LLM 0 call(s) $0.0000
+2026-10-12 18:03:28,977 INFO sourcing.pipeline: Row 26 offer: pn=432004031 price=843.57 USD qty=49 cond=None lead=74 days
+2026-10-12 18:03:29,033 INFO sourcing.pipeline: Row 26 432004031 (proponent): -> DONE
+2026-10-12 18:03:29,037 INFO sourcing.pipeline: Rows 27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51: bulk searching Proponent for 25 parts
+2026-10-12 18:03:29,037 INFO sourcing.vendors.proponent: Bulk search: 25 parts in one search (https://procart.proponent.com/)
+2026-10-12 18:03:41,130 INFO sourcing.vendors.proponent: Bulk search: submitted; waiting up to 90s for the page
+2026-10-12 18:03:53,304 INFO sourcing.vendors.proponent: Bulk search: page ready after 14.5s (https://procart.proponent.com/PartSearchResults.aspx)
+2026-10-12 18:03:53,304 INFO sourcing.vendors.proponent: Bulk search: results at https://procart.proponent.com/PartSearchResults.aspx
+2026-10-12 18:03:59,920 INFO sourcing.vendors.proponent: Bulk search: setting results per page to 50 (27 results wanted)
+2026-10-12 18:04:10,308 INFO sourcing.vendors.proponent: Bulk search: results 1-27 of 27 on page 1
+2026-10-12 18:04:29,521 INFO httpx2: HTTP Request: POST https://api.anthropic.com/v1/messages?beta=true "HTTP/1.1 200 OK"
+2026-10-12 18:04:29,526 INFO sourcing.vendors.proponent: Bulk search: offers for 24 of 25 parts
+2026-10-12 18:04:37,097 INFO sourcing.vendors.proponent: Auth probe https://procart.proponent.com/: no Login button -> signed in
+2026-10-12 18:04:37,097 INFO sourcing.pipeline: Bulk search: 24 found, 1 not found, 68.1s, LLM 1 call(s) $0.0863
+2026-10-12 18:04:37,097 INFO sourcing.pipeline: Row 27: found, 1 offer(s), 68.1s, LLM 0 call(s) $0.0000
+2026-10-12 18:04:37,097 INFO sourcing.pipeline: Row 27 offer: pn=44267KS-10SL-4SN price=375.52 USD qty=120 cond=None lead=239 days
+2026-10-12 18:04:37,243 INFO sourcing.pipeline: Row 27 44267KS-10SL-4SN (proponent): -> DONE
+2026-10-12 18:04:37,256 INFO sourcing.pipeline: Row 28: found, 1 offer(s), 68.1s, LLM 0 call(s) $0.0000
+2026-10-12 18:04:37,256 INFO sourcing.pipeline: Row 28 offer: pn=446667-1 price=None  qty=0 cond=None lead=217 days
+2026-10-12 18:04:37,395 INFO sourcing.pipeline: Row 28 446667-1 (proponent): -> DONE
+2026-10-12 18:04:37,404 INFO sourcing.pipeline: Row 29: found, 1 offer(s), 68.1s, LLM 0 call(s) $0.0000
+2026-10-12 18:04:37,404 INFO sourcing.pipeline: Row 29 offer: pn=453A1810-10 price=416.90 USD qty=195 cond=None lead=114 days
+2026-10-12 18:04:37,538 INFO sourcing.pipeline: Row 29 453A1810-10 (proponent): -> DONE
+2026-10-12 18:04:37,544 INFO sourcing.pipeline: Row 30: found, 1 offer(s), 68.1s, LLM 0 call(s) $0.0000
+2026-10-12 18:04:37,544 INFO sourcing.pipeline: Row 30 offer: pn=465-000092-2ADSTC price=3,462.20 USD qty=0 cond=None lead=59 days
+2026-10-12 18:04:37,680 INFO sourcing.pipeline: Row 30 465-000092-2ADSTC (proponent): -> DONE
+2026-10-12 18:04:37,687 INFO sourcing.pipeline: Row 31: found, 1 offer(s), 68.1s, LLM 0 call(s) $0.0000
+2026-10-12 18:04:37,688 INFO sourcing.pipeline: Row 31 offer: pn=4900397-7 price=1,170.70 USD qty=2 cond=None lead=62 days
+2026-10-12 18:04:37,828 INFO sourcing.pipeline: Row 31 4900397-7 (proponent): -> DONE
+2026-10-12 18:04:37,838 INFO sourcing.pipeline: Row 32: found, 1 offer(s), 68.1s, LLM 0 call(s) $0.0000
+2026-10-12 18:04:37,839 INFO sourcing.pipeline: Row 32 offer: pn=4951114 price=1,785.44 USD qty=30 cond=None lead=74 days
+2026-10-12 18:04:37,983 INFO sourcing.pipeline: Row 32 4951114 (proponent): -> DONE
+2026-10-12 18:04:37,993 INFO sourcing.pipeline: Row 33: found, 1 offer(s), 68.1s, LLM 0 call(s) $0.0000
+2026-10-12 18:04:37,993 INFO sourcing.pipeline: Row 33 offer: pn=4E4140-1 price=15,993.51 USD qty=1 cond=None lead=None
+2026-10-12 18:04:38,135 INFO sourcing.pipeline: Row 33 4E4140-1 (proponent): -> DONE
+2026-10-12 18:04:38,144 INFO sourcing.pipeline: Row 34: found, 1 offer(s), 68.1s, LLM 0 call(s) $0.0000
+2026-10-12 18:04:38,145 INFO sourcing.pipeline: Row 34 offer: pn=4PB717-T2 price=538.39 USD qty=23 cond=None lead=266 days
+2026-10-12 18:04:38,289 INFO sourcing.pipeline: Row 34 4PB717-T2 (proponent): -> DONE
+2026-10-12 18:04:38,295 INFO sourcing.pipeline: Row 35: found, 1 offer(s), 68.1s, LLM 0 call(s) $0.0000
+2026-10-12 18:04:38,295 INFO sourcing.pipeline: Row 35 offer: pn=5-86557-203 price=114.80 USD qty=20 cond=None lead=18 days
+2026-10-12 18:04:38,421 INFO sourcing.pipeline: Row 35 5-86557-203 (proponent): -> DONE
+2026-10-12 18:04:38,428 INFO sourcing.pipeline: Row 36: found, 1 offer(s), 68.1s, LLM 0 call(s) $0.0000
+2026-10-12 18:04:38,428 INFO sourcing.pipeline: Row 36 offer: pn=503274-415 price=1,876.27 USD qty=2 cond=None lead=98 days
+2026-10-12 18:04:38,556 INFO sourcing.pipeline: Row 36 503274-415 (proponent): -> DONE
+2026-10-12 18:04:38,564 INFO sourcing.pipeline: Row 38: found, 1 offer(s), 68.1s, LLM 0 call(s) $0.0000
+2026-10-12 18:04:38,564 INFO sourcing.pipeline: Row 38 offer: pn=52000735-1 price=6,994.29 USD qty=0 cond=None lead=230 days
+2026-10-12 18:04:38,682 INFO sourcing.pipeline: Row 38 52000735-1 (proponent): -> DONE
+2026-10-12 18:04:38,690 INFO sourcing.pipeline: Row 39: found, 1 offer(s), 68.1s, LLM 0 call(s) $0.0000
+2026-10-12 18:04:38,690 INFO sourcing.pipeline: Row 39 offer: pn=52132 price=2,215.68 USD qty=0 cond=None lead=64 days
+2026-10-12 18:04:38,833 INFO sourcing.pipeline: Row 39 52132 (proponent): -> DONE
+2026-10-12 18:04:38,844 INFO sourcing.pipeline: Row 40: found, 1 offer(s), 68.1s, LLM 0 call(s) $0.0000
+2026-10-12 18:04:38,844 INFO sourcing.pipeline: Row 40 offer: pn=55-0331-3 price=83.96 USD qty=59 cond=None lead=70 days
+2026-10-12 18:04:39,004 INFO sourcing.pipeline: Row 40 55-0331-3 (proponent): -> DONE
+2026-10-12 18:04:39,013 INFO sourcing.pipeline: Row 41: found, 1 offer(s), 68.1s, LLM 0 call(s) $0.0000
+2026-10-12 18:04:39,013 INFO sourcing.pipeline: Row 41 offer: pn=561-009-9006 price=475.73 USD qty=351 cond=None lead=196 days
+2026-10-12 18:04:39,158 INFO sourcing.pipeline: Row 41 561-009-9006 (proponent): -> DONE
+2026-10-12 18:04:39,168 INFO sourcing.pipeline: Row 42: found, 2 offer(s), 68.1s, LLM 0 call(s) $0.0000
+2026-10-12 18:04:39,168 INFO sourcing.pipeline: Row 42 offer: pn=ACHC-3-13 price=406.07 USD qty=379 cond=None lead=249 days
+2026-10-12 18:04:39,168 INFO sourcing.pipeline: Row 42 offer: pn=ACHC3-13 price=8,004.22 USD qty=10 cond=None lead=224 days
+2026-10-12 18:04:39,353 INFO sourcing.pipeline: Row 42 ACHC-3-13 (proponent): -> DONE
+2026-10-12 18:04:39,364 INFO sourcing.pipeline: Row 43: found, 1 offer(s), 68.1s, LLM 0 call(s) $0.0000
+2026-10-12 18:04:39,365 INFO sourcing.pipeline: Row 43 offer: pn=ACO44521 price=102.52 USD qty=64 cond=None lead=123 days
+2026-10-12 18:04:39,509 INFO sourcing.pipeline: Row 43 ACO44521 (proponent): -> DONE
+2026-10-12 18:04:39,517 INFO sourcing.pipeline: Row 44: found, 1 offer(s), 68.1s, LLM 0 call(s) $0.0000
+2026-10-12 18:04:39,517 INFO sourcing.pipeline: Row 44 offer: pn=ACO47189 price=11,514.61 USD qty=48 cond=None lead=113 days
+2026-10-12 18:04:39,656 INFO sourcing.pipeline: Row 44 ACO47189 (proponent): -> DONE
+2026-10-12 18:04:39,662 INFO sourcing.pipeline: Row 45: found, 1 offer(s), 68.1s, LLM 0 call(s) $0.0000
+2026-10-12 18:04:39,663 INFO sourcing.pipeline: Row 45 offer: pn=ACR-6-33/B price=41.35 USD qty=2813 cond=None lead=239 days
+2026-10-12 18:04:39,782 INFO sourcing.pipeline: Row 45 ACR-6-33/B (proponent): -> DONE
+2026-10-12 18:04:39,790 INFO sourcing.pipeline: Row 46: found, 1 offer(s), 68.1s, LLM 0 call(s) $0.0000
+2026-10-12 18:04:39,790 INFO sourcing.pipeline: Row 46 offer: pn=AEC-145-69685-005 price=89.23 USD qty=12 cond=None lead=70 days
+2026-10-12 18:04:39,906 INFO sourcing.pipeline: Row 46 AEC-145-69685-005 (proponent): -> DONE
+2026-10-12 18:04:39,912 INFO sourcing.pipeline: Row 47: found, 1 offer(s), 68.1s, LLM 0 call(s) $0.0000
+2026-10-12 18:04:39,913 INFO sourcing.pipeline: Row 47 offer: pn=AF400 price=176.84 USD qty=301 cond=None lead=59 days
+2026-10-12 18:04:40,027 INFO sourcing.pipeline: Row 47 AF400 (proponent): -> DONE
+2026-10-12 18:04:40,031 INFO sourcing.pipeline: Row 48: found, 1 offer(s), 68.1s, LLM 0 call(s) $0.0000
+2026-10-12 18:04:40,032 INFO sourcing.pipeline: Row 48 offer: pn=AG282000-03 price=128.62 USD qty=24 cond=None lead=86 days
+2026-10-12 18:04:40,134 INFO sourcing.pipeline: Row 48 AG282000-03 (proponent): -> DONE
+2026-10-12 18:04:40,142 INFO sourcing.pipeline: Row 49: found, 1 offer(s), 68.1s, LLM 0 call(s) $0.0000
+2026-10-12 18:04:40,142 INFO sourcing.pipeline: Row 49 offer: pn=AIS16P price=6.34 USD qty=1842 cond=None lead=276 days
+2026-10-12 18:04:40,251 INFO sourcing.pipeline: Row 49 AIS16P (proponent): -> DONE
+2026-10-12 18:04:40,259 INFO sourcing.pipeline: Row 50: found, 1 offer(s), 68.1s, LLM 0 call(s) $0.0000
+2026-10-12 18:04:40,259 INFO sourcing.pipeline: Row 50 offer: pn=AMC02RA03W price=47.51 USD qty=0 cond=None lead=224 days
+2026-10-12 18:04:40,372 INFO sourcing.pipeline: Row 50 AMC02RA03W (proponent): -> DONE
+2026-10-12 18:04:40,377 INFO sourcing.pipeline: Row 51: found, 1 offer(s), 68.1s, LLM 0 call(s) $0.0000
+2026-10-12 18:04:40,377 INFO sourcing.pipeline: Row 51 offer: pn=AN901-4C price=1.02 USD qty=12263 cond=None lead=210 days
+2026-10-12 18:04:40,476 INFO sourcing.pipeline: Row 51 AN901-4C (proponent): -> DONE
+2026-10-12 18:04:40,481 INFO sourcing.pipeline: Rows 52,53,54,55,56,57,58,59,60,61,62,63,64,65,66,67,68,69,70,71,72,73,74,75,76: bulk searching Proponent for 25 parts
+2026-10-12 18:04:40,482 INFO sourcing.vendors.proponent: Bulk search: 25 parts in one search (https://procart.proponent.com/)
+2026-10-12 18:04:52,486 INFO sourcing.vendors.proponent: Bulk search: submitted; waiting up to 90s for the page
+2026-10-12 18:05:07,508 INFO sourcing.vendors.proponent: Bulk search: page ready after 17.4s (https://procart.proponent.com/PartSearchResults.aspx)
+2026-10-12 18:05:07,508 INFO sourcing.vendors.proponent: Bulk search: results at https://procart.proponent.com/PartSearchResults.aspx
+2026-10-12 18:05:13,906 INFO sourcing.vendors.proponent: Bulk search: setting results per page to 50 (34 results wanted)
+2026-10-12 18:05:37,361 INFO sourcing.vendors.proponent: Bulk search: results 1-34 of 34 on page 1
+2026-10-12 18:05:55,179 INFO httpx2: HTTP Request: POST https://api.anthropic.com/v1/messages?beta=true "HTTP/1.1 200 OK"
+2026-10-12 18:05:55,183 INFO sourcing.vendors.proponent: Bulk search: offers for 25 of 25 parts
+2026-10-12 18:05:55,183 INFO sourcing.pipeline: Bulk search: 25 found, 0 not found, 74.7s, LLM 1 call(s) $0.0866
+2026-10-12 18:05:55,183 INFO sourcing.pipeline: Row 52: found, 1 offer(s), 74.7s, LLM 0 call(s) $0.0000
+2026-10-12 18:05:55,183 INFO sourcing.pipeline: Row 52 offer: pn=AQC-5729 price=82.34 USD qty=21 cond=None lead=104 days
+2026-10-12 18:05:55,260 INFO sourcing.pipeline: Row 52 AQC-5729 (proponent): -> DONE
+2026-10-12 18:05:55,266 INFO sourcing.pipeline: Row 53: found, 1 offer(s), 74.7s, LLM 0 call(s) $0.0000
+2026-10-12 18:05:55,266 INFO sourcing.pipeline: Row 53 offer: pn=AS1097-08 price=11.49 USD qty=5776 cond=None lead=141 days
+2026-10-12 18:05:55,337 INFO sourcing.pipeline: Row 53 AS1097-08 (proponent): -> DONE
+2026-10-12 18:05:55,341 INFO sourcing.pipeline: Row 54: found, 1 offer(s), 74.7s, LLM 0 call(s) $0.0000
+2026-10-12 18:05:55,341 INFO sourcing.pipeline: Row 54 offer: pn=AS115-06F0324 price=160.77 USD qty=6 cond=None lead=70 days
+2026-10-12 18:05:55,417 INFO sourcing.pipeline: Row 54 AS115-06F0324 (proponent): -> DONE
+2026-10-12 18:05:55,421 INFO sourcing.pipeline: Row 55: found, 1 offer(s), 74.7s, LLM 0 call(s) $0.0000
+2026-10-12 18:05:55,421 INFO sourcing.pipeline: Row 55 offer: pn=AS137-06S2-0264L price=724.54 USD qty=17 cond=None lead=546 days
+2026-10-12 18:05:55,488 INFO sourcing.pipeline: Row 55 AS137-06S2-0264L (proponent): -> DONE
+2026-10-12 18:05:55,492 INFO sourcing.pipeline: Row 56: found, 1 offer(s), 74.7s, LLM 0 call(s) $0.0000
+2026-10-12 18:05:55,492 INFO sourcing.pipeline: Row 56 offer: pn=AS15001-1P price=6.33 USD qty=151683 cond=None lead=518 days
+2026-10-12 18:05:55,559 INFO sourcing.pipeline: Row 56 AS15001-1P (proponent): -> DONE
+2026-10-12 18:05:55,565 INFO sourcing.pipeline: Row 57: found, 1 offer(s), 74.7s, LLM 0 call(s) $0.0000
+2026-10-12 18:05:55,565 INFO sourcing.pipeline: Row 57 offer: pn=AS1634A20H0144 price=1,756.15 USD qty=Out of Stock cond=None lead=324 days
+2026-10-12 18:05:55,634 INFO sourcing.pipeline: Row 57 AS1634A20H0144 (proponent): -> DONE
+2026-10-12 18:05:55,638 INFO sourcing.pipeline: Row 58: found, 1 offer(s), 74.7s, LLM 0 call(s) $0.0000
+2026-10-12 18:05:55,638 INFO sourcing.pipeline: Row 58 offer: pn=AS1895/1-200 price=378.02 USD qty=Out of Stock cond=None lead=294 days
+2026-10-12 18:05:55,707 INFO sourcing.pipeline: Row 58 AS1895/1-200 (proponent): -> DONE
+2026-10-12 18:05:55,712 INFO sourcing.pipeline: Row 59: found, 1 offer(s), 74.7s, LLM 0 call(s) $0.0000
+2026-10-12 18:05:55,712 INFO sourcing.pipeline: Row 59 offer: pn=AS1895/7-300 price=23.70 USD qty=Out of Stock cond=None lead=370 days
+2026-10-12 18:05:55,785 INFO sourcing.pipeline: Row 59 AS1895/7-300 (proponent): -> DONE
+2026-10-12 18:05:55,789 INFO sourcing.pipeline: Row 60: found, 1 offer(s), 74.7s, LLM 0 call(s) $0.0000
+2026-10-12 18:05:55,789 INFO sourcing.pipeline: Row 60 offer: pn=AS3069-09 price=None  qty=Out of Stock cond=None lead=154 days
+2026-10-12 18:05:55,862 INFO sourcing.pipeline: Row 60 AS3069-09 (proponent): -> DONE
+2026-10-12 18:05:55,866 INFO sourcing.pipeline: Row 61: found, 1 offer(s), 74.7s, LLM 0 call(s) $0.0000
+2026-10-12 18:05:55,866 INFO sourcing.pipeline: Row 61 offer: pn=AS3237-12 price=7.20 USD qty=147402 cond=None lead=514 days
+2026-10-12 18:05:55,963 INFO sourcing.pipeline: Row 61 AS3237-12 (proponent): -> DONE
+2026-10-12 18:05:55,971 INFO sourcing.pipeline: Row 62: found, 1 offer(s), 74.7s, LLM 0 call(s) $0.0000
+2026-10-12 18:05:55,971 INFO sourcing.pipeline: Row 62 offer: pn=AS3578-226 price=13.26 USD qty=41645 cond=None lead=72 days
+2026-10-12 18:05:56,042 INFO sourcing.pipeline: Row 62 AS3578-226 (proponent): -> DONE
+2026-10-12 18:05:56,048 INFO sourcing.pipeline: Row 63: found, 1 offer(s), 74.7s, LLM 0 call(s) $0.0000
+2026-10-12 18:05:56,049 INFO sourcing.pipeline: Row 63 offer: pn=AS3582-210 price=9.11 USD qty=10070 cond=None lead=85 days
+2026-10-12 18:05:56,119 INFO sourcing.pipeline: Row 63 AS3582-210 (proponent): -> DONE
+2026-10-12 18:05:56,123 INFO sourcing.pipeline: Row 64: found, 1 offer(s), 74.7s, LLM 0 call(s) $0.0000
+2026-10-12 18:05:56,123 INFO sourcing.pipeline: Row 64 offer: pn=AS43013-118 price=5.26 USD qty=32067 cond=None lead=112 days
+2026-10-12 18:05:56,198 INFO sourcing.pipeline: Row 64 AS43013-118 (proponent): -> DONE
+2026-10-12 18:05:56,203 INFO sourcing.pipeline: Row 65: found, 1 offer(s), 74.7s, LLM 0 call(s) $0.0000
+2026-10-12 18:05:56,203 INFO sourcing.pipeline: Row 65 offer: pn=AS5860P10-112 price=4.81 USD qty=2055 cond=None lead=126 days
+2026-10-12 18:05:56,274 INFO sourcing.pipeline: Row 65 AS5860P10-112 (proponent): -> DONE
+2026-10-12 18:05:56,278 INFO sourcing.pipeline: Row 66: found, 1 offer(s), 74.7s, LLM 0 call(s) $0.0000
+2026-10-12 18:05:56,278 INFO sourcing.pipeline: Row 66 offer: pn=ASNA2151-09 price=32.04 USD qty=1199 cond=None lead=112 days
+2026-10-12 18:05:56,348 INFO sourcing.pipeline: Row 66 ASNA2151-09 (proponent): -> DONE
+2026-10-12 18:05:56,351 INFO sourcing.pipeline: Row 67: found, 1 offer(s), 74.7s, LLM 0 call(s) $0.0000
+2026-10-12 18:05:56,351 INFO sourcing.pipeline: Row 67 offer: pn=ASNA2373JA10 price=12.40 USD qty=Out of Stock cond=None lead=169 days
+2026-10-12 18:05:56,422 INFO sourcing.pipeline: Row 67 ASNA2373JA10 (proponent): -> DONE
+2026-10-12 18:05:56,426 INFO sourcing.pipeline: Row 68: found, 1 offer(s), 74.7s, LLM 0 call(s) $0.0000
+2026-10-12 18:05:56,426 INFO sourcing.pipeline: Row 68 offer: pn=B14056-910 price=7.91 USD qty=603 cond=None lead=88 days
+2026-10-12 18:05:56,503 INFO sourcing.pipeline: Row 68 B14056-910 (proponent): -> DONE
+2026-10-12 18:05:56,507 INFO sourcing.pipeline: Row 69: found, 1 offer(s), 74.7s, LLM 0 call(s) $0.0000
+2026-10-12 18:05:56,507 INFO sourcing.pipeline: Row 69 offer: pn=B215-06 price=97.91 USD qty=67 cond=None lead=104 days
+2026-10-12 18:05:56,577 INFO sourcing.pipeline: Row 69 B215-06 (proponent): -> DONE
+2026-10-12 18:05:56,581 INFO sourcing.pipeline: Row 70: found, 1 offer(s), 74.7s, LLM 0 call(s) $0.0000
+2026-10-12 18:05:56,581 INFO sourcing.pipeline: Row 70 offer: pn=624018-1 price=None  qty=Out of Stock cond=None lead=109 days
+2026-10-12 18:05:56,656 INFO sourcing.pipeline: Row 70 B7210 (proponent): -> DONE
+2026-10-12 18:05:56,659 INFO sourcing.pipeline: Row 71: found, 2 offer(s), 74.7s, LLM 0 call(s) $0.0000
+2026-10-12 18:05:56,660 INFO sourcing.pipeline: Row 71 offer: pn=BA-4120-50LD price=44.01 USD qty=2082 cond=None lead=140 days
+2026-10-12 18:05:56,660 INFO sourcing.pipeline: Row 71 offer: pn=BA4120-50LD price=41.81 USD qty=2082 cond=None lead=None
+2026-10-12 18:05:56,729 INFO sourcing.pipeline: Row 71 BA-4120-50LD (proponent): -> DONE
+2026-10-12 18:05:56,733 INFO sourcing.pipeline: Row 72: found, 1 offer(s), 74.7s, LLM 0 call(s) $0.0000
+2026-10-12 18:05:56,733 INFO sourcing.pipeline: Row 72 offer: pn=BAC1521-715 price=3.96 USD qty=1386 cond=None lead=152 days
+2026-10-12 18:05:56,810 INFO sourcing.pipeline: Row 72 BAC1521-715 (proponent): -> DONE
+2026-10-12 18:05:56,815 INFO sourcing.pipeline: Row 73: found, 1 offer(s), 74.7s, LLM 0 call(s) $0.0000
+2026-10-12 18:05:56,815 INFO sourcing.pipeline: Row 73 offer: pn=BAC1522-180-706 price=51.12 USD qty=760 cond=None lead=112 days
+2026-10-12 18:05:56,894 INFO sourcing.pipeline: Row 73 BAC1522-180-706 (proponent): -> DONE
+2026-10-12 18:05:56,898 INFO sourcing.pipeline: Row 74: found, 1 offer(s), 74.7s, LLM 0 call(s) $0.0000
+2026-10-12 18:05:56,898 INFO sourcing.pipeline: Row 74 offer: pn=BAC1530-10 price=22.25 USD qty=2440 cond=None lead=175 days
+2026-10-12 18:05:56,969 INFO sourcing.pipeline: Row 74 BAC1530-10 (proponent): -> DONE
+2026-10-12 18:05:56,972 INFO sourcing.pipeline: Row 75: found, 1 offer(s), 74.7s, LLM 0 call(s) $0.0000
+2026-10-12 18:05:56,972 INFO sourcing.pipeline: Row 75 offer: pn=561-515-0001 price=122.43 USD qty=452 cond=None lead=75 days
+2026-10-12 18:05:57,050 INFO sourcing.pipeline: Row 75 561-515-0001 (proponent): -> DONE
+2026-10-12 18:05:57,054 INFO sourcing.pipeline: Row 76: found, 1 offer(s), 74.7s, LLM 0 call(s) $0.0000
+2026-10-12 18:05:57,054 INFO sourcing.pipeline: Row 76 offer: pn=56B3A11 price=2,711.59 USD qty=10 cond=None lead=209 days
+2026-10-12 18:05:57,123 INFO sourcing.pipeline: Row 76 56B3A11 (proponent): -> DONE
+2026-10-12 18:05:57,128 INFO sourcing.pipeline: Rows 77,78,79,80,81,82,83,84,85,86,87,88,89,90,91,92,93,94,95,96,97,98,99,100,101: bulk searching Proponent for 25 parts
+2026-10-12 18:05:57,128 INFO sourcing.vendors.proponent: Bulk search: 25 parts in one search (https://procart.proponent.com/)
+2026-10-12 18:06:08,786 INFO sourcing.vendors.proponent: Bulk search: submitted; waiting up to 90s for the page
+2026-10-12 18:06:26,360 INFO sourcing.vendors.proponent: Bulk search: page ready after 20.0s (https://procart.proponent.com/PartSearchResults.aspx)
+2026-10-12 18:06:26,360 INFO sourcing.vendors.proponent: Bulk search: results at https://procart.proponent.com/PartSearchResults.aspx
+2026-10-12 18:06:32,501 INFO sourcing.vendors.proponent: Bulk search: setting results per page to 50 (39 results wanted)
+2026-10-12 18:06:47,739 INFO sourcing.vendors.proponent: Bulk search: results 1-39 of 39 on page 1
+2026-10-12 18:07:06,294 INFO httpx2: HTTP Request: POST https://api.anthropic.com/v1/messages?beta=true "HTTP/1.1 200 OK"
+2026-10-12 18:07:06,296 INFO sourcing.vendors.proponent: Bulk search: offers for 25 of 25 parts
+2026-10-12 18:07:06,296 INFO sourcing.pipeline: Bulk search: 25 found, 0 not found, 69.2s, LLM 1 call(s) $0.0841
+2026-10-12 18:07:06,296 INFO sourcing.pipeline: Row 77: found, 1 offer(s), 69.2s, LLM 0 call(s) $0.0000
+2026-10-12 18:07:06,296 INFO sourcing.pipeline: Row 77 offer: pn=57230-630-2 price=162.33 USD qty=49 cond=None lead=137 days if out of stock
+2026-10-12 18:07:06,371 INFO sourcing.pipeline: Row 77 57230-630-2 (proponent): -> DONE
+2026-10-12 18:07:06,375 INFO sourcing.pipeline: Row 78: found, 1 offer(s), 69.2s, LLM 0 call(s) $0.0000
+2026-10-12 18:07:06,375 INFO sourcing.pipeline: Row 78 offer: pn=57739-1 price=447.13 USD qty=23 cond=None lead=144 days if out of stock
+2026-10-12 18:07:06,454 INFO sourcing.pipeline: Row 78 57739-1 (proponent): -> DONE
+2026-10-12 18:07:06,458 INFO sourcing.pipeline: Row 79: found, 1 offer(s), 69.2s, LLM 0 call(s) $0.0000
+2026-10-12 18:07:06,458 INFO sourcing.pipeline: Row 79 offer: pn=583-522-9001 price=13.09 USD qty=3350 cond=None lead=186 days if out of stock
+2026-10-12 18:07:06,533 INFO sourcing.pipeline: Row 79 583-522-9001 (proponent): -> DONE
+2026-10-12 18:07:06,537 INFO sourcing.pipeline: Row 80: found, 1 offer(s), 69.2s, LLM 0 call(s) $0.0000
+2026-10-12 18:07:06,537 INFO sourcing.pipeline: Row 80 offer: pn=590-53AD33-104 price=170.28 USD qty=65 cond=None lead=52 days if out of stock
+2026-10-12 18:07:06,611 INFO sourcing.pipeline: Row 80 590-53AD33-104 (proponent): -> DONE
+2026-10-12 18:07:06,615 INFO sourcing.pipeline: Row 81: found, 1 offer(s), 69.2s, LLM 0 call(s) $0.0000
+2026-10-12 18:07:06,615 INFO sourcing.pipeline: Row 81 offer: pn=59000S-19-2SN-H63 price=394.28 USD qty=101 cond=None lead=239 days if out of stock
+2026-10-12 18:07:06,692 INFO sourcing.pipeline: Row 81 59000S-19-2SN-H63 (proponent): -> DONE
+2026-10-12 18:07:06,695 INFO sourcing.pipeline: Row 82: found, 1 offer(s), 69.2s, LLM 0 call(s) $0.0000
+2026-10-12 18:07:06,695 INFO sourcing.pipeline: Row 82 offer: pn=5904761 price=677.73 USD qty=9 cond=None lead=63 days if out of stock
+2026-10-12 18:07:06,770 INFO sourcing.pipeline: Row 82 5904761 (proponent): -> DONE
+2026-10-12 18:07:06,774 INFO sourcing.pipeline: Row 83: found, 1 offer(s), 69.2s, LLM 0 call(s) $0.0000
+2026-10-12 18:07:06,774 INFO sourcing.pipeline: Row 83 offer: pn=5934001-217 price=2,719.21 USD qty=0 cond=None lead=Out of stock; next due in Nov 20, 2026 (65); approx. 129 days
+2026-10-12 18:07:06,850 INFO sourcing.pipeline: Row 83 5934001-217 (proponent): -> DONE
+2026-10-12 18:07:06,854 INFO sourcing.pipeline: Row 84: found, 1 offer(s), 69.2s, LLM 0 call(s) $0.0000
+2026-10-12 18:07:06,854 INFO sourcing.pipeline: Row 84 offer: pn=5E2675-1 price=14,338.26 USD qty=2 cond=None lead=283 days if out of stock
+2026-10-12 18:07:06,937 INFO sourcing.pipeline: Row 84 5E2675-1 (proponent): -> DONE
+2026-10-12 18:07:06,941 INFO sourcing.pipeline: Row 85: found, 1 offer(s), 69.2s, LLM 0 call(s) $0.0000
+2026-10-12 18:07:06,941 INFO sourcing.pipeline: Row 85 offer: pn=5L0036400104000 price=52.16 USD qty=46 cond=None lead=104 days if out of stock
+2026-10-12 18:07:07,016 INFO sourcing.pipeline: Row 85 5L0036400104000 (proponent): -> DONE
+2026-10-12 18:07:07,020 INFO sourcing.pipeline: Row 86: found, 1 offer(s), 69.2s, LLM 0 call(s) $0.0000
+2026-10-12 18:07:07,021 INFO sourcing.pipeline: Row 86 offer: pn=600-0115-1/4 price=1.47 USD qty=12848 cond=None lead=210 days if out of stock
+2026-10-12 18:07:07,095 INFO sourcing.pipeline: Row 86 600-0115-1/4 (proponent): -> DONE
+2026-10-12 18:07:07,099 INFO sourcing.pipeline: Row 87: found, 1 offer(s), 69.2s, LLM 0 call(s) $0.0000
+2026-10-12 18:07:07,099 INFO sourcing.pipeline: Row 87 offer: pn=600-052 price=21.77 USD qty=5690 cond=None lead=19 days if out of stock
+2026-10-12 18:07:07,183 INFO sourcing.pipeline: Row 87 600-052 (proponent): -> DONE
+2026-10-12 18:07:07,188 INFO sourcing.pipeline: Row 88: found, 1 offer(s), 69.2s, LLM 0 call(s) $0.0000
+2026-10-12 18:07:07,188 INFO sourcing.pipeline: Row 88 offer: pn=6001-99-0538 price=522.48 USD qty=22 cond=None lead=227 days if out of stock
+2026-10-12 18:07:07,266 INFO sourcing.pipeline: Row 88 6001-99-0538 (proponent): -> DONE
+2026-10-12 18:07:07,270 INFO sourcing.pipeline: Row 89: found, 1 offer(s), 69.2s, LLM 0 call(s) $0.0000
+2026-10-12 18:07:07,270 INFO sourcing.pipeline: Row 89 offer: pn=601NB4E-1 price=385.64 USD qty=41 cond=None lead=98 days if out of stock
+2026-10-12 18:07:07,344 INFO sourcing.pipeline: Row 89 601NB4E-1 (proponent): -> DONE
+2026-10-12 18:07:07,348 INFO sourcing.pipeline: Row 90: found, 1 offer(s), 69.2s, LLM 0 call(s) $0.0000
+2026-10-12 18:07:07,349 INFO sourcing.pipeline: Row 90 offer: pn=606338-2 price=2,429.08 USD qty=876 cond=None lead=74 days if out of stock
+2026-10-12 18:07:07,424 INFO sourcing.pipeline: Row 90 606338-2 (proponent): -> DONE
+2026-10-12 18:07:07,428 INFO sourcing.pipeline: Row 91: found, 1 offer(s), 69.2s, LLM 0 call(s) $0.0000
+2026-10-12 18:07:07,428 INFO sourcing.pipeline: Row 91 offer: pn=60B40018-32 price=1,757.47 USD qty=0 cond=None lead=Out of stock; next due in Feb 12, 2027 (10); approx. 117 days
+2026-10-12 18:07:07,504 INFO sourcing.pipeline: Row 91 60B40018-32 (proponent): -> DONE
+2026-10-12 18:07:07,507 INFO sourcing.pipeline: Row 92: found, 1 offer(s), 69.2s, LLM 0 call(s) $0.0000
+2026-10-12 18:07:07,507 INFO sourcing.pipeline: Row 92 offer: pn=612739 price=530.03 USD qty=14 cond=None lead=74 days if out of stock
+2026-10-12 18:07:07,581 INFO sourcing.pipeline: Row 92 612739 (proponent): -> DONE
+2026-10-12 18:07:07,585 INFO sourcing.pipeline: Row 93: found, 1 offer(s), 69.2s, LLM 0 call(s) $0.0000
+2026-10-12 18:07:07,585 INFO sourcing.pipeline: Row 93 offer: pn=617954005 price=8.20 USD qty=284 cond=None lead=154 days if out of stock
+2026-10-12 18:07:07,661 INFO sourcing.pipeline: Row 93 617954005 (proponent): -> DONE
+2026-10-12 18:07:07,664 INFO sourcing.pipeline: Row 94: found, 1 offer(s), 69.2s, LLM 0 call(s) $0.0000
+2026-10-12 18:07:07,664 INFO sourcing.pipeline: Row 94 offer: pn=620-1-200 price=19.53 USD qty=81 cond=None lead=53 days if out of stock
+2026-10-12 18:07:07,742 INFO sourcing.pipeline: Row 94 620-1-200 (proponent): -> DONE
+2026-10-12 18:07:07,746 INFO sourcing.pipeline: Row 95: found, 1 offer(s), 69.2s, LLM 0 call(s) $0.0000
+2026-10-12 18:07:07,746 INFO sourcing.pipeline: Row 95 offer: pn=6205-89-63 price=8,841.38 USD qty=0 cond=None lead=Out of stock; next due in Nov 29, 2026 (1); approx. 187 days
+2026-10-12 18:07:07,820 INFO sourcing.pipeline: Row 95 6205-89-63 (proponent): -> DONE
+2026-10-12 18:07:07,823 INFO sourcing.pipeline: Row 96: found, 1 offer(s), 69.2s, LLM 0 call(s) $0.0000
+2026-10-12 18:07:07,823 INFO sourcing.pipeline: Row 96 offer: pn=622WR1-B-F price=2,685.76 USD qty=42 cond=None lead=146 days if out of stock
+2026-10-12 18:07:07,903 INFO sourcing.pipeline: Row 96 622WR1-B-F (proponent): -> DONE
+2026-10-12 18:07:07,906 INFO sourcing.pipeline: Row 97: found, 1 offer(s), 69.2s, LLM 0 call(s) $0.0000
+2026-10-12 18:07:07,906 INFO sourcing.pipeline: Row 97 offer: pn=63600-505 price=112.25 USD qty=35 cond=None lead=80 days if out of stock
+2026-10-12 18:07:07,977 INFO sourcing.pipeline: Row 97 63600-505 (proponent): -> DONE
+2026-10-12 18:07:07,981 INFO sourcing.pipeline: Row 98: found, 1 offer(s), 69.2s, LLM 0 call(s) $0.0000
+2026-10-12 18:07:07,981 INFO sourcing.pipeline: Row 98 offer: pn=651-535-9002 price=3,297.66 USD qty=6 cond=None lead=154 days if out of stock
+2026-10-12 18:07:08,055 INFO sourcing.pipeline: Row 98 651-535-9002 (proponent): -> DONE
+2026-10-12 18:07:08,059 INFO sourcing.pipeline: Row 99: found, 1 offer(s), 69.2s, LLM 0 call(s) $0.0000
+2026-10-12 18:07:08,059 INFO sourcing.pipeline: Row 99 offer: pn=66569-3F0 price=2,061.16 USD qty=62 cond=None lead=301 days if out of stock
+2026-10-12 18:07:08,137 INFO sourcing.pipeline: Row 99 66569-3F0 (proponent): -> DONE
+2026-10-12 18:07:08,140 INFO sourcing.pipeline: Row 100: found, 1 offer(s), 69.2s, LLM 0 call(s) $0.0000
+2026-10-12 18:07:08,140 INFO sourcing.pipeline: Row 100 offer: pn=684-12-28 price=12,515.73 USD qty=37 cond=None lead=53 days if out of stock
+2026-10-12 18:07:08,210 INFO sourcing.pipeline: Row 100 684-12-28 (proponent): -> DONE
+2026-10-12 18:07:08,214 INFO sourcing.pipeline: Row 101: found, 1 offer(s), 69.2s, LLM 0 call(s) $0.0000
+2026-10-12 18:07:08,214 INFO sourcing.pipeline: Row 101 offer: pn=69-77023-1 price=67.95 USD qty=270 cond=None lead=190 days if out of stock
+2026-10-12 18:07:08,287 INFO sourcing.pipeline: Row 101 69-77023-1 (proponent): -> DONE
+2026-10-12 18:07:08,290 INFO sourcing.pipeline: Rows 102,103,104,105,106,107: bulk searching Proponent for 6 parts
+2026-10-12 18:07:08,290 INFO sourcing.vendors.proponent: Bulk search: 6 parts in one search (https://procart.proponent.com/)
+2026-10-12 18:07:20,370 INFO sourcing.vendors.proponent: Bulk search: submitted; waiting up to 90s for the page
+2026-10-12 18:07:27,968 INFO sourcing.vendors.proponent: Bulk search: page ready after 10.0s (https://procart.proponent.com/PartSearchResults.aspx)
+2026-10-12 18:07:27,968 INFO sourcing.vendors.proponent: Bulk search: results at https://procart.proponent.com/PartSearchResults.aspx
+2026-10-12 18:07:34,109 INFO sourcing.vendors.proponent: Bulk search: setting results per page to 20 (11 results wanted)
+2026-10-12 18:07:39,488 INFO sourcing.vendors.proponent: Bulk search: results 1-11 of 11 on page 1
+2026-10-12 18:07:49,038 INFO httpx2: HTTP Request: POST https://api.anthropic.com/v1/messages?beta=true "HTTP/1.1 200 OK"
+2026-10-12 18:07:49,041 INFO sourcing.vendors.proponent: Bulk search: offers for 6 of 6 parts
+2026-10-12 18:07:49,041 INFO sourcing.pipeline: Bulk search: 6 found, 0 not found, 40.8s, LLM 1 call(s) $0.0345
+2026-10-12 18:07:49,041 INFO sourcing.pipeline: Row 102: found, 1 offer(s), 40.8s, LLM 0 call(s) $0.0000
+2026-10-12 18:07:49,042 INFO sourcing.pipeline: Row 102 offer: pn=69494J112 price=14.01 USD qty=52 cond=None lead=26 days
+2026-10-12 18:07:49,123 INFO sourcing.pipeline: Row 102 69494J112 (proponent): -> DONE
+2026-10-12 18:07:49,127 INFO sourcing.pipeline: Row 103: found, 1 offer(s), 40.8s, LLM 0 call(s) $0.0000
+2026-10-12 18:07:49,127 INFO sourcing.pipeline: Row 103 offer: pn=6TC6-10 price=184.38 USD qty=18 cond=None lead=None
+2026-10-12 18:07:49,204 INFO sourcing.pipeline: Row 103 6TC6-10 (proponent): -> DONE
+2026-10-12 18:07:49,208 INFO sourcing.pipeline: Row 104: found, 1 offer(s), 40.8s, LLM 0 call(s) $0.0000
+2026-10-12 18:07:49,208 INFO sourcing.pipeline: Row 104 offer: pn=702409-1078 price=937.75 USD qty=4 cond=None lead=60 days
+2026-10-12 18:07:49,293 INFO sourcing.pipeline: Row 104 702409-1078 (proponent): -> DONE
+2026-10-12 18:07:49,297 INFO sourcing.pipeline: Row 105: found, 1 offer(s), 40.8s, LLM 0 call(s) $0.0000
+2026-10-12 18:07:49,297 INFO sourcing.pipeline: Row 105 offer: pn=7119SD price=31.12 USD qty=Out of Stock cond=None lead=155 days
+2026-10-12 18:07:49,380 INFO sourcing.pipeline: Row 105 7119SD (proponent): -> DONE
+2026-10-12 18:07:49,384 INFO sourcing.pipeline: Row 106: found, 1 offer(s), 40.8s, LLM 0 call(s) $0.0000
+2026-10-12 18:07:49,384 INFO sourcing.pipeline: Row 106 offer: pn=71550KE10T05SN-LC price=264.30 USD qty=391 cond=None lead=282 days
+2026-10-12 18:07:49,466 INFO sourcing.pipeline: Row 106 71550KE10T05SN-LC (proponent): -> DONE
+2026-10-12 18:07:49,469 INFO sourcing.pipeline: Row 107: found, 1 offer(s), 40.8s, LLM 0 call(s) $0.0000
+2026-10-12 18:07:49,469 INFO sourcing.pipeline: Row 107 offer: pn=723747 price=4,135.65 USD qty=1 cond=None lead=55 days
+2026-10-12 18:07:49,547 INFO sourcing.pipeline: Row 107 723747 (proponent): -> DONE
+2026-10-12 18:07:49,550 INFO sourcing.pipeline: [proponent___shared] Searching 1 part(s) the bulk search didn't find one by one before logout
+2026-10-12 18:07:49,550 INFO sourcing.pipeline: Row 37: searching Proponent for 50831-1
+2026-10-12 18:07:49,550 INFO sourcing.vendors.proponent: Bulk search: 1 parts in one search (https://procart.proponent.com/)
+2026-10-12 18:08:01,345 INFO sourcing.vendors.proponent: Bulk search: submitted; waiting up to 90s for the page
+2026-10-12 18:08:02,642 INFO sourcing.vendors.proponent: Bulk search: page ready after 3.7s (https://procart.proponent.com/PartSearchResults.aspx)
+2026-10-12 18:08:02,642 INFO sourcing.vendors.proponent: Bulk search: results at https://procart.proponent.com/PartSearchResults.aspx
+2026-10-12 18:08:10,864 INFO httpx2: HTTP Request: POST https://api.anthropic.com/v1/messages?beta=true "HTTP/1.1 200 OK"
+2026-10-12 18:08:10,866 INFO sourcing.vendors.proponent: Bulk search: offers for 0 of 1 parts
+2026-10-12 18:08:17,967 INFO sourcing.vendors.proponent: Auth probe https://procart.proponent.com/: no Login button -> signed in
+2026-10-12 18:08:17,967 INFO sourcing.pipeline: Row 37: no results, 0 offer(s), 21.3s, LLM 1 call(s) $0.0080
+2026-10-12 18:08:18,006 INFO sourcing.pipeline: Row 37 50831-1 (proponent): -> NOT_FOUND
+2026-10-12 18:08:21,986 INFO sourcing.vendors.proponent: Logout: clicking a:has-text('Log out')
+2026-10-12 18:08:24,315 INFO sourcing.vendors.proponent: Logout: submitted; waiting up to 90s for the page
+2026-10-12 18:08:25,726 INFO sourcing.vendors.proponent: Logout: page ready after 3.7s (https://procart.proponent.com/)
+2026-10-12 18:08:28,049 INFO sourcing.vendors.proponent: Logout: signed out (now at https://procart.proponent.com/)
+2026-10-12 18:08:28,068 INFO sourcing.pipeline: [proponent___shared] Signed out of Proponent
+2026-10-12 18:08:29,332 INFO httpx: HTTP Request: POST https://api.browserbase.com/v1/sessions/95064591-5cd7-46f0-9539-b2fe31088e0e "HTTP/1.1 200 OK"
+2026-10-12 18:08:29,334 INFO sourcing.pipeline: [proponent___shared] Browser session 95064591-5cd7-46f0-9539-b2fe31088e0e released
+2026-10-12 18:08:29,339 INFO sourcing.sheets: Requests in /home/pragnakalpl19/stagehand-browser-mcp/sourcing-proto/test.xlsx: 114 data row(s), 0 to process (Status empty/NEW), skipped by Status: DONE=105, NOT_FOUND=1, rows without a part number: 8
+2026-10-12 18:08:29,344 INFO sourcing.pipeline: Run summary: {'run_id': 'local-20261012-123142-6dbe__test', 'rows_total': 106, 'counts': {'DONE': 105, 'NOT_FOUND': 1}, 'llm': {'calls': 6, 'input_tokens': 47517, 'output_tokens': 9639, 'cache_read_tokens': 0, 'cost_usd': 0.382848}, 'seconds': 405.9}
+2026-10-12 18:08:29,344 INFO sourcing.notify: [chat disabled] Sourcing run local-20261012-123142-6dbe__test: 106 rows (DONE 105, NOT_FOUND 1). LLM cost $0.3828, 405.9s.

@@ -1,0 +1,31 @@
+Run local-20261014-073440-1130__aF7CVqak
+
+ Row  Part number          Status     Offers   Secs  In tok Out tok   Cost $
+   2  F1101385-01          DONE            1   17.9    4819     423   0.0007
+   3  4066-0014            DONE            1   19.4    4993     729   0.0009
+   4  AS15001-1P           FAILED          1   21.4    5131     950   0.0010  Could not write results: ConnectionError(ProtocolError('Conn
+   5  5934001-217          DONE            1   19.7    4900     787   0.0009
+   6  60B40018-32          DONE            3   22.4    6905    1526   0.0015
+   7  4132A-934-ZB         DONE            1   17.5    4973     670   0.0008
+   8  410946               DONE            2   28.6    7055    2086   0.0017
+   9  ACHC-3-13            DONE            2   24.6    6242    1392   0.0013
+  10  B7210                DONE            1   19.3    4558     649   0.0008
+  11  50831-1              DONE            1   19.7    3848     661   0.0007
+  12  ACO44521             DONE            1   17.5    4832     607   0.0008
+  13  ACO47189             DONE            1   16.6    4887     443   0.0007
+  14  ACR-6-33/B           DONE            1   20.8    5218    1133   0.0011
+  15  AEC-145-69685-005    DONE            1   19.1    4837     375   0.0007
+  16  AF400                DONE            1   21.7    5197    1316   0.0012
+  17  AG282000-03          DONE            1   18.0    4961     596   0.0008
+  18  AIS16P               DONE            1   22.8    4788     661   0.0008
+  19  AMC02RA03W           DONE            1   24.4    4986     988   0.0010
+  20  AN901-4C             DONE            1   21.8    5040     781   0.0009
+  21  AQC-5729             DONE            2   19.0    5737     606   0.0009
+
+Parts: 20   statuses: {'DONE': 19, 'FAILED': 1}
+Search time per part: avg 20.6s, min 16.6s, max 28.6s
+Tokens: 103907 in + 17379 out (avg 5195 in + 868 out per part)
+LLM cost: $0.0191 total, $0.0010 per part
+Whole run (login and sheet writes included): 486s, 24.3s per part
+
+Saved report_20_haiku.csv

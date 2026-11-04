@@ -1,0 +1,30 @@
+# Python / local env
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+
+# Secrets: never commit
+.env
+infra/secrets.env
+
+# Local run state (FileStore). Holds Browserbase Context ids, learned selectors,
+# per-row run records. Personal to each developer.
+.local_store.json
+.local_store.json.tmp
+.local_store.json.hitl/
+.local_login*.json
+
+# Raw vendor pages saved during runs (debug). They show the signed-in Skylink
+# account and the vendor's price pages, so they stay on the machine that made them.
+debug_pages*/
+test_runs/**/vendor_pages/
+test_runs/state_snapshot*/local_store*.json
+
+# Editors / OS
+.vscode/
+.idea/
+.DS_Store
+
+# Loose local run logs (real runs are saved under test_runs/)
+/run_*.log

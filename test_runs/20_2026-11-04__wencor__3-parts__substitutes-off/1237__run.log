@@ -1,0 +1,60 @@
+2026-11-04 12:37:23,621 INFO sourcing.job: Run local-20261104-070723-35bd: mode=REAL, browser=local, store=file (/media/pragnakalpl19/projects1/Backup/sourcing-proto_share_2026-10-15/sourcing-proto/.local_store.json), llm=anthropic/claude-opus-5-5 (effort medium), chat=on, vendor secret overrides=sourcing-vendor-proponent=sourcing-vendor-test
+2026-11-04 12:37:23,621 INFO sourcing.job: Vendor config for this run: {'*': {'bulk_min_parts': 2}}
+2026-11-04 12:37:24,272 INFO sourcing.job: Processing 1 sheet(s): test_runs/20_2026-11-04__wencor__3-parts__substitutes-off/wencor_3parts.xlsx
+2026-11-04 12:37:24,317 INFO sourcing.sheets: Opened local Excel file /media/pragnakalpl19/projects1/Backup/sourcing-proto_share_2026-10-15/sourcing-proto/test_runs/20_2026-11-04__wencor__3-parts__substitutes-off/wencor_3parts.xlsx (tabs: Requests, Results)
+2026-11-04 12:37:24,327 INFO sourcing.sheets: Requests in /media/pragnakalpl19/projects1/Backup/sourcing-proto_share_2026-10-15/sourcing-proto/test_runs/20_2026-11-04__wencor__3-parts__substitutes-off/wencor_3parts.xlsx: 3 data row(s), 3 to process (Status empty/NEW/RUNNING), skipped by Status: none, rows without a part number: 0
+2026-11-04 12:37:24,327 INFO sourcing.pipeline: Run local-20261104-070723-35bd__wencor_3parts picked up 3 NEW rows
+2026-11-04 12:37:28,078 INFO sourcing.pipeline: wencor / you@example.com: using shared login (secret key sourcing-vendor-wencor, totp=no) for 3 row(s)
+2026-11-04 12:37:28,104 INFO sourcing.pipeline: [wencor___shared] Bulk search: 3 parts (bulk from 2), up to 5 per search
+2026-11-04 12:37:28,105 INFO sourcing.auth: [wencor___shared] Reusing saved browser Context ade99380-e3c6-40ab-8222-f6990e33133a (state=NEEDS_LOGIN)
+2026-11-04 12:37:28,463 INFO sourcing.browser: Opened local Chromium 156.0.8078.4 (session local-92037ebb3773, headless=True, live view=off; no saved cookies, context label ade99380-e3c6-40ab-8222-f6990e33133a)
+2026-11-04 12:37:28,463 INFO sourcing.auth: [wencor___shared] Context ade99380-e3c6-40ab-8222-f6990e33133a has no active sign-in (signed out at the end of the run 18h 42m ago); logging in
+2026-11-04 12:37:28,463 INFO sourcing.auth: [wencor___shared] Automatic login attempt 1/2
+2026-11-04 12:37:28,473 INFO sourcing.vendors.generic: Login: Wencor as carrie@skylinkintl.com
+2026-11-04 12:37:28,473 INFO sourcing.vendors.wencor: Login: opening https://fly.wencor.com/log-in (from secret sourcing-vendor-wencor url)
+2026-11-04 12:38:39,942 INFO sourcing.vendors.web: Consent popup [role='dialog'][aria-label*='cookie' i]: clicking 'Decline all'
+2026-11-04 12:38:44,949 INFO sourcing.vendors.web: Consent popup answered; no reload
+2026-11-04 12:38:44,977 INFO sourcing.vendors.wencor: Wencor step 1 (sign in): the page's own login form at https://fly.wencor.com/log-in
+2026-11-04 12:38:45,012 INFO sourcing.vendors.generic: Login step 1 at https://fly.wencor.com/log-in: username=form.login-form:not([id*='_INSTANCE_1234_']) input[id$='_username'] password=form.login-form:not([id*='_INSTANCE_1234_']) input[type='password']
+2026-11-04 12:38:45,047 INFO sourcing.vendors.generic: Login: submitting with form.login-form:not([id*='_INSTANCE_1234_']) button[type='submit']
+2026-11-04 12:38:45,095 INFO sourcing.vendors.web: Login submit: submitted; waiting up to 90s for the page
+2026-11-04 12:39:19,058 INFO sourcing.vendors.web: Login submit: page ready after 34.0s (https://fly.wencor.com/search)
+2026-11-04 12:39:19,196 INFO sourcing.vendors.generic: Account menu button[aria-label*='account' i]: holds a:has-text('Log out')
+2026-11-04 12:39:19,201 INFO sourcing.vendors.generic: Login: signed in (a:has-text('Log out') visible)
+2026-11-04 12:39:19,201 INFO sourcing.auth: [wencor___shared] Sign-in seen by the login (a:has-text('Log out') at https://fly.wencor.com/search); no separate probe
+2026-11-04 12:39:19,220 INFO sourcing.auth: [wencor___shared] Login OK
+2026-11-04 12:39:19,229 INFO sourcing.pipeline: Rows 2,3,4: bulk searching Wencor for 3 parts
+2026-11-04 12:39:24,877 INFO sourcing.vendors.wencor: Wencor step 2 (bulk): 3 line(s) in PowerSearch
+2026-11-04 12:39:38,776 INFO sourcing.vendors.wencor: Wencor PowerSearch: 3 of 3 part(s) listed; minimum order quantity for AS3209-120 100
+2026-11-04 12:39:38,776 INFO sourcing.vendors.generic: Search: opening https://fly.wencor.com/products/-/o/category/all/cn/All-Products/ecom-search/N120-47934-071 directly
+2026-11-04 12:40:09,990 INFO sourcing.vendors.wencor: Wencor step 3 (open): 1 listed part(s) are N120-47934-071: https://fly.wencor.com/product-details/-/o/cn/Cabin-Interiors/d/N120-47934-071/ecom-item/10013439
+2026-11-04 12:40:40,001 INFO sourcing.vendors.wencor: Wencor: no stock link on https://fly.wencor.com/product-details/-/o/cn/Cabin-Interiors/d/N120-47934-071/ecom-item/10013439
+2026-11-04 12:40:40,006 INFO sourcing.vendors.wencor: Wencor step 4 (read): product page 1 of 1 at https://fly.wencor.com/product-details/-/o/cn/Cabin-Interiors/d/N120-47934-071/ecom-item/10013439
+2026-11-04 12:40:48,220 INFO sourcing.vendors.generic: Search: opening https://fly.wencor.com/products/-/o/category/all/cn/All-Products/ecom-search/21FA407G directly
+2026-11-04 12:41:26,542 INFO sourcing.vendors.wencor: Wencor step 3 (open): 1 listed part(s) are 21FA407G: https://fly.wencor.com/product-details/-/o/cn/Filters/d/21FA407G/ecom-item/10047883
+2026-11-04 12:41:39,135 INFO sourcing.vendors.wencor: Wencor: no stock link on https://fly.wencor.com/product-details/-/o/cn/Filters/d/21FA407G/ecom-item/10047883
+2026-11-04 12:41:39,140 INFO sourcing.vendors.wencor: Wencor step 4 (read): product page 1 of 1 at https://fly.wencor.com/product-details/-/o/cn/Filters/d/21FA407G/ecom-item/10047883
+2026-11-04 12:41:42,586 INFO sourcing.vendors.generic: Search: opening https://fly.wencor.com/products/-/o/category/all/cn/All-Products/ecom-search/AS3209-120 directly
+2026-11-04 12:41:52,749 INFO sourcing.vendors.wencor: Wencor step 3 (open): 1 listed part(s) are AS3209-120: https://fly.wencor.com/product-details/-/o/cn/Seals/d/AS3209-120/ecom-item/10017622
+2026-11-04 12:42:00,472 INFO sourcing.vendors.wencor: Wencor: order rules on https://fly.wencor.com/product-details/-/o/cn/Seals/d/AS3209-120/ecom-item/10017622: Minimum order quantity: 100; Ordered in multiples of: 100
+2026-11-04 12:42:02,076 INFO sourcing.vendors.wencor: Wencor: stock link 'Availability for All Warehouses' showed 13 new line(s)
+2026-11-04 12:42:02,083 INFO sourcing.vendors.wencor: Wencor step 4 (read): product page 1 of 1 at https://fly.wencor.com/product-details/-/o/cn/Seals/d/AS3209-120/ecom-item/10017622
+2026-11-04 12:42:07,443 INFO sourcing.pipeline: Bulk search: 3 found, 0 not found, 168.2s, LLM 3 call(s) $0.1767
+2026-11-04 12:42:07,443 INFO sourcing.pipeline: Row 2: found, 1 offer(s), 168.2s, LLM 1 call(s) $0.0586
+2026-11-04 12:42:07,443 INFO sourcing.pipeline: Row 2 offer: pn=N120-47934-071 price=917.14  qty=271 cond=NE lead=In stock (50 days if out of stock)
+2026-11-04 12:42:07,443 INFO sourcing.pipeline: Row 3: found, 1 offer(s), 168.2s, LLM 1 call(s) $0.0577
+2026-11-04 12:42:07,443 INFO sourcing.pipeline: Row 3 offer: pn=21FA407G price=407.95  qty=681 cond=NE lead=In stock (185 days if out of stock)
+2026-11-04 12:42:07,443 INFO sourcing.pipeline: Row 4: found, 1 offer(s), 168.2s, LLM 1 call(s) $0.0604
+2026-11-04 12:42:07,443 INFO sourcing.pipeline: Row 4 offer: pn=AS3209-120 price=0.87  qty=3494 cond=NE lead=In stock (99 days if out of stock)
+2026-11-04 12:42:07,473 INFO sourcing.pipeline: Row 2 N120-47934-071 (wencor): -> DONE
+2026-11-04 12:42:07,482 INFO sourcing.pipeline: Row 3 21FA407G (wencor): -> DONE
+2026-11-04 12:42:07,491 INFO sourcing.pipeline: Row 4 AS3209-120 (wencor): -> DONE
+2026-11-04 12:42:07,571 INFO sourcing.vendors.generic: Account menu button[aria-label*='account' i]: holds a:has-text('Log out')
+2026-11-04 12:42:07,572 INFO sourcing.vendors.generic: Logout: clicking a:has-text('Log out')
+2026-11-04 12:42:07,616 INFO sourcing.vendors.web: Logout: submitted; waiting up to 90s for the page
+2026-11-04 12:42:28,752 INFO sourcing.vendors.web: Logout: page ready after 21.2s (https://fly.wencor.com/home)
+2026-11-04 12:42:28,810 INFO sourcing.vendors.generic: Logout: signed out (now at https://fly.wencor.com/home)
+2026-11-04 12:42:28,831 INFO sourcing.pipeline: [wencor___shared] Signed out of Wencor
+2026-11-04 12:42:28,908 INFO sourcing.pipeline: [wencor___shared] Browser session local-92037ebb3773 released
+2026-11-04 12:42:28,918 INFO sourcing.sheets: Requests in /media/pragnakalpl19/projects1/Backup/sourcing-proto_share_2026-10-15/sourcing-proto/test_runs/20_2026-11-04__wencor__3-parts__substitutes-off/wencor_3parts.xlsx: 3 data row(s), 0 to process (Status empty/NEW), skipped by Status: DONE=3, rows without a part number: 0
+2026-11-04 12:42:28,927 INFO sourcing.pipeline: Run summary: {'run_id': 'local-20261104-070723-35bd__wencor_3parts', 'rows_total': 3, 'counts': {'DONE': 3}, 'llm': {'calls': 3, 'input_tokens': 39624, 'output_tokens': 912, 'cache_read_tokens': 0, 'cost_usd': 0.176736}, 'seconds': 304.6}

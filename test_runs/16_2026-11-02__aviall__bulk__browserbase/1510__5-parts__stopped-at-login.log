@@ -1,0 +1,21 @@
+2026-11-02 15:10:30,840 INFO sourcing.job: Run local-20261102-094030-f8c1: mode=REAL, browser=browserbase, store=file (/media/pragnakalpl19/projects1/Backup/sourcing-proto_share_2026-10-15/sourcing-proto/.local_store.json), llm=anthropic/claude-opus-5-5 (effort medium), chat=on, vendor secret overrides=sourcing-vendor-proponent=sourcing-vendor-test
+2026-11-02 15:10:30,840 INFO sourcing.job: Vendor config for this run: {'*': {'bulk_min_parts': 2}}
+2026-11-02 15:10:30,947 WARNING sourcing.browser: Browserbase session recording is ON: recordings show the vendor pages, login screens included. Use for local debugging only.
+2026-11-02 15:10:31,538 INFO sourcing.job: Processing 1 sheet(s): 1V-S8J4bFqw1w_WvrsQjFqR4gNhPwFyd-YS_aF7CVqak
+2026-11-02 15:10:34,638 INFO sourcing.sheets: Requests in 1V-S8J4bFqw1w_WvrsQjFqR4gNhPwFyd-YS_aF7CVqak: 5 data row(s), 5 to process (Status empty/NEW/RUNNING), skipped by Status: none, rows without a part number: 0
+2026-11-02 15:10:34,638 INFO sourcing.pipeline: Run local-20261102-094030-f8c1__aF7CVqak picked up 5 NEW rows
+/media/pragnakalpl19/projects1/Backup/sourcing-proto_share_2026-10-15/sourcing-proto/.venv/lib/python3.11/site-packages/google/api_core/_python_version_support.py:254: FutureWarning: You are using a Python version (3.11.15) which Google will stop supporting in new releases of google.api_core once it reaches its end of life (2027-10-24). Please upgrade to the latest Python version, or at least Python 3.12, to continue receiving updates for google.api_core past that date.
+  warnings.warn(message, FutureWarning)
+/media/pragnakalpl19/projects1/Backup/sourcing-proto_share_2026-10-15/sourcing-proto/.venv/lib/python3.11/site-packages/google/api_core/_python_version_support.py:254: FutureWarning: You are using a Python version (3.11.15) which Google will stop supporting in new releases of google.cloud.secretmanager_v1 once it reaches its end of life (2027-10-24). Please upgrade to the latest Python version, or at least Python 3.12, to continue receiving updates for google.cloud.secretmanager_v1 past that date.
+  warnings.warn(message, FutureWarning)
+2026-11-02 15:10:36,687 INFO sourcing.pipeline: aviall / (no requester): using shared login (secret key sourcing-vendor-aviall, totp=no) for 5 row(s)
+2026-11-02 15:10:36,702 INFO sourcing.pipeline: [aviall___shared] Rows 3: same part EN2267-010A006S as row 2, one search for all
+2026-11-02 15:10:36,702 INFO sourcing.pipeline: [aviall___shared] Bulk search: 4 parts (bulk from 2), up to 25 per search
+2026-11-02 15:10:36,702 INFO sourcing.auth: [aviall___shared] Reusing saved browser Context 1babb21c-7108-4beb-a423-68c254e6cf3c (state=NEEDS_LOGIN)
+2026-11-02 15:10:40,117 INFO sourcing.browser: Opened Browserbase session af2b14ca-1c6a-4d71-ace4-6916d95a814f (context=1babb21c-7108-4beb-a423-68c254e6cf3c, keep_alive=False, recording=on)
+2026-11-02 15:10:40,117 INFO sourcing.browser: Session page: https://www.browserbase.com/sessions/af2b14ca-1c6a-4d71-ace4-6916d95a814f
+2026-11-02 15:10:40,483 INFO sourcing.browser: Session live view (while the run lasts): https://www.browserbase.com/devtools-fullscreen/inspector.html?wss=connect.browserbase.com/debug/af2b14ca-1c6a-4d71-ace4-6916d95a814f/devtools/page/BBD1B17CE02250FE5AD36EA58CA8B085?t=eyJhbGciOiJBMjU2S1ciLCJlbmMiOiJBMjU2R0NNIn0.DL19Xfb0-ZpO09gL2_NqsqKhXGsTk6CIOxe8bggSouxXWyUzvQuMsA.QiC9HnnjHQYStbmc.PxjGaqmwOZD4gRw-lviDLN3SqmqUcJlDhvRiuqScMhotRzTuQwTLDvIW6nzqIpK_UcKC51J43YojDeBjAsS37QbTEbUbnlnJA8g6yCjxYbBkwVSitYV8AArOU6NqCxqA6nFqnRpJb3BY766Ekw.aPo3fAzbqtbB3lJEsD5Brg&debug=true
+2026-11-02 15:10:40,483 INFO sourcing.auth: [aviall___shared] Context 1babb21c-7108-4beb-a423-68c254e6cf3c has no active sign-in (signed out at the end of the run 49m ago); logging in
+2026-11-02 15:10:40,484 INFO sourcing.auth: [aviall___shared] Automatic login attempt 1/2
+2026-11-02 15:10:40,505 INFO sourcing.vendors.generic: Login: Aviall as purchasing@skylinkintl.com
+2026-11-02 15:10:40,506 INFO sourcing.vendors.aviall: Login: opening https://shop.boeing.com/aviation-supply (from secret sourcing-vendor-aviall url)

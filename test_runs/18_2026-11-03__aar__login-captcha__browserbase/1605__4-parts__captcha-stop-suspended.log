@@ -1,0 +1,36 @@
+2026-11-03 16:05:55,111 INFO sourcing.job: Run local-20261103-103555-d325: mode=REAL, browser=browserbase, store=file (/media/pragnakalpl19/projects1/Backup/sourcing-proto_share_2026-10-15/sourcing-proto/.local_store.json), llm=anthropic/claude-opus-5-5 (effort medium), chat=on, vendor secret overrides=sourcing-vendor-proponent=sourcing-vendor-test
+2026-11-03 16:05:55,111 INFO sourcing.job: Vendor config for this run: {'*': {'bulk_min_parts': 2}}
+2026-11-03 16:05:55,215 WARNING sourcing.browser: Browserbase session recording is ON: recordings show the vendor pages, login screens included. Use for local debugging only.
+2026-11-03 16:05:55,855 INFO sourcing.job: Processing 1 sheet(s): 1V-S8J4bFqw1w_WvrsQjFqR4gNhPwFyd-YS_aF7CVqak
+2026-11-03 16:05:58,953 INFO sourcing.sheets: Requests in 1V-S8J4bFqw1w_WvrsQjFqR4gNhPwFyd-YS_aF7CVqak: 34 data row(s), 4 to process (Status empty/NEW/RUNNING), skipped by Status: DONE=25, NOT_FOUND=3, NOT_SOLD=2, rows without a part number: 0
+2026-11-03 16:05:58,954 INFO sourcing.pipeline: Run local-20261103-103555-d325__aF7CVqak picked up 4 NEW rows
+/media/pragnakalpl19/projects1/Backup/sourcing-proto_share_2026-10-15/sourcing-proto/.venv/lib/python3.11/site-packages/google/api_core/_python_version_support.py:254: FutureWarning: You are using a Python version (3.11.15) which Google will stop supporting in new releases of google.api_core once it reaches its end of life (2027-10-24). Please upgrade to the latest Python version, or at least Python 3.12, to continue receiving updates for google.api_core past that date.
+  warnings.warn(message, FutureWarning)
+/media/pragnakalpl19/projects1/Backup/sourcing-proto_share_2026-10-15/sourcing-proto/.venv/lib/python3.11/site-packages/google/api_core/_python_version_support.py:254: FutureWarning: You are using a Python version (3.11.15) which Google will stop supporting in new releases of google.cloud.secretmanager_v1 once it reaches its end of life (2027-10-24). Please upgrade to the latest Python version, or at least Python 3.12, to continue receiving updates for google.cloud.secretmanager_v1 past that date.
+  warnings.warn(message, FutureWarning)
+2026-11-03 16:06:01,390 INFO sourcing.pipeline: aar / (no requester): using shared login (secret key sourcing-vendor-aar, totp=no) for 4 row(s)
+2026-11-03 16:06:01,406 INFO sourcing.pipeline: [aar___shared] Bulk search: 4 parts (bulk from 2), up to 10 per search
+2026-11-03 16:06:02,650 INFO sourcing.auth: [aar___shared] Created browser Context 902eecf8-a124-4823-8a11-003df1e812ac (first login for this account)
+2026-11-03 16:06:10,231 INFO sourcing.browser: Opened Browserbase session bf73415c-e9b1-4a97-b0f2-f7efbe58258e (context=902eecf8-a124-4823-8a11-003df1e812ac, keep_alive=False, recording=on)
+2026-11-03 16:06:10,231 INFO sourcing.browser: Session page: https://www.browserbase.com/sessions/bf73415c-e9b1-4a97-b0f2-f7efbe58258e
+2026-11-03 16:06:11,213 INFO sourcing.browser: Session live view (while the run lasts): https://www.browserbase.com/devtools-fullscreen/inspector.html?wss=connect.browserbase.com/debug/bf73415c-e9b1-4a97-b0f2-f7efbe58258e/devtools/page/37C4DBD8D8BE4B27D15EDB7D7313696D?t=eyJhbGciOiJBMjU2S1ciLCJlbmMiOiJBMjU2R0NNIn0.RUNWuDaRGuAaS_o6xq4pgU1tlbCsoi9CHI1PnT9i-qNtd35HP0XDKw.z8qGjq5mtq9ZqfxY.mvX9v3SW8veTfCD3y5gN5zdxUTP7LVnjRzWQfaqZcmz1cmFLfaEK-mzWJPXLwkaMH9JrAuk-jGfpT5exZzd7xqMldxbwqUiPn7ocL65AYJW8cKue0-S8FkZ08YB4sIdGpjB7EfrUjG967PrrVQ.Z-T1hEJ9Gyrk9MYpjVTW2A&debug=true
+2026-11-03 16:06:11,213 INFO sourcing.auth: [aar___shared] Context 902eecf8-a124-4823-8a11-003df1e812ac has no active sign-in (never signed in); logging in
+2026-11-03 16:06:11,213 INFO sourcing.auth: [aar___shared] Automatic login attempt 1/2
+2026-11-03 16:06:11,236 INFO sourcing.vendors.generic: Login: AAR as purchasing@skylinkintl.com
+2026-11-03 16:06:11,236 INFO sourcing.vendors.generic: Login: opening https://shop.aarcorp.com/customer/account/login/ (from secret sourcing-vendor-aar url)
+2026-11-03 16:06:29,786 INFO sourcing.vendors.web: Consent popup [role='dialog'][aria-label*='cookie' i]: clicking 'Close (OneTrust)'
+2026-11-03 16:06:34,791 INFO sourcing.vendors.web: Consent popup answered; no reload
+2026-11-03 16:06:45,748 INFO sourcing.vendors.generic: Login step 1 at https://shop.aarcorp.com/customer/account/login/: username=form#login-form input#email password=form#login-form input#pass
+2026-11-03 16:06:53,159 INFO sourcing.vendors.generic: Login: submitting with form#login-form button#send2
+2026-11-03 16:06:55,702 INFO sourcing.vendors.web: Login submit: submitted; waiting up to 90s for the page
+2026-11-03 16:07:12,526 INFO sourcing.vendors.web: Login submit: page ready after 19.4s (https://shop.aarcorp.com/customer/account/login/)
+2026-11-03 16:07:21,128 WARNING sourcing.vendors.generic: Login: page mentions 'captcha' -> stopping (lockout / CAPTCHA / block)
+2026-11-03 16:07:21,150 WARNING sourcing.auth: [aar___shared] Stopping login: account -> SUSPENDED (Portal reports a lockout or block ('captcha'))
+2026-11-03 16:07:28,859 INFO sourcing.pipeline: Row 32 44066 (aar corp): -> NEEDS_ATTENTION | Portal reports a lockout or block ('captcha')
+2026-11-03 16:07:28,881 INFO sourcing.pipeline: Row 33 1381-1176 (aar corp): -> NEEDS_ATTENTION | Portal reports a lockout or block ('captcha')
+2026-11-03 16:07:28,892 INFO sourcing.pipeline: Row 34 3880938-1 (aar corp): -> NEEDS_ATTENTION | Portal reports a lockout or block ('captcha')
+2026-11-03 16:07:28,905 INFO sourcing.pipeline: Row 35 C100-013080 (aar corp): -> NEEDS_ATTENTION | Portal reports a lockout or block ('captcha')
+2026-11-03 16:07:29,546 INFO sourcing.pipeline: [aar___shared] Not saved (no sign-in / search confirmed them): password_input, username_input
+2026-11-03 16:07:30,088 INFO sourcing.sheets: Requests in 1V-S8J4bFqw1w_WvrsQjFqR4gNhPwFyd-YS_aF7CVqak: 34 data row(s), 0 to process (Status empty/NEW), skipped by Status: DONE=25, NEEDS_ATTENTION=4, NOT_FOUND=3, NOT_SOLD=2, rows without a part number: 0
+2026-11-03 16:07:30,117 INFO sourcing.pipeline: Vendor aar had no limits; saved the defaults (unconfirmed)
+2026-11-03 16:07:31,029 INFO sourcing.pipeline: Run summary: {'run_id': 'local-20261103-103555-d325__aF7CVqak', 'rows_total': 4, 'counts': {'NEEDS_ATTENTION': 4}, 'llm': {'calls': 0, 'input_tokens': 0, 'output_tokens': 0, 'cache_read_tokens': 0, 'cost_usd': 0.0}, 'seconds': 92.6}

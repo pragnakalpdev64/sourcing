@@ -1,0 +1,167 @@
+2026-11-02 17:27:07,832 INFO sourcing.job: Run local-20261102-115707-6446: mode=REAL, browser=browserbase, store=file (/media/pragnakalpl19/projects1/Backup/sourcing-proto_share_2026-10-15/sourcing-proto/.local_store.json), llm=anthropic/claude-opus-5-5 (effort medium), chat=on, vendor secret overrides=sourcing-vendor-proponent=sourcing-vendor-test
+2026-11-02 17:27:07,832 INFO sourcing.job: Vendor config for this run: {'*': {'bulk_min_parts': 2}}
+2026-11-02 17:27:07,948 WARNING sourcing.browser: Browserbase session recording is ON: recordings show the vendor pages, login screens included. Use for local debugging only.
+2026-11-02 17:27:08,606 INFO sourcing.job: Processing 1 sheet(s): 1V-S8J4bFqw1w_WvrsQjFqR4gNhPwFyd-YS_aF7CVqak
+2026-11-02 17:27:11,485 INFO sourcing.sheets: Requests in 1V-S8J4bFqw1w_WvrsQjFqR4gNhPwFyd-YS_aF7CVqak: 10 data row(s), 10 to process (Status empty/NEW/RUNNING), skipped by Status: none, rows without a part number: 0
+2026-11-02 17:27:11,486 INFO sourcing.pipeline: Run local-20261102-115707-6446__aF7CVqak picked up 10 NEW rows
+/media/pragnakalpl19/projects1/Backup/sourcing-proto_share_2026-10-15/sourcing-proto/.venv/lib/python3.11/site-packages/google/api_core/_python_version_support.py:254: FutureWarning: You are using a Python version (3.11.15) which Google will stop supporting in new releases of google.api_core once it reaches its end of life (2027-10-24). Please upgrade to the latest Python version, or at least Python 3.12, to continue receiving updates for google.api_core past that date.
+  warnings.warn(message, FutureWarning)
+/media/pragnakalpl19/projects1/Backup/sourcing-proto_share_2026-10-15/sourcing-proto/.venv/lib/python3.11/site-packages/google/api_core/_python_version_support.py:254: FutureWarning: You are using a Python version (3.11.15) which Google will stop supporting in new releases of google.cloud.secretmanager_v1 once it reaches its end of life (2027-10-24). Please upgrade to the latest Python version, or at least Python 3.12, to continue receiving updates for google.cloud.secretmanager_v1 past that date.
+  warnings.warn(message, FutureWarning)
+2026-11-02 17:27:13,256 INFO sourcing.pipeline: aviall / (no requester): using shared login (secret key sourcing-vendor-aviall, totp=no) for 10 row(s)
+2026-11-02 17:27:13,265 INFO sourcing.pipeline: [aviall___shared] Bulk search: 10 parts (bulk from 2), up to 25 per search
+2026-11-02 17:27:13,265 INFO sourcing.auth: [aviall___shared] Reusing saved browser Context e20d3872-003d-4534-82af-34dc905219c7 (state=NEEDS_LOGIN)
+2026-11-02 17:27:22,801 INFO sourcing.browser: Opened Browserbase session f073f519-a2b3-4cb3-b4be-9eaf21ecc8a7 (context=e20d3872-003d-4534-82af-34dc905219c7, keep_alive=False, recording=on)
+2026-11-02 17:27:22,801 INFO sourcing.browser: Session page: https://www.browserbase.com/sessions/f073f519-a2b3-4cb3-b4be-9eaf21ecc8a7
+2026-11-02 17:27:23,702 INFO sourcing.browser: Session live view (while the run lasts): https://www.browserbase.com/devtools-fullscreen/inspector.html?wss=connect.browserbase.com/debug/f073f519-a2b3-4cb3-b4be-9eaf21ecc8a7/devtools/page/A794B2F91029BC5B64C7FDAA7274FCAE?t=eyJhbGciOiJBMjU2S1ciLCJlbmMiOiJBMjU2R0NNIn0.QlhpPiXNDBjIiEaKnLyycrGnAFRScpSL9EDJhepotHZu-TXzDts6mw.H-Xqv6KLxvnpPVPR.hTEGmu-BkpwxhQEjw8Up5CfMZ53XoC1i6UdgeuYNMvXwvrdD8XF2nKQSTe7ZCNiXkZGxgpmP-j9xhrelXMVNExmVhk1wAwOf_qL3tHhbtLoWLtfhQwz2XsI4M5n7O5mTIWiDStOIvmO1vnbb-w.Ef-OnnVyouD_1Fq1NnUgHg&debug=true
+2026-11-02 17:27:23,702 INFO sourcing.auth: [aviall___shared] Context e20d3872-003d-4534-82af-34dc905219c7 has no active sign-in (signed out at the end of the run 53m ago); logging in
+2026-11-02 17:27:23,702 INFO sourcing.auth: [aviall___shared] Automatic login attempt 1/2
+2026-11-02 17:27:23,711 INFO sourcing.vendors.generic: Login: Aviall as purchasing@skylinkintl.com
+2026-11-02 17:27:23,711 INFO sourcing.vendors.aviall: Login: opening https://shop.boeing.com/aviation-supply (from secret sourcing-vendor-aviall url)
+2026-11-02 17:27:23,711 INFO sourcing.vendors.aviall: Aviall action 1: open https://shop.boeing.com/aviation-supply (at about:blank)
+2026-11-02 17:27:25,047 INFO sourcing.vendors.aviall: Aviall page: https://shop.boeing.com/distribution
+2026-11-02 17:27:27,605 INFO sourcing.vendors.aviall: Aviall page: https://shop.boeing.com/distribution
+2026-11-02 17:27:31,852 INFO sourcing.vendors.aviall: Aviall step 1 (sign in): https://shop.boeing.com/distribution shows button:has-text('Log in to Boeing Distribution') after 8.1s
+2026-11-02 17:27:37,541 INFO sourcing.vendors.aviall: Login: clicking button:has-text('Log in to Boeing Distribution') (Boeing Distribution login button)
+2026-11-02 17:27:37,541 INFO sourcing.vendors.aviall: Aviall action 2: click button:has-text('Log in to Boeing Distribution') (at https://shop.boeing.com/distribution)
+2026-11-02 17:27:41,053 INFO sourcing.vendors.aviall: Boeing Distribution login button: button:has-text('OneLogin') shows after 1.2s (https://shop.boeing.com/distribution)
+2026-11-02 17:27:45,079 INFO sourcing.vendors.aviall: Login: clicking button:has-text('OneLogin') (OneLogin ID button)
+2026-11-02 17:27:45,079 INFO sourcing.vendors.aviall: Aviall action 3: click button:has-text('OneLogin') (at https://shop.boeing.com/distribution)
+2026-11-02 17:27:48,044 INFO sourcing.vendors.aviall: Aviall page: https://auth.boeing.com/as/authorization.oauth2?redirect_uri=https://shop.boeing.com/distribution/&client_id=commonPingProdClient&scope=openid&code_challenge=0X
+2026-11-02 17:27:48,317 INFO sourcing.vendors.aviall: Aviall page: https://auth.boeingservices.com/idp/SSO.saml2
+2026-11-02 17:27:48,349 INFO sourcing.vendors.aviall: Aviall page: https://auth.boeing.com/sp/ACS.saml2
+2026-11-02 17:27:52,515 INFO sourcing.vendors.aviall: OneLogin ID button: [id="username"] shows after 4.9s (https://auth.boeing.com/sp/ACS.saml2)
+2026-11-02 17:27:57,921 INFO sourcing.vendors.aviall: Login: sign-in form at https://auth.boeing.com/sp/ACS.saml2
+2026-11-02 17:28:05,210 INFO sourcing.vendors.generic: Login step 1 at https://auth.boeing.com/sp/ACS.saml2: username=[id="username"] password=None
+2026-11-02 17:28:10,238 INFO sourcing.vendors.generic: Login: two-step sign-in; continuing with [id="submitButton"]
+2026-11-02 17:28:12,521 INFO sourcing.vendors.web: Login next: submitted; waiting up to 180s for the page
+2026-11-02 17:28:13,204 INFO sourcing.vendors.aviall: Aviall page: https://auth.boeing.com/as/5ahQ7y15Z6/resume/as/authorization.ping
+2026-11-02 17:28:13,828 INFO sourcing.vendors.web: Login next: page ready after 3.6s (https://auth.boeing.com/as/5ahQ7y15Z6/resume/as/authorization.ping)
+2026-11-02 17:28:14,238 INFO sourcing.vendors.aviall: Aviall page: https://auth.boeing.com/as/5ahQ7y15Z6/resume/as/authorization.ping
+2026-11-02 17:28:20,386 INFO sourcing.vendors.generic: Login step 2 at https://auth.boeing.com/as/5ahQ7y15Z6/resume/as/authorization.ping: username=(done) password=input[type='password']:not([aria-hidden='true']):not([tabindex='-1'])
+2026-11-02 17:28:24,013 INFO sourcing.vendors.generic: Login: submitting with button:has-text('Log in')
+2026-11-02 17:28:26,243 INFO sourcing.vendors.web: Login submit: submitted; waiting up to 180s for the page
+2026-11-02 17:28:27,237 INFO sourcing.vendors.aviall: Aviall page: https://auth.boeing.com/as/5ahQ7y15Z6/resume/as/authorization.ping
+2026-11-02 17:28:27,787 INFO sourcing.vendors.web: Login submit: page ready after 3.8s (https://auth.boeing.com/as/5ahQ7y15Z6/resume/as/authorization.ping)
+2026-11-02 17:28:31,738 INFO sourcing.vendors.aviall: Aviall step 1 (sign in): 2FA box; opening https://shop.boeing.com/distribution again instead (team, 2026-11-02)
+2026-11-02 17:28:31,738 INFO sourcing.vendors.aviall: Aviall action 4: open https://shop.boeing.com/distribution (at https://auth.boeing.com/as/5ahQ7y15Z6/resume/as/authorization.ping)
+2026-11-02 17:28:32,181 INFO sourcing.vendors.aviall: Aviall page: https://shop.boeing.com/distribution
+2026-11-02 17:28:33,993 INFO sourcing.vendors.aviall: Aviall page: https://shop.boeing.com/distribution
+2026-11-02 17:28:37,585 INFO sourcing.vendors.aviall: Aviall step 1 (sign in): https://shop.boeing.com/distribution shows button:has-text('Log in to Boeing Distribution') after 5.8s
+2026-11-02 17:28:41,753 INFO sourcing.vendors.aviall: Login: clicking button:has-text('Log in to Boeing Distribution') (Boeing Distribution login button)
+2026-11-02 17:28:41,753 INFO sourcing.vendors.aviall: Aviall action 5: click button:has-text('Log in to Boeing Distribution') (at https://shop.boeing.com/distribution)
+2026-11-02 17:28:46,739 INFO sourcing.vendors.aviall: Boeing Distribution login button: button:has-text('OneLogin') shows after 1.2s (https://shop.boeing.com/distribution)
+2026-11-02 17:28:50,769 INFO sourcing.vendors.aviall: Login: clicking button:has-text('OneLogin') (OneLogin ID button)
+2026-11-02 17:28:50,769 INFO sourcing.vendors.aviall: Aviall action 6: click button:has-text('OneLogin') (at https://shop.boeing.com/distribution)
+2026-11-02 17:28:54,002 INFO sourcing.vendors.aviall: Aviall page: https://shop.boeing.com/distribution/?code=NFE6dZhC7R4HORag0yQ6qygM31G5jTQY5ZxFYpwU
+2026-11-02 17:28:59,263 INFO sourcing.vendors.aviall: Aviall page: https://shop.boeing.com/distribution
+2026-11-02 17:29:17,457 INFO sourcing.vendors.aviall: OneLogin ID button: .accounts-bar .account-detail shows after 24.3s (https://shop.boeing.com/distribution)
+2026-11-02 17:29:23,986 INFO sourcing.vendors.aviall: Login: signed in (.accounts-bar .account-detail at https://shop.boeing.com/distribution)
+2026-11-02 17:29:23,986 INFO sourcing.vendors.aviall: Login: after reopening the login URL: signed_in at https://shop.boeing.com/distribution
+2026-11-02 17:29:25,385 INFO sourcing.auth: [aviall___shared] Sign-in seen by the login (.accounts-bar .account-detail at https://shop.boeing.com/distribution); no separate probe
+2026-11-02 17:29:25,414 INFO sourcing.auth: [aviall___shared] Login OK
+2026-11-02 17:29:25,423 INFO sourcing.pipeline: Rows 2,3,4,5,6,7,8,9,10,11: bulk searching Aviall for 10 parts
+2026-11-02 17:29:25,423 INFO sourcing.vendors.aviall: Bulk search: 10 parts in one search (https://shop.boeing.com/bulksearch)
+2026-11-02 17:29:25,424 INFO sourcing.vendors.aviall: Aviall action 7: open https://shop.boeing.com/bulksearch (at https://shop.boeing.com/distribution)
+2026-11-02 17:29:25,836 INFO sourcing.vendors.aviall: Aviall page: https://shop.boeing.com/bulksearch
+2026-11-02 17:29:28,094 INFO sourcing.vendors.aviall: Aviall page: https://shop.boeing.com/bulksearch
+2026-11-02 17:29:40,880 INFO sourcing.vendors.aviall: Aviall step 2 (search): opening Multi-line Ordering with button:has-text('Multi-line Ordering')
+2026-11-02 17:29:40,880 INFO sourcing.vendors.aviall: Aviall action 8: click button:has-text('Multi-line Ordering') (at https://shop.boeing.com/bulksearch)
+2026-11-02 17:29:46,535 INFO sourcing.vendors.aviall: Bulk search: Copy & Paste box textarea.bulkSearchTextArea
+2026-11-02 17:29:49,873 INFO sourcing.vendors.aviall: Aviall action 9: paste 10 line(s) into textarea.bulkSearchTextArea (at https://shop.boeing.com/bulksearch)
+2026-11-02 17:29:57,121 INFO sourcing.vendors.aviall: Bulk search: part numbers pasted into the box
+2026-11-02 17:29:57,121 INFO sourcing.vendors.aviall: Bulk search: 10 line(s) in textarea.bulkSearchTextArea
+2026-11-02 17:29:59,071 INFO sourcing.vendors.aviall: Aviall step 2 (search): clicking Search [data-sourcing-bulk] >> button, [role=button], input[type=submit] >> visible=true >> nth=1
+2026-11-02 17:29:59,072 INFO sourcing.vendors.aviall: Aviall action 10: click [data-sourcing-bulk] >> button, [role=button], input[type=submit] >> visible=true >> nth=1 (at https://shop.boeing.com/bulksearch)
+2026-11-02 17:30:09,077 INFO sourcing.vendors.aviall: Click on [data-sourcing-bulk] >> button, [role=button], input[type=submit] >> visible=true >> nth=1 blocked; clicking it from code
+2026-11-02 17:30:09,077 INFO sourcing.vendors.aviall: Aviall action 11: click from code (covered element) (at https://shop.boeing.com/bulksearch)
+2026-11-02 17:31:10,799 INFO sourcing.vendors.web: Bulk search: no new page within 45s (updated in place, or the submit didn't fire); now at https://shop.boeing.com/bulksearch
+2026-11-02 17:31:14,514 INFO sourcing.vendors.aviall: Aviall action 12: click boeing-generic-popover .genericPopoverHeader .closeBtn (at https://shop.boeing.com/bulksearch)
+2026-11-02 17:31:21,009 INFO sourcing.vendors.aviall: Aviall step 3 (read): 12 card(s), 10 full part number(s), 0 icon label(s), 18 pop-up button(s), 0 icon(s) to hover
+2026-11-02 17:31:21,576 INFO sourcing.vendors.aviall: Aviall action 13: click pop-up button (at https://shop.boeing.com/bulksearch)
+2026-11-02 17:31:25,990 INFO sourcing.vendors.aviall: Aviall action 14: click pop-up button again (closes it) (at https://shop.boeing.com/bulksearch)
+2026-11-02 17:31:30,522 INFO sourcing.vendors.aviall: Aviall action 15: click pop-up button (at https://shop.boeing.com/bulksearch)
+2026-11-02 17:31:34,938 INFO sourcing.vendors.aviall: Aviall action 16: click pop-up button again (closes it) (at https://shop.boeing.com/bulksearch)
+2026-11-02 17:31:40,541 INFO sourcing.vendors.aviall: Aviall action 17: click pop-up button (at https://shop.boeing.com/bulksearch)
+2026-11-02 17:31:44,912 INFO sourcing.vendors.aviall: Aviall action 18: click pop-up button again (closes it) (at https://shop.boeing.com/bulksearch)
+2026-11-02 17:31:49,532 INFO sourcing.vendors.aviall: Aviall action 19: click pop-up button (at https://shop.boeing.com/bulksearch)
+2026-11-02 17:31:53,923 INFO sourcing.vendors.aviall: Aviall action 20: click pop-up button again (closes it) (at https://shop.boeing.com/bulksearch)
+2026-11-02 17:31:58,501 INFO sourcing.vendors.aviall: Aviall action 21: click pop-up button (at https://shop.boeing.com/bulksearch)
+2026-11-02 17:32:02,879 INFO sourcing.vendors.aviall: Aviall action 22: click pop-up button again (closes it) (at https://shop.boeing.com/bulksearch)
+2026-11-02 17:32:07,431 INFO sourcing.vendors.aviall: Aviall action 23: click pop-up button (at https://shop.boeing.com/bulksearch)
+2026-11-02 17:32:11,699 INFO sourcing.vendors.aviall: Aviall action 24: click pop-up button again (closes it) (at https://shop.boeing.com/bulksearch)
+2026-11-02 17:32:16,227 INFO sourcing.vendors.aviall: Aviall action 25: click pop-up button (at https://shop.boeing.com/bulksearch)
+2026-11-02 17:32:20,516 INFO sourcing.vendors.aviall: Aviall action 26: click pop-up button again (closes it) (at https://shop.boeing.com/bulksearch)
+2026-11-02 17:32:25,170 INFO sourcing.vendors.aviall: Aviall action 27: click pop-up button (at https://shop.boeing.com/bulksearch)
+2026-11-02 17:32:29,550 INFO sourcing.vendors.aviall: Aviall action 28: click pop-up button again (closes it) (at https://shop.boeing.com/bulksearch)
+2026-11-02 17:32:34,174 INFO sourcing.vendors.aviall: Aviall action 29: click pop-up button (at https://shop.boeing.com/bulksearch)
+2026-11-02 17:32:38,537 INFO sourcing.vendors.aviall: Aviall action 30: click pop-up button again (closes it) (at https://shop.boeing.com/bulksearch)
+2026-11-02 17:32:43,082 INFO sourcing.vendors.aviall: Aviall action 31: click pop-up button (at https://shop.boeing.com/bulksearch)
+2026-11-02 17:32:47,597 INFO sourcing.vendors.aviall: Aviall action 32: click pop-up button again (closes it) (at https://shop.boeing.com/bulksearch)
+2026-11-02 17:32:52,112 WARNING sourcing.vendors.aviall: Aviall: stopped reading hover text / pop-ups after 90s
+2026-11-02 17:32:52,389 INFO sourcing.vendors.aviall: Aviall: read 10 pop-up(s) (Price Breaks, Stock By Location, ...) and 0 hover text(s)
+2026-11-02 17:32:54,659 INFO sourcing.vendors.web: Saved results page to /media/pragnakalpl19/projects1/Backup/sourcing-proto_share_2026-10-15/sourcing-proto/debug_pages/20261102-173252-aviall-bulk.(txt|html)
+2026-11-02 17:33:31,570 INFO sourcing.vendors.aviall: Bulk search: offers for 10 of 10 parts (results at https://shop.boeing.com/bulksearch)
+2026-11-02 17:33:31,570 INFO sourcing.pipeline: Bulk search: 10 found, 0 not found, 246.1s, LLM 1 call(s) $0.1645
+2026-11-02 17:33:31,570 INFO sourcing.pipeline: Row 2: found, 1 offer(s), 246.1s, LLM 0 call(s) $0.0000
+2026-11-02 17:33:31,570 INFO sourcing.pipeline: Row 2 offer: pn=4596=1F price=10.10  qty=675 cond=NE lead=In stock
+2026-11-02 17:33:31,570 INFO sourcing.pipeline: Row 3: found, 2 offer(s), 246.1s, LLM 0 call(s) $0.0000
+2026-11-02 17:33:31,570 INFO sourcing.pipeline: Row 3 offer: pn=6839 price=170.00  qty=13 cond=NE lead=In stock
+2026-11-02 17:33:31,570 INFO sourcing.pipeline: Row 3 offer: pn=0L6839=1F price=1.89  qty=6019 cond=NE lead=In stock
+2026-11-02 17:33:31,570 INFO sourcing.pipeline: Row 3: not written, other part numbers: 0L6839=1F, 6839
+2026-11-02 17:33:31,570 INFO sourcing.pipeline: Row 4: found, 1 offer(s), 246.1s, LLM 0 call(s) $0.0000
+2026-11-02 17:33:31,570 INFO sourcing.pipeline: Row 4 offer: pn=4200A200-6=K3 price=442.39  qty=228 cond=NE lead=In stock
+2026-11-02 17:33:31,571 INFO sourcing.pipeline: Row 5: found, 1 offer(s), 246.1s, LLM 0 call(s) $0.0000
+2026-11-02 17:33:31,571 INFO sourcing.pipeline: Row 5 offer: pn=Q5587=1F price=30.44  qty=15 cond=NE lead=In stock
+2026-11-02 17:33:31,571 INFO sourcing.pipeline: Row 6: found, 1 offer(s), 246.1s, LLM 0 call(s) $0.0000
+2026-11-02 17:33:31,571 INFO sourcing.pipeline: Row 6 offer: pn=68-570=3S price=312.47  qty=53 cond=NE lead=In stock
+2026-11-02 17:33:31,571 INFO sourcing.pipeline: Row 7: found, 1 offer(s), 246.1s, LLM 0 call(s) $0.0000
+2026-11-02 17:33:31,571 INFO sourcing.pipeline: Row 7 offer: pn=P4-01-0021=2P price=34.18  qty=5131 cond=NE lead=In stock
+2026-11-02 17:33:31,571 INFO sourcing.pipeline: Row 8: found, 1 offer(s), 246.1s, LLM 0 call(s) $0.0000
+2026-11-02 17:33:31,571 INFO sourcing.pipeline: Row 8 offer: pn=5909812=8D price=584.18  qty=207 cond=NE lead=In stock
+2026-11-02 17:33:31,571 INFO sourcing.pipeline: Row 9: found, 1 offer(s), 246.1s, LLM 0 call(s) $0.0000
+2026-11-02 17:33:31,571 INFO sourcing.pipeline: Row 9 offer: pn=M23033-1141=62 price=44.74  qty=292 cond=NE lead=In stock
+2026-11-02 17:33:31,571 INFO sourcing.pipeline: Row 10: found, 1 offer(s), 246.1s, LLM 0 call(s) $0.0000
+2026-11-02 17:33:31,571 INFO sourcing.pipeline: Row 10 offer: pn=S1840502-01=4T price=101.88  qty=25 cond=NE lead=In stock
+2026-11-02 17:33:31,571 INFO sourcing.pipeline: Row 11: found, 1 offer(s), 246.1s, LLM 0 call(s) $0.0000
+2026-11-02 17:33:31,571 INFO sourcing.pipeline: Row 11 offer: pn=009404=C0 price=64.05  qty=628 cond=NE lead=In stock
+2026-11-02 17:33:34,802 INFO sourcing.pipeline: Row 3 0L6839 (Aviall): -> NOT_FOUND | Only other part numbers listed: 0L6839=1F, 6839
+2026-11-02 17:33:34,811 INFO sourcing.pipeline: Row 2 4596=1F (Aviall): -> DONE
+2026-11-02 17:33:34,820 INFO sourcing.pipeline: Row 4 4200A200-6=K3 (Aviall): -> DONE
+2026-11-02 17:33:34,828 INFO sourcing.pipeline: Row 5 Q5587=1F (Aviall): -> DONE
+2026-11-02 17:33:34,838 INFO sourcing.pipeline: Row 6 68-570=3S (Aviall): -> DONE
+2026-11-02 17:33:34,847 INFO sourcing.pipeline: Row 7 P4-01-0021=2P (Aviall): -> DONE
+2026-11-02 17:33:34,856 INFO sourcing.pipeline: Row 8 5909812=8D (Aviall): -> DONE
+2026-11-02 17:33:34,866 INFO sourcing.pipeline: Row 9 M23033-1141=62 (Aviall): -> DONE
+2026-11-02 17:33:34,875 INFO sourcing.pipeline: Row 10 S1840502-01=4T (Aviall): -> DONE
+2026-11-02 17:33:34,887 INFO sourcing.pipeline: Row 11 009404=C0 (Aviall): -> DONE
+2026-11-02 17:33:34,908 INFO sourcing.vendors.aviall: Aviall action 33: open https://shop.boeing.com/ (at https://shop.boeing.com/bulksearch)
+2026-11-02 17:33:35,304 INFO sourcing.vendors.aviall: Aviall page: https://shop.boeing.com/
+2026-11-02 17:33:37,816 INFO sourcing.vendors.aviall: Aviall page: https://shop.boeing.com/
+2026-11-02 17:33:42,131 INFO sourcing.vendors.aviall: Aviall action 34: click #my-account-profile-dropdown button.dropdown-toggle (at https://shop.boeing.com/)
+2026-11-02 17:33:46,453 INFO sourcing.vendors.aviall: Avatar #my-account-profile-dropdown button.dropdown-toggle: signed_in (#my-account-profile button:has-text('Log out'))
+2026-11-02 17:33:46,453 INFO sourcing.vendors.aviall: Aviall step 4 (finish): clicking #my-account-profile button:has-text('Log out') in the avatar's dropdown
+2026-11-02 17:33:46,454 INFO sourcing.vendors.aviall: Aviall action 35: click #my-account-profile button:has-text('Log out') (at https://shop.boeing.com/)
+2026-11-02 17:33:51,029 INFO sourcing.vendors.aviall: Logout: dialog 1's Log out is a a https://logout.boeingservices.com/?env=p1as&returnURL=https%3A%2F%2Fshop.boeing.com%2F%3Flogout%3Dtrue
+2026-11-02 17:33:51,029 INFO sourcing.vendors.aviall: Aviall step 4 (finish): confirming the logout in dialog 1
+2026-11-02 17:33:53,672 INFO sourcing.vendors.web: Logout confirm: submitted; waiting up to 180s for the page
+2026-11-02 17:33:53,808 INFO sourcing.vendors.aviall: Aviall page: https://myboeingfleet.boeing.com/ReverseProxy/Logout.html?TargetResource=https://sso.aviationid.com/credmgr/accesslogin/Logout.faces?returnUrl=https://auth.boei
+2026-11-02 17:33:54,235 INFO sourcing.vendors.aviall: Aviall page: https://sso.aviationid.com/idprov/accesslogin/Logout.faces?returnUrl=https://auth.boeingservices.com/idp/startSLO.ping?TargetResource=https://auth.boeing.com/id
+2026-11-02 17:33:55,031 INFO sourcing.vendors.aviall: Aviall page: https://auth.boeing.com/idp/startSLO.ping?TargetResource=https://shop.boeing.com/?logout=true
+2026-11-02 17:33:55,847 INFO sourcing.vendors.web: Logout confirm: page ready after 4.8s (https://auth.boeing.com/idp/startSLO.ping?TargetResource=https://shop.boeing.com/?logout=true)
+2026-11-02 17:33:57,176 INFO sourcing.vendors.aviall: Aviall page: https://shop.boeing.com/?logout=true
+2026-11-02 17:33:58,890 INFO sourcing.vendors.aviall: Aviall page: https://shop.boeing.com/?logout=true
+2026-11-02 17:33:59,261 INFO sourcing.vendors.aviall: Aviall page: https://shop.boeing.com/
+2026-11-02 17:34:00,856 INFO sourcing.vendors.aviall: Aviall page: https://shop.boeing.com/
+2026-11-02 17:34:05,000 INFO sourcing.vendors.aviall: Logout: no further confirmation dialog at https://shop.boeing.com/
+2026-11-02 17:34:07,005 INFO sourcing.vendors.aviall: Aviall action 36: open https://shop.boeing.com/ (at https://shop.boeing.com/)
+2026-11-02 17:34:07,445 INFO sourcing.vendors.aviall: Aviall page: https://shop.boeing.com/
+2026-11-02 17:34:09,741 INFO sourcing.vendors.aviall: Aviall page: https://shop.boeing.com/
+2026-11-02 17:34:15,395 INFO sourcing.vendors.aviall: Aviall action 37: open https://shop.boeing.com/aviation-supply (at https://shop.boeing.com/)
+2026-11-02 17:34:16,240 INFO sourcing.vendors.aviall: Aviall page: https://shop.boeing.com/distribution
+2026-11-02 17:34:18,383 INFO sourcing.vendors.aviall: Aviall page: https://shop.boeing.com/distribution
+2026-11-02 17:34:23,501 INFO sourcing.vendors.aviall: Logout: signed out (https://shop.boeing.com/distribution shows button:has-text('Log in to Boeing Distribution'))
+2026-11-02 17:34:23,523 INFO sourcing.pipeline: [aviall___shared] Signed out of Aviall
+2026-11-02 17:34:30,099 INFO sourcing.pipeline: [aviall___shared] Browser session f073f519-a2b3-4cb3-b4be-9eaf21ecc8a7 released
+2026-11-02 17:34:30,790 INFO sourcing.sheets: Requests in 1V-S8J4bFqw1w_WvrsQjFqR4gNhPwFyd-YS_aF7CVqak: 10 data row(s), 0 to process (Status empty/NEW), skipped by Status: DONE=9, NOT_FOUND=1, rows without a part number: 0
+2026-11-02 17:34:30,809 INFO sourcing.pipeline: Run summary: {'run_id': 'local-20261102-115707-6446__aF7CVqak', 'rows_total': 10, 'counts': {'NOT_FOUND': 1, 'DONE': 9}, 'llm': {'calls': 1, 'input_tokens': 17911, 'output_tokens': 4644, 'cache_read_tokens': 0, 'cost_usd': 0.164524}, 'seconds': 439.8}

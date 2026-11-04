@@ -1,0 +1,54 @@
+Onboarding aar with AarAdapter: login from secret sourcing-vendor-aar, browser local (window shown), LLM anthropic claude-opus-5-5 (effort medium), with saved selectors
+2FA: code form at https://moonlit-acquaint-enviable.ngrok-free.dev/hitl/code (the API must be running); the local browser has no Live View; wait 600s
+2026-11-04 11:02:05,910 INFO sourcing.browser: Vendor asks for browser stealth: only on Browserbase; ignored locally
+2026-11-04 11:02:06,544 INFO sourcing.browser: Opened local Chromium 156.0.8078.4 (session local-607ab9dcc98a, headless=False, live view=off; no saved cookies, context label local-60e1713ccf65457b9200ff0bf4cacb8b)
+2026-11-04 11:02:06,544 INFO sourcing.vendors.generic: Login: AAR as purchasing@skylinkintl.com
+2026-11-04 11:02:06,544 INFO sourcing.vendors.aar: Login: opening https://shop.aarcorp.com (AAR landing page)
+2026-11-04 11:02:10,490 INFO sourcing.vendors.web: Consent popup [role='dialog'][aria-label*='cookie' i]: clicking 'Reject all (OneTrust)'
+2026-11-04 11:02:14,563 ERROR sourcing.onboarding: Onboarding stopped
+Traceback (most recent call last):
+  File "/media/pragnakalpl19/projects1/Backup/sourcing-proto_share_2026-10-15/sourcing-proto/sourcing/onboarding.py", line 129, in onboard
+    await login_with_handoff(adapter, page, cred, handoff,
+  File "/media/pragnakalpl19/projects1/Backup/sourcing-proto_share_2026-10-15/sourcing-proto/sourcing/auth/hitl.py", line 360, in login_with_handoff
+    await adapter.login(page, cred)
+  File "/media/pragnakalpl19/projects1/Backup/sourcing-proto_share_2026-10-15/sourcing-proto/sourcing/vendors/generic.py", line 510, in login
+    await self._login(page, cred)
+  File "/media/pragnakalpl19/projects1/Backup/sourcing-proto_share_2026-10-15/sourcing-proto/sourcing/vendors/generic.py", line 583, in _login
+    if not await self._open_login_page(page, cred):
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/media/pragnakalpl19/projects1/Backup/sourcing-proto_share_2026-10-15/sourcing-proto/sourcing/vendors/aar.py", line 175, in _open_login_page
+    await accept_cookies(page)
+  File "/media/pragnakalpl19/projects1/Backup/sourcing-proto_share_2026-10-15/sourcing-proto/sourcing/vendors/web.py", line 491, in accept_cookies
+    async with page.expect_navigation(wait_until="domcontentloaded", timeout=5_000):
+  File "/media/pragnakalpl19/projects1/Backup/sourcing-proto_share_2026-10-15/sourcing-proto/.venv/lib/python3.11/site-packages/playwright/_impl/_async_base.py", line 60, in __aexit__
+    await self._event.value
+  File "/media/pragnakalpl19/projects1/Backup/sourcing-proto_share_2026-10-15/sourcing-proto/.venv/lib/python3.11/site-packages/playwright/_impl/_async_base.py", line 35, in value
+    return mapping.from_maybe_impl(await self._future)
+                                   ^^^^^^^^^^^^^^^^^^
+  File "/media/pragnakalpl19/projects1/Backup/sourcing-proto_share_2026-10-15/sourcing-proto/.venv/lib/python3.11/site-packages/playwright/_impl/_frame.py", line 265, in continuation
+    event = await waiter.result()
+            ^^^^^^^^^^^^^^^^^^^^^
+playwright._impl._errors.Error: Target page, context or browser has been closed
+=========================== logs ===========================
+waiting for navigation until 'domcontentloaded'
+============================================================
+2026-11-04 11:02:14,605 WARNING sourcing.vendors.generic: Could not list the page's elements: TargetClosedError('Page.evaluate: Target page, context or browser has been closed')
+2026-11-04 11:02:14,605 INFO sourcing.vendors.generic: Logout: no logout link on https://shop.aarcorp.com/
+2026-11-04 11:02:14,606 WARNING sourcing.hitl: [onboarding:aar] Logout attempt 1 of 2 not confirmed
+2026-11-04 11:02:14,618 INFO sourcing.vendors.generic: Logout: no logout link on https://shop.aarcorp.com/
+2026-11-04 11:02:14,619 WARNING sourcing.hitl: [onboarding:aar] Logout attempt 2 of 2 not confirmed
+2026-11-04 11:02:14,619 WARNING sourcing.hitl: [onboarding:aar] No Live View to ask a person to log out: Local browser started without live view (LOCAL_BROWSER_LIVE_VIEW=1 turns it on)
+
+Onboarding aar (AarAdapter): NOT OK
+  login: not signed in
+  sign-in check on the next page: None
+  logout: False
+  STOPPED: unexpected error: Error: Target page, context or browser has been closed
+=========================== logs ===========================
+waiting for navigation until 'domcontentloaded'
+============================================================
+  found by: -
+  learned selectors (confirmed; --save saves these):
+  LLM: 0 call(s) (0 to find elements), $0.0000; whole run 8.8s
+
+Saved test_runs/19_2026-11-04__aar__login-only/local-headed-human-typing-2__onboarding.json

@@ -1,0 +1,30 @@
+Run local-20261013-134041-c823__aF7CVqak (sonnet, effort medium)
+Rebuilt from the log: the original report file was a copy of the opus report, and the
+row records in .local_store.json were overwritten by the next run, so tokens per part are not available.
+
+ Row  Part number          Status     Offers   Secs   Cost $
+   2  F1101385-01          DONE            1   20.9   0.0136
+   3  4066-0014            DONE            1   21.3   0.0173
+   4  AS15001-1P           DONE            1   20.7   0.0148
+   5  5934001-217          DONE            1   21.6   0.0146
+   6  60B40018-32          DONE            3   22.7   0.0200
+   7  4132A-934-ZB         DONE            1   21.1   0.0142
+   8  410946               DONE            2   23.7   0.0198
+   9  ACHC-3-13            DONE            2   22.1   0.0180
+  10  B7210                DONE            1   21.6   0.0129
+  11  50831-1              DONE            1   20.1   0.0116
+  12  ACO44521             DONE            1   21.0   0.0139
+  13  ACO47189             DONE            1   21.7   0.0139
+  14  ACR-6-33/B           DONE            1   21.2   0.0149
+  15  AEC-145-69685-005    DONE            1   20.5   0.0140
+  16  AF400                DONE            1   19.8   0.0149
+  17  AG282000-03          DONE            1   19.5   0.0139
+  18  AIS16P               DONE            1   20.5   0.0137
+  19  AMC02RA03W           DONE            1   20.6   0.0145
+  20  AN901-4C             DONE            1   21.0   0.0141
+  21  AQC-5729             DONE            2   21.1   0.0163
+
+Parts: 20   statuses: DONE=20
+Search time per part: avg 21.1s, min 19.5s, max 23.7s
+LLM cost: $0.3009 total, $0.0150 per part (run summary in the log: $0.3011, 130417 in + 4023 out tokens)
+Whole run (login and sheet writes included): 501s, 25.0s per part

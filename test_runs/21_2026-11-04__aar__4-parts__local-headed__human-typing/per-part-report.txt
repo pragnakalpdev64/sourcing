@@ -1,0 +1,15 @@
+Run local-20261104-073534-3948__aar_4parts
+
+ Row  Part number          Status     Offers   Secs  In tok Out tok   Cost $
+   2  44066                DONE            1   49.2       0       0   0.0259
+   3  1381-1176            DONE            1   49.2       0       0   0.0259
+   4  3880938-1            DONE            1   49.2       0       0   0.0259
+   5  C100-013080          DONE            1   49.2       0       0   0.0259
+
+Parts: 4   statuses: {'DONE': 4}
+Search time per part: avg 49.2s, min 49.2s, max 49.2s
+Tokens: 0 in + 0 out (avg 0 in + 0 out per part)
+LLM cost: $0.1036 total, $0.0259 per part
+Whole run (login and sheet writes included): 98s, 24.6s per part
+
+Saved test_runs/21_2026-11-04__aar__4-parts__local-headed__human-typing/per-part-report.csv

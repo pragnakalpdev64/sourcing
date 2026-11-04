@@ -1,0 +1,36 @@
+/media/pragnakalpl19/projects1/Backup/sourcing-proto_share_2026-10-15/sourcing-proto/.venv/lib/python3.11/site-packages/google/api_core/_python_version_support.py:254: FutureWarning: You are using a Python version (3.11.15) which Google will stop supporting in new releases of google.api_core once it reaches its end of life (2027-10-24). Please upgrade to the latest Python version, or at least Python 3.12, to continue receiving updates for google.api_core past that date.
+  warnings.warn(message, FutureWarning)
+/media/pragnakalpl19/projects1/Backup/sourcing-proto_share_2026-10-15/sourcing-proto/.venv/lib/python3.11/site-packages/google/api_core/_python_version_support.py:254: FutureWarning: You are using a Python version (3.11.15) which Google will stop supporting in new releases of google.cloud.secretmanager_v1 once it reaches its end of life (2027-10-24). Please upgrade to the latest Python version, or at least Python 3.12, to continue receiving updates for google.cloud.secretmanager_v1 past that date.
+  warnings.warn(message, FutureWarning)
+Onboarding aviall with AviallAdapter: login from secret sourcing-vendor-aviall, browser browserbase, LLM anthropic claude-opus-5-5 (effort medium), fresh (saved selectors ignored)
+2FA: Live View link sent in Chat; the person logs in there; wait 600s
+2026-11-02 11:07:54,163 WARNING sourcing.browser: Browserbase session recording is ON: recordings show the vendor pages, login screens included. Use for local debugging only.
+2026-11-02 11:08:00,258 INFO sourcing.browser: Opened Browserbase session 8c2bf693-f340-42c5-8a20-b03e67e6c7a3 (context=dbed1f01-6e06-45a0-a7e6-1ec36f4fde84, keep_alive=False, recording=on)
+2026-11-02 11:08:00,258 INFO sourcing.browser: Session page: https://www.browserbase.com/sessions/8c2bf693-f340-42c5-8a20-b03e67e6c7a3
+2026-11-02 11:08:00,606 INFO sourcing.browser: Session live view (while the run lasts): https://www.browserbase.com/devtools-fullscreen/inspector.html?wss=connect.browserbase.com/debug/8c2bf693-f340-42c5-8a20-b03e67e6c7a3/devtools/page/290A98965F08D3223EF0DB1C4D949ACA?t=eyJhbGciOiJBMjU2S1ciLCJlbmMiOiJBMjU2R0NNIn0.HdrZ4j4F6FsIv65JGFn8t9nICAV2W9gfJU5lNDpM-I5ZPn3rOD4cxg.fnuZcabJfWVWnKcq.OOoJDa-PPpZIQwWmDYmL4rAAndBZf6NUP7h_EWPmnl45eA3mbN08dvGc-N0MQNM6Hf_K-0rx-iDCT8xU8nYitAkG5ULIRb5K9ovyQGZ8L8sK56nzFzRbZtNS4WoPALEslbKeyClTbfuqr50BCw.b03Y_9pOQWSnE2ZxH40MKg&debug=true
+2026-11-02 11:08:00,606 INFO sourcing.vendors.generic: Login: Aviall as purchasing@skylinkintl.com
+2026-11-02 11:08:00,606 INFO sourcing.vendors.aviall: Login: opening https://shop.boeing.com/aviation-supply (from secret sourcing-vendor-aviall url)
+2026-11-02 11:09:08,935 WARNING sourcing.vendors.web: Consent popup #onetrust-banner-sdk is showing but has no button we recognise (Decline all, Decline, Reject all, Reject, Only necessary, Necessary only, Accept all, Accept, I agree, Agree, OK, Got it); leaving it
+2026-11-02 11:09:20,826 INFO sourcing.vendors.aviall: Login: clicking button:has-text('Log in to Boeing Distribution') (Boeing Distribution login button)
+2026-11-02 11:09:58,558 INFO sourcing.vendors.web: Boeing Distribution login button: no new page within 20s (updated in place, or the submit didn't fire); now at https://shop.boeing.com/distribution
+2026-11-02 11:10:21,137 INFO sourcing.vendors.aviall: Login: clicking button:has-text('OneLogin') (OneLogin ID button)
+2026-11-02 11:10:24,011 INFO sourcing.vendors.web: OneLogin ID button: submitted; waiting up to 90s for the page
+2026-11-02 11:10:26,537 INFO sourcing.vendors.web: OneLogin ID button: page ready after 5.4s (https://auth.boeing.com/sp/ACS.saml2)
+2026-11-02 11:10:33,645 INFO sourcing.vendors.aviall: Login: sign-in form at https://auth.boeing.com/sp/ACS.saml2
+2026-11-02 11:10:43,547 INFO sourcing.vendors.generic: LLM picked username: [id="username"], saved as [id="username"] ({"index": 0, "tag": "input", "type": "text", "role": null, "id": "username", "name": "subject", "placeholder": "yourname@company.com", "autocomplete": null, "aria_label": null, "label": null, "title":)
+2026-11-02 11:10:43,547 INFO sourcing.vendors.generic: LLM picked next: [id="submitButton"], saved as [id="submitButton"] ({"index": 1, "tag": "button", "type": null, "role": null, "id": "submitButton", "name": null, "placeholder": null, "autocomplete": null, "aria_label": null, "label": null, "title": null, "text": "LOG )
+2026-11-02 11:10:43,547 INFO sourcing.vendors.generic: Login step 1 at https://auth.boeing.com/sp/ACS.saml2: username=input[id*='username' i] password=None
+2026-11-02 11:10:44,972 INFO sourcing.vendors.generic: Login: two-step sign-in; continuing with [id="submitButton"]
+2026-11-02 11:10:47,668 INFO sourcing.vendors.web: Login next: submitted; waiting up to 90s for the page
+2026-11-02 11:10:52,203 INFO sourcing.vendors.web: Login next: page ready after 7.2s (https://auth.boeing.com/as/Y2JNYMozNL/resume/as/authorization.ping)
+2026-11-02 11:11:03,329 INFO sourcing.vendors.generic: Login step 2 at https://auth.boeing.com/as/Y2JNYMozNL/resume/as/authorization.ping: username=(done) password=input[type='password']:not([aria-hidden='true']):not([tabindex='-1'])
+2026-11-02 11:11:07,915 INFO sourcing.vendors.generic: Login: submitting with button:has-text('Log in')
+2026-11-02 11:11:10,750 INFO sourcing.vendors.web: Login submit: submitted; waiting up to 90s for the page
+2026-11-02 11:11:14,361 INFO sourcing.vendors.web: Login submit: page ready after 6.4s (https://auth.boeing.com/as/Y2JNYMozNL/resume/as/authorization.ping)
+2026-11-02 11:11:18,911 INFO sourcing.vendors.aviall: Login: Aviall asks for a 2FA code; opening the login URL https://shop.boeing.com/aviation-supply again instead (team, 2026-11-02)
+2026-11-02 11:12:27,598 INFO sourcing.vendors.aviall: Login: clicking button:has-text('Log in to Boeing Distribution') (Boeing Distribution login button)
+2026-11-02 11:13:05,592 INFO sourcing.vendors.web: Boeing Distribution login button: no new page within 20s (updated in place, or the submit didn't fire); now at https://shop.boeing.com/distribution
+2026-11-02 11:13:29,087 INFO sourcing.vendors.aviall: Login: clicking button:has-text('OneLogin') (OneLogin ID button)
+2026-11-02 11:13:32,233 INFO sourcing.vendors.web: OneLogin ID button: submitted; waiting up to 90s for the page
+2026-11-02 11:14:33,540 INFO sourcing.vendors.web: OneLogin ID button: page ready after 64.5s (https://shop.boeing.com/distribution)
+2026-11-02 11:15:27,682 INFO sourcing.vendors.aviall: Login: after reopening the login URL: no sign-in button at https://auth.boeing.com/idp/startSLO.ping?TargetResource=https://shop.boeing.com/distribution/?logout=true at https://auth.boeing.com/idp/startSLO.ping?TargetResource=https://shop.boeing.com/distribution/?logout=true

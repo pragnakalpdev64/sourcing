@@ -1,0 +1,144 @@
+2026-10-30 16:04:34,868 INFO sourcing.sheets: Opened local Excel file /tmp/claude-1001/-media-pragnakalpl19-projects1-Backup-sourcing-proto-share-2026-10-15-sourcing-proto/32602489-e666-496c-896b-4e8678c06b80/scratchpad/dry_run_same_part.xlsx (tabs: Requests)
+2026-10-30 16:04:34,870 INFO sourcing.sheets: Requests in /tmp/claude-1001/-media-pragnakalpl19-projects1-Backup-sourcing-proto-share-2026-10-15-sourcing-proto/32602489-e666-496c-896b-4e8678c06b80/scratchpad/dry_run_same_part.xlsx: 12 data row(s), 12 to process (Status empty/NEW/RUNNING), skipped by Status: none, rows without a part number: 0
+2026-10-30 16:04:34,870 INFO sourcing.pipeline: Run dry-run picked up 12 NEW rows
+2026-10-30 16:04:34,876 INFO sourcing.pipeline: dasi / dry@example.com: using shared login (secret key sourcing-vendor-dasi, totp=no) for 12 row(s)
+2026-10-30 16:04:34,876 INFO sourcing.pipeline: [dasi___shared] Rows 13: same part MS24665-132 as row 2, one search for all
+2026-10-30 16:04:34,876 INFO sourcing.pipeline: [dasi___shared] Rows 12: same part MS20470AD3-4 as row 5, one search for all
+2026-10-30 16:04:34,876 INFO sourcing.pipeline: [dasi___shared] Bulk search: 10 parts (bulk from 2), up to 25 per search
+2026-10-30 16:04:34,876 INFO sourcing.auth: [dasi___shared] Created browser Context local-637047ba7b45414fb446408f6556eb59 (first login for this account)
+2026-10-30 16:04:35,221 INFO sourcing.browser: Opened local Chromium 156.0.8078.4 (session local-ca80af69aad5, headless=True, live view=off; no saved cookies, context label local-637047ba7b45414fb446408f6556eb59)
+2026-10-30 16:04:35,221 INFO sourcing.auth: [dasi___shared] Context local-637047ba7b45414fb446408f6556eb59 has no active sign-in (never signed in); logging in
+2026-10-30 16:04:35,221 INFO sourcing.auth: [dasi___shared] Automatic login attempt 1/2
+2026-10-30 16:04:35,223 INFO sourcing.auth: [dasi___shared] Login OK
+2026-10-30 16:04:35,223 INFO sourcing.pipeline: Rows 2,3,4,5,6,7,8,9,10,11: bulk searching DASI for 10 parts
+2026-10-30 16:04:35,224 INFO sourcing.vendors.dasi: Bulk search: 10 parts in one search (https://store.dasi.com/product-search?type=multiple&exact=true&product=MS24665-132&product=MS20470AD4-3&product=MS20470AD4-4&product=MS20470AD3-4&product=MS20470AD5-4&product=NAS1149C0863R&product=NAS1149C0432R&product=NAS1149C0332R&product=NAS1149D0863H&product=NAS1352-5LE16P)
+2026-10-30 16:04:40,992 INFO sourcing.vendors.dasi: DASI: Fulfilled by = DASI Only set
+2026-10-30 16:04:45,130 INFO sourcing.vendors.dasi: DASI: Location = DASI Miami HQ (FL) set
+2026-10-30 16:04:45,196 INFO sourcing.vendors.dasi: DASI: 10 of 10 part block(s) open (10 all at once; 0 clicked at once)
+2026-10-30 16:04:45,238 INFO sourcing.vendors.dasi: DASI: read 42 lot(s) from 10 part block(s)
+2026-10-30 16:04:45,238 INFO sourcing.vendors.dasi: DASI: reading 42 lot record(s) in 3 LLM calls at once
+2026-10-30 16:05:07,532 INFO httpx2: HTTP Request: POST https://api.anthropic.com/v1/messages?beta=true "HTTP/1.1 200 OK"
+2026-10-30 16:05:22,796 INFO httpx2: HTTP Request: POST https://api.anthropic.com/v1/messages?beta=true "HTTP/1.1 200 OK"
+2026-10-30 16:05:23,198 INFO httpx2: HTTP Request: POST https://api.anthropic.com/v1/messages?beta=true "HTTP/1.1 200 OK"
+2026-10-30 16:05:23,214 INFO sourcing.vendors.dasi: Bulk search: offers for 9 of 10 parts
+2026-10-30 16:05:23,214 INFO sourcing.pipeline: Bulk search: 9 found, 1 not found, 48.0s, LLM 3 call(s) $0.3779
+2026-10-30 16:05:23,214 INFO sourcing.pipeline: Row 2: found, 5 offer(s), 48.0s, LLM 0 call(s) $0.0000
+2026-10-30 16:05:23,214 INFO sourcing.pipeline: Row 2 offer: pn=MS24665-132 price=0.15  qty=273 cond=NS lead=In stock (0 days)
+2026-10-30 16:05:23,214 INFO sourcing.pipeline: Row 2 offer: pn=MS24665-132 price=0.38  qty=54 cond=NS lead=In stock (0 days)
+2026-10-30 16:05:23,214 INFO sourcing.pipeline: Row 2 offer: pn=MS24665-132 price=0.67  qty=30 cond=NS lead=In stock (0 days)
+2026-10-30 16:05:23,214 INFO sourcing.pipeline: Row 2 offer: pn=MS24665-132 price=0.06  qty=389 cond=NE lead=In stock (0 days)
+2026-10-30 16:05:23,214 INFO sourcing.pipeline: Row 2 offer: pn=MS24665-132 price=0.10  qty=200 cond=NS lead=In stock (0 days)
+2026-10-30 16:05:23,215 INFO sourcing.pipeline: Row 13: same part as row 2, using its search
+2026-10-30 16:05:23,215 INFO sourcing.pipeline: Row 13: found, 5 offer(s), 48.0s, LLM 0 call(s) $0.0000
+2026-10-30 16:05:23,215 INFO sourcing.pipeline: Row 13 offer: pn=MS24665-132 price=0.15  qty=273 cond=NS lead=In stock (0 days)
+2026-10-30 16:05:23,215 INFO sourcing.pipeline: Row 13 offer: pn=MS24665-132 price=0.38  qty=54 cond=NS lead=In stock (0 days)
+2026-10-30 16:05:23,215 INFO sourcing.pipeline: Row 13 offer: pn=MS24665-132 price=0.67  qty=30 cond=NS lead=In stock (0 days)
+2026-10-30 16:05:23,215 INFO sourcing.pipeline: Row 13 offer: pn=MS24665-132 price=0.06  qty=389 cond=NE lead=In stock (0 days)
+2026-10-30 16:05:23,215 INFO sourcing.pipeline: Row 13 offer: pn=MS24665-132 price=0.10  qty=200 cond=NS lead=In stock (0 days)
+2026-10-30 16:05:23,215 INFO sourcing.pipeline: Row 3: found, 5 offer(s), 48.0s, LLM 0 call(s) $0.0000
+2026-10-30 16:05:23,215 INFO sourcing.pipeline: Row 3 offer: pn=MS20470AD4-3 price=2.23  qty=9 cond=NS lead=In stock (0 days)
+2026-10-30 16:05:23,216 INFO sourcing.pipeline: Row 3 offer: pn=MS20470AD4-3 price=3.34  qty=6 cond=NS lead=In stock (0 days)
+2026-10-30 16:05:23,216 INFO sourcing.pipeline: Row 3 offer: pn=MS20470AD4-3 price=0.28  qty=73 cond=NS lead=In stock (0 days)
+2026-10-30 16:05:23,216 INFO sourcing.pipeline: Row 3 offer: pn=MS20470AD4-3 price=0.43  qty=47 cond=NS lead=In stock (0 days)
+2026-10-30 16:05:23,216 INFO sourcing.pipeline: Row 3 offer: pn=MS20470AD4-3 price=20.00  qty=2 cond=NS lead=In stock (0 days)
+2026-10-30 16:05:23,216 INFO sourcing.pipeline: Row 4: found, 2 offer(s), 48.0s, LLM 0 call(s) $0.0000
+2026-10-30 16:05:23,216 INFO sourcing.pipeline: Row 4 offer: pn=MS20470AD4-4 price=1.54  qty=13 cond=NS lead=In stock (0 days)
+2026-10-30 16:05:23,216 INFO sourcing.pipeline: Row 4 offer: pn=MS20470AD4-4 price=1.82  qty=1238 cond=NS lead=In stock (0 days)
+2026-10-30 16:05:23,216 INFO sourcing.pipeline: Row 5: found, 11 offer(s), 48.0s, LLM 0 call(s) $0.0000
+2026-10-30 16:05:23,216 INFO sourcing.pipeline: Row 5 offer: pn=MS20470AD3-4 price=0.02  qty=4038 cond=NS lead=In stock (0 days)
+2026-10-30 16:05:23,217 INFO sourcing.pipeline: Row 5 offer: pn=MS20470AD3-4 price=20.00  qty=6 cond=NS lead=In stock (0 days)
+2026-10-30 16:05:23,217 INFO sourcing.pipeline: Row 5 offer: pn=MS20470AD3-4 price=20.00  qty=1 cond=NS lead=In stock (0 days)
+2026-10-30 16:05:23,217 INFO sourcing.pipeline: Row 5 offer: pn=MS20470AD3-4 price=0.10  qty=200 cond=NS lead=In stock (0 days)
+2026-10-30 16:05:23,217 INFO sourcing.pipeline: Row 5 offer: pn=MS20470AD3-4 price=0.04  qty=1150 cond=NS lead=In stock (0 days)
+2026-10-30 16:05:23,217 INFO sourcing.pipeline: Row 5 offer: pn=MS20470AD3-4 price=2.50  qty=8 cond=NS lead=In stock (0 days)
+2026-10-30 16:05:23,217 INFO sourcing.pipeline: Row 5 offer: pn=MS20470AD3-4 price=0.36  qty=57 cond=NS lead=In stock (0 days)
+2026-10-30 16:05:23,217 INFO sourcing.pipeline: Row 5 offer: pn=MS20470AD3-4 price=10.00  qty=2 cond=NS lead=In stock (0 days)
+2026-10-30 16:05:23,217 INFO sourcing.pipeline: Row 5 offer: pn=MS20470AD3-4 price=0.05  qty=403 cond=NS lead=In stock (0 days)
+2026-10-30 16:05:23,217 INFO sourcing.pipeline: Row 5 offer: pn=MS20470AD3-4 price=0.03  qty=1326 cond=NE lead=In stock (0 days)
+2026-10-30 16:05:23,217 INFO sourcing.pipeline: Row 5 offer: pn=MS20470AD3-4 price=None  qty=3233 cond=SV lead=In stock (0 days)
+2026-10-30 16:05:23,217 INFO sourcing.pipeline: Row 5: not written, other UOM: LB (asked EA)
+2026-10-30 16:05:23,217 INFO sourcing.pipeline: Row 12: same part as row 5, using its search
+2026-10-30 16:05:23,217 INFO sourcing.pipeline: Row 12: found, 11 offer(s), 48.0s, LLM 0 call(s) $0.0000
+2026-10-30 16:05:23,217 INFO sourcing.pipeline: Row 12 offer: pn=MS20470AD3-4 price=0.02  qty=4038 cond=NS lead=In stock (0 days)
+2026-10-30 16:05:23,217 INFO sourcing.pipeline: Row 12 offer: pn=MS20470AD3-4 price=20.00  qty=6 cond=NS lead=In stock (0 days)
+2026-10-30 16:05:23,217 INFO sourcing.pipeline: Row 12 offer: pn=MS20470AD3-4 price=20.00  qty=1 cond=NS lead=In stock (0 days)
+2026-10-30 16:05:23,217 INFO sourcing.pipeline: Row 12 offer: pn=MS20470AD3-4 price=0.10  qty=200 cond=NS lead=In stock (0 days)
+2026-10-30 16:05:23,217 INFO sourcing.pipeline: Row 12 offer: pn=MS20470AD3-4 price=0.04  qty=1150 cond=NS lead=In stock (0 days)
+2026-10-30 16:05:23,217 INFO sourcing.pipeline: Row 12 offer: pn=MS20470AD3-4 price=2.50  qty=8 cond=NS lead=In stock (0 days)
+2026-10-30 16:05:23,217 INFO sourcing.pipeline: Row 12 offer: pn=MS20470AD3-4 price=0.36  qty=57 cond=NS lead=In stock (0 days)
+2026-10-30 16:05:23,217 INFO sourcing.pipeline: Row 12 offer: pn=MS20470AD3-4 price=10.00  qty=2 cond=NS lead=In stock (0 days)
+2026-10-30 16:05:23,217 INFO sourcing.pipeline: Row 12 offer: pn=MS20470AD3-4 price=0.05  qty=403 cond=NS lead=In stock (0 days)
+2026-10-30 16:05:23,217 INFO sourcing.pipeline: Row 12 offer: pn=MS20470AD3-4 price=0.03  qty=1326 cond=NE lead=In stock (0 days)
+2026-10-30 16:05:23,217 INFO sourcing.pipeline: Row 12 offer: pn=MS20470AD3-4 price=None  qty=3233 cond=SV lead=In stock (0 days)
+2026-10-30 16:05:23,217 INFO sourcing.pipeline: Row 12: not written, other UOM: EA (asked LB)
+2026-10-30 16:05:23,217 INFO sourcing.pipeline: Row 6: found, 5 offer(s), 48.0s, LLM 0 call(s) $0.0000
+2026-10-30 16:05:23,217 INFO sourcing.pipeline: Row 6 offer: pn=MS20470AD5-4 price=0.14  qty=151 cond=NS lead=In stock (0 days)
+2026-10-30 16:05:23,218 INFO sourcing.pipeline: Row 6 offer: pn=MS20470AD5-4 price=0.25  qty=82 cond=NS lead=In stock (0 days)
+2026-10-30 16:05:23,218 INFO sourcing.pipeline: Row 6 offer: pn=MS20470AD5-4 price=5.00  qty=4 cond=NS lead=In stock (0 days)
+2026-10-30 16:05:23,218 INFO sourcing.pipeline: Row 6 offer: pn=MS20470AD5-4 price=0.16  qty=133 cond=NS lead=In stock (0 days)
+2026-10-30 16:05:23,218 INFO sourcing.pipeline: Row 6 offer: pn=MS20470AD5-4 price=1.34  qty=760 cond=NE lead=In stock (0 days)
+2026-10-30 16:05:23,218 INFO sourcing.pipeline: Row 7: found, 2 offer(s), 48.0s, LLM 0 call(s) $0.0000
+2026-10-30 16:05:23,218 INFO sourcing.pipeline: Row 7 offer: pn=NAS1149C0863R price=None  qty=8 cond=SV lead=In stock (0 days)
+2026-10-30 16:05:23,218 INFO sourcing.pipeline: Row 7 offer: pn=NAS1149C0863R price=0.96  qty=21 cond=NE lead=In stock (0 days)
+2026-10-30 16:05:23,218 INFO sourcing.pipeline: Row 8: found, 5 offer(s), 48.0s, LLM 0 call(s) $0.0000
+2026-10-30 16:05:23,218 INFO sourcing.pipeline: Row 8 offer: pn=NAS1149C0432R price=2.50  qty=8 cond=NS lead=In stock (0 days)
+2026-10-30 16:05:23,218 INFO sourcing.pipeline: Row 8 offer: pn=NAS1149C0432R price=1.25  qty=16 cond=NS lead=In stock (0 days)
+2026-10-30 16:05:23,218 INFO sourcing.pipeline: Row 8 offer: pn=NAS1149C0432R price=10.00  qty=2 cond=NS lead=In stock (0 days)
+2026-10-30 16:05:23,218 INFO sourcing.pipeline: Row 8 offer: pn=NAS1149C0432R price=0.72  qty=28 cond=NS lead=In stock (0 days)
+2026-10-30 16:05:23,218 INFO sourcing.pipeline: Row 8 offer: pn=NAS1149C0432R price=1.43  qty=14 cond=NS lead=In stock (0 days)
+2026-10-30 16:05:23,218 INFO sourcing.pipeline: Row 9: found, 3 offer(s), 48.0s, LLM 0 call(s) $0.0000
+2026-10-30 16:05:23,218 INFO sourcing.pipeline: Row 9 offer: pn=NAS1149C0332R price=20.00  qty=1 cond=NS lead=In stock (0 days)
+2026-10-30 16:05:23,218 INFO sourcing.pipeline: Row 9 offer: pn=NAS1149C0332R price=5.00  qty=4 cond=NS lead=In stock (0 days)
+2026-10-30 16:05:23,218 INFO sourcing.pipeline: Row 9 offer: pn=NAS1149C0332R price=20.00  qty=1 cond=NE lead=In stock (0 days)
+2026-10-30 16:05:23,219 INFO sourcing.pipeline: Row 10: found, 2 offer(s), 48.0s, LLM 0 call(s) $0.0000
+2026-10-30 16:05:23,219 INFO sourcing.pipeline: Row 10 offer: pn=NAS1149D0863H price=15.60  qty=3240 cond=NS lead=In stock (0 days)
+2026-10-30 16:05:23,219 INFO sourcing.pipeline: Row 10 offer: pn=NAS1149D0863H price=15.60  qty=484 cond=NE lead=In stock (0 days)
+2026-10-30 16:05:23,463 INFO sourcing.pipeline: Row 2 MS24665-132 (dasi): -> DONE
+2026-10-30 16:05:23,463 INFO sourcing.pipeline: Row 13 MS24665-132 (dasi): -> DONE
+2026-10-30 16:05:23,463 INFO sourcing.pipeline: Row 3 MS20470AD4-3 (dasi): -> DONE
+2026-10-30 16:05:23,463 INFO sourcing.pipeline: Row 4 MS20470AD4-4 (dasi): -> DONE
+2026-10-30 16:05:23,463 INFO sourcing.pipeline: Row 5 MS20470AD3-4 (dasi): -> DONE
+2026-10-30 16:05:23,463 INFO sourcing.pipeline: Row 12 MS20470AD3-4 (dasi): -> DONE
+2026-10-30 16:05:23,463 INFO sourcing.pipeline: Row 6 MS20470AD5-4 (dasi): -> DONE
+2026-10-30 16:05:23,463 INFO sourcing.pipeline: Row 7 NAS1149C0863R (dasi): -> DONE
+2026-10-30 16:05:23,463 INFO sourcing.pipeline: Row 8 NAS1149C0432R (dasi): -> DONE
+2026-10-30 16:05:23,463 INFO sourcing.pipeline: Row 9 NAS1149C0332R (dasi): -> DONE
+2026-10-30 16:05:23,463 INFO sourcing.pipeline: Row 10 NAS1149D0863H (dasi): -> DONE
+2026-10-30 16:05:23,463 INFO sourcing.pipeline: [dasi___shared] Searching 1 part(s) again one by one before logout (not found in bulk, empty page or search error)
+2026-10-30 16:05:23,463 INFO sourcing.pipeline: Row 11: searching DASI for NAS1352-5LE16P
+2026-10-30 16:05:23,463 INFO sourcing.vendors.generic: Search: opening https://store.dasi.com/product-search?type=simple&searchterms=NAS1352-5LE16P&exact=true directly
+2026-10-30 16:05:29,161 INFO sourcing.vendors.dasi: DASI: Fulfilled by = DASI Only set
+2026-10-30 16:05:33,277 INFO sourcing.vendors.dasi: DASI: Location = DASI Miami HQ (FL) set
+2026-10-30 16:05:33,353 INFO sourcing.vendors.dasi: DASI: 10 of 10 part block(s) open (10 all at once; 0 clicked at once)
+2026-10-30 16:05:33,376 INFO sourcing.vendors.dasi: DASI: read 42 lot(s) from 10 part block(s)
+2026-10-30 16:05:38,570 INFO httpx2: HTTP Request: POST https://api.anthropic.com/v1/messages?beta=true "HTTP/1.1 200 OK"
+2026-10-30 16:05:40,586 INFO httpx2: HTTP Request: POST https://api.anthropic.com/v1/messages?beta=true "HTTP/1.1 200 OK"
+2026-10-30 16:05:40,588 INFO sourcing.pipeline: Row 11: no results, 0 offer(s), 17.1s, LLM 2 call(s) $0.0831
+2026-10-30 16:05:40,618 INFO sourcing.pipeline: Row 11 NAS1352-5LE16P (dasi): -> NOT_FOUND
+2026-10-30 16:05:40,618 INFO sourcing.pipeline: [dasi___shared] Signed out of DASI
+2026-10-30 16:05:40,650 INFO sourcing.pipeline: [dasi___shared] Browser session local-ca80af69aad5 released
+2026-10-30 16:05:40,650 INFO sourcing.sheets: Requests in /tmp/claude-1001/-media-pragnakalpl19-projects1-Backup-sourcing-proto-share-2026-10-15-sourcing-proto/32602489-e666-496c-896b-4e8678c06b80/scratchpad/dry_run_same_part.xlsx: 12 data row(s), 0 to process (Status empty/NEW), skipped by Status: DONE=11, NOT_FOUND=1, rows without a part number: 0
+2026-10-30 16:05:40,651 INFO sourcing.pipeline: Vendor dasi had no limits; saved the defaults (unconfirmed)
+2026-10-30 16:05:40,651 INFO sourcing.notify: [chat disabled] Vendor DASI has no login/search limits set, so the safe defaults were used and saved (unconfirmed): locks after 3 failed login(s) in 24h, at most 10 logins a day, 5s between searches, 50 searches per run and 200 per day. Please get DASI's real rules (how many failed logins lock the account, any search limits) and set them: python scripts/vendor_limits.py set dasi KEY=VALUE ...
+2026-10-30 16:05:40,651 INFO sourcing.pipeline: Run summary: {'run_id': 'dry-run', 'rows_total': 12, 'counts': {'DONE': 11, 'NOT_FOUND': 1}, 'llm': {'calls': 5, 'input_tokens': 54742, 'output_tokens': 12100, 'cache_read_tokens': 0, 'cost_usd': 0.460968}, 'seconds': 65.8}
+2026-10-30 16:05:40,651 INFO sourcing.notify: [chat disabled] *SourcingAI run finished*
+12 part(s) in 1m 06s (5.5s per part)
+Sheet: `dry_run_same_part.xlsx` (local file)
+Run: `dry-run`
+
+*Results*
+DONE 11 · NOT_FOUND 1
+Offers written to Results: 45
+
+*By vendor*
+• DASI: 12 part(s), bulk search, up to 25 per search · DONE 11, NOT_FOUND 1 · 45 offer(s) · LLM $0.4610
+
+*LLM*
+• Model: anthropic claude-opus-5-5, effort medium
+• Calls: 5
+• Tokens: 54,742 in + 12,100 out (avg 4,561 + 1,008 per part)
+• Cost: $0.4610 total, $0.0384 per part
+
+*Not DONE* (1)
+• Row 11 `NAS1352-5LE16P` (DASI): NOT_FOUND
+SUMMARY {'run_id': 'dry-run', 'rows_total': 12, 'counts': {'DONE': 11, 'NOT_FOUND': 1}, 'llm': {'calls': 5, 'input_tokens': 54742, 'output_tokens': 12100, 'cache_read_tokens': 0, 'cost_usd': 0.460968}, 'seconds': 65.8}

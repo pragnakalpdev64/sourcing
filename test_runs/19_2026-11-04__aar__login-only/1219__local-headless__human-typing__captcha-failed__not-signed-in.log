@@ -1,0 +1,30 @@
+Onboarding aar with AarAdapter: login from secret sourcing-vendor-aar, browser local, LLM anthropic claude-opus-5-5 (effort medium), with saved selectors
+2FA: local live view link (DevTools on 127.0.0.1) sent in Chat; open it on this machine and log in there; wait 600s
+2026-11-04 12:20:03,833 INFO sourcing.browser: Opened local Chromium 156.0.8078.4 (session local-933e4f65392e, headless=True, live view=127.0.0.1:50405; no saved cookies, context label local-246bfebe84bd4bc1b4fcf70262f37725)
+2026-11-04 12:20:03,833 INFO sourcing.vendors.generic: Login: AAR as purchasing@skylinkintl.com
+2026-11-04 12:20:03,833 INFO sourcing.vendors.aar: Login: opening https://shop.aarcorp.com (AAR landing page)
+2026-11-04 12:20:14,141 INFO sourcing.vendors.web: Consent popup [role='dialog'][aria-label*='cookie' i]: clicking 'Reject all (OneTrust)'
+2026-11-04 12:20:19,148 INFO sourcing.vendors.web: Consent popup answered; no reload
+2026-11-04 12:20:20,441 INFO sourcing.vendors.aar: AAR account check: 302 to https://shop.aarcorp.com/customer/account/login/referer/aHR0cHM6Ly9zaG9wLmFhcmNvcnAuY29tL2N1c3RvbWVyL2FjY291bnQvaW5kZXgv/ -> signed out
+2026-11-04 12:20:20,494 INFO sourcing.vendors.aar: Login: avatar clicked; following 'Sign In or Register'
+2026-11-04 12:20:20,569 INFO sourcing.vendors.web: AAR Sign In link: submitted; waiting up to 90s for the page
+2026-11-04 12:20:25,051 INFO sourcing.vendors.web: AAR Sign In link: page ready after 4.6s (https://shop.aarcorp.com/customer/account/login)
+2026-11-04 12:20:25,100 INFO sourcing.vendors.aar: AAR step 1 (sign in): the sign-in form at https://shop.aarcorp.com/customer/account/login
+2026-11-04 12:20:25,159 INFO sourcing.vendors.generic: Login step 1 at https://shop.aarcorp.com/customer/account/login: username=form#login-form input#email password=form#login-form input#pass
+2026-11-04 12:20:35,282 INFO sourcing.vendors.generic: Login: submitting with form#login-form button#send2
+2026-11-04 12:20:35,647 INFO sourcing.vendors.web: Login submit: submitted; waiting up to 90s for the page
+2026-11-04 12:20:41,435 INFO sourcing.vendors.web: Login submit: page ready after 6.2s (https://shop.aarcorp.com/customer/account/login/referer/aHR0cHM6Ly9zaG9wLmFhcmNvcnAuY29tL2N1c3RvbWVyL2FjY291bnQvaW5kZXgv/)
+2026-11-04 12:20:41,475 WARNING sourcing.vendors.generic: Login: page mentions 'captcha' -> login failed, may be tried again
+2026-11-04 12:20:41,476 WARNING sourcing.onboarding: Onboarding stopped: the login could not be completed (Portal shows a CAPTCHA ('captcha'))
+
+Onboarding aar (AarAdapter): NOT OK
+  login: not signed in
+  sign-in check on the next page: None
+  logout: None
+  STOPPED: the login could not be completed (Portal shows a CAPTCHA ('captcha'))
+  found by: password_input=saved, submit_button=saved, username_input=saved
+  learned selectors (confirmed; --save saves these):
+  not saved (no sign-in or search confirmed them): password_input, username_input
+  LLM: 0 call(s) (0 to find elements), $0.0000; whole run 38.4s
+
+Saved test_runs/19_2026-11-04__aar__login-only/1219__local-headless-human-typing__onboarding.json

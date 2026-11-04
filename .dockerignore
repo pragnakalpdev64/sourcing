@@ -1,0 +1,12 @@
+.venv
+__pycache__
+*.pyc
+.env
+infra
+tests
+.pytest_cache
+.git
+.local_store.json*
+.local_login*.json
+debug_pages
+test_runs

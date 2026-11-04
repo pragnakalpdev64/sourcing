@@ -1,0 +1,44 @@
+2026-11-02 15:32:10,679 INFO sourcing.job: Run local-20261102-100210-2d69: mode=REAL, browser=browserbase, store=file (/media/pragnakalpl19/projects1/Backup/sourcing-proto_share_2026-10-15/sourcing-proto/.local_store.json), llm=anthropic/claude-opus-5-5 (effort medium), chat=on, vendor secret overrides=sourcing-vendor-proponent=sourcing-vendor-test
+2026-11-02 15:32:10,679 INFO sourcing.job: Vendor config for this run: {'*': {'bulk_min_parts': 2}}
+2026-11-02 15:32:10,828 WARNING sourcing.browser: Browserbase session recording is ON: recordings show the vendor pages, login screens included. Use for local debugging only.
+2026-11-02 15:32:11,864 INFO sourcing.job: Processing 1 sheet(s): 1V-S8J4bFqw1w_WvrsQjFqR4gNhPwFyd-YS_aF7CVqak
+2026-11-02 15:32:14,901 INFO sourcing.sheets: Requests in 1V-S8J4bFqw1w_WvrsQjFqR4gNhPwFyd-YS_aF7CVqak: 5 data row(s), 5 to process (Status empty/NEW/RUNNING), skipped by Status: none, rows without a part number: 0
+2026-11-02 15:32:14,901 INFO sourcing.pipeline: Run local-20261102-100210-2d69__aF7CVqak picked up 5 NEW rows
+/media/pragnakalpl19/projects1/Backup/sourcing-proto_share_2026-10-15/sourcing-proto/.venv/lib/python3.11/site-packages/google/api_core/_python_version_support.py:254: FutureWarning: You are using a Python version (3.11.15) which Google will stop supporting in new releases of google.api_core once it reaches its end of life (2027-10-24). Please upgrade to the latest Python version, or at least Python 3.12, to continue receiving updates for google.api_core past that date.
+  warnings.warn(message, FutureWarning)
+/media/pragnakalpl19/projects1/Backup/sourcing-proto_share_2026-10-15/sourcing-proto/.venv/lib/python3.11/site-packages/google/api_core/_python_version_support.py:254: FutureWarning: You are using a Python version (3.11.15) which Google will stop supporting in new releases of google.cloud.secretmanager_v1 once it reaches its end of life (2027-10-24). Please upgrade to the latest Python version, or at least Python 3.12, to continue receiving updates for google.cloud.secretmanager_v1 past that date.
+  warnings.warn(message, FutureWarning)
+2026-11-02 15:32:17,851 INFO sourcing.pipeline: aviall / (no requester): using shared login (secret key sourcing-vendor-aviall, totp=no) for 5 row(s)
+2026-11-02 15:32:17,871 INFO sourcing.pipeline: [aviall___shared] Rows 3: same part EN2267-010A006S as row 2, one search for all
+2026-11-02 15:32:17,871 INFO sourcing.pipeline: [aviall___shared] Bulk search: 4 parts (bulk from 2), up to 25 per search
+2026-11-02 15:32:17,872 INFO sourcing.auth: [aviall___shared] Reusing saved browser Context 1babb21c-7108-4beb-a423-68c254e6cf3c (state=NEEDS_LOGIN)
+2026-11-02 15:32:28,382 INFO sourcing.browser: Opened Browserbase session 231facd8-f17c-42f7-89b1-6e60c1dcd9b1 (context=1babb21c-7108-4beb-a423-68c254e6cf3c, keep_alive=False, recording=on)
+2026-11-02 15:32:28,382 INFO sourcing.browser: Session page: https://www.browserbase.com/sessions/231facd8-f17c-42f7-89b1-6e60c1dcd9b1
+2026-11-02 15:32:34,353 INFO sourcing.browser: Session live view (while the run lasts): https://www.browserbase.com/devtools-fullscreen/inspector.html?wss=connect.browserbase.com/debug/231facd8-f17c-42f7-89b1-6e60c1dcd9b1/devtools/page/7B4CA6A237627053388196A4C8AFDFAF?t=eyJhbGciOiJBMjU2S1ciLCJlbmMiOiJBMjU2R0NNIn0.CWYsYbHZlM6PO851gnI1Pti0vv3RryUiZmugN0tYlsovoaX1A1jkgQ.5MCzhFy6ZqepEszq.qyjPLB7bXqMSFxaASd-ut0rQzhf7H42snXHsFjQ8rNPK2QG7BoDkIVY7Y3485lPXofwoP_4VENVZlcxYsDUon9nP5qXEmLxDE-yhJUG7QcodGGJM3GP7HWwHp-kkYT3K63gt2uX4phr5zraFqg.Osi2Wu2KCcmxqfEqsjVXVg&debug=true
+2026-11-02 15:32:34,353 INFO sourcing.auth: [aviall___shared] Context 1babb21c-7108-4beb-a423-68c254e6cf3c has no active sign-in (signed out at the end of the run 1h 11m ago); logging in
+2026-11-02 15:32:34,353 INFO sourcing.auth: [aviall___shared] Automatic login attempt 1/2
+2026-11-02 15:32:34,374 INFO sourcing.vendors.generic: Login: Aviall as purchasing@skylinkintl.com
+2026-11-02 15:32:34,374 INFO sourcing.vendors.aviall: Login: opening https://shop.boeing.com/aviation-supply (from secret sourcing-vendor-aviall url)
+2026-11-02 15:34:13,093 INFO sourcing.vendors.aviall: Aviall step 1 (sign in): https://shop.boeing.com/distribution shows button:has-text('Log in to Boeing Distribution') after 98.7s
+2026-11-02 15:34:18,772 INFO sourcing.vendors.aviall: Login: clicking button:has-text('Log in to Boeing Distribution') (Boeing Distribution login button)
+2026-11-02 15:34:23,814 INFO sourcing.vendors.aviall: Boeing Distribution login button: button:has-text('OneLogin') shows after 2.2s (https://shop.boeing.com/distribution)
+2026-11-02 15:34:29,007 INFO sourcing.vendors.aviall: Login: clicking button:has-text('OneLogin') (OneLogin ID button)
+2026-11-02 15:34:35,583 INFO sourcing.vendors.aviall: OneLogin ID button: input[id*='username' i] shows after 4.2s (https://auth.boeing.com/sp/ACS.saml2)
+2026-11-02 15:34:40,218 INFO sourcing.vendors.aviall: Login: sign-in form at https://auth.boeing.com/sp/ACS.saml2
+2026-11-02 15:34:51,856 INFO sourcing.vendors.generic: Login step 1 at https://auth.boeing.com/sp/ACS.saml2: username=[id="username"] password=None
+2026-11-02 15:34:58,739 INFO sourcing.vendors.generic: Login: two-step sign-in; continuing with [id="submitButton"]
+2026-11-02 15:35:01,316 INFO sourcing.vendors.web: Login next: submitted; waiting up to 180s for the page
+2026-11-02 15:35:12,476 INFO sourcing.vendors.web: Login next: page ready after 13.7s (https://auth.boeing.com/as/uhy0H0BqAr/resume/as/authorization.ping)
+2026-11-02 15:35:32,833 INFO sourcing.vendors.generic: Login step 2 at https://auth.boeing.com/as/uhy0H0BqAr/resume/as/authorization.ping: username=(done) password=input[type='password']:not([aria-hidden='true']):not([tabindex='-1'])
+2026-11-02 15:35:36,525 INFO sourcing.vendors.generic: Login: submitting with button:has-text('Log in')
+2026-11-02 15:35:39,854 INFO sourcing.vendors.web: Login submit: submitted; waiting up to 180s for the page
+2026-11-02 15:35:43,548 INFO sourcing.vendors.web: Login submit: page ready after 7.0s (https://auth.boeing.com/as/uhy0H0BqAr/resume/as/authorization.ping)
+2026-11-02 15:35:48,641 INFO sourcing.vendors.aviall: Login: Aviall asks for a 2FA code; opening the login URL https://shop.boeing.com/aviation-supply again instead (team, 2026-11-02)
+2026-11-02 15:39:29,103 INFO sourcing.vendors.aviall: Login: clicking button:has-text('Log in to Boeing Distribution') (Boeing Distribution login button)
+2026-11-02 15:39:39,113 INFO sourcing.vendors.aviall: Click on button:has-text('Log in to Boeing Distribution') blocked; clicking it from code
+2026-11-02 15:41:32,648 INFO sourcing.vendors.aviall: Not all saved (aviall-login-click): TimeoutError('Page.screenshot: Timeout 15000ms exceeded.\nCall log:\n  - taking page screenshot\n')
+2026-11-02 15:41:32,648 WARNING sourcing.vendors.generic: Login: timed out at https://shop.boeing.com/distribution: Locator.evaluate: Timeout 45000ms exceeded.
+2026-11-02 15:41:32,648 WARNING sourcing.auth: [aviall___shared] Login attempt 1 failed: Timed out at https://shop.boeing.com/distribution: Locator.evaluate: Timeout 45000ms exceeded.
+2026-11-02 15:41:32,673 INFO sourcing.auth: [aviall___shared] Automatic login attempt 2/2
+2026-11-02 15:41:32,695 INFO sourcing.vendors.generic: Login: Aviall as purchasing@skylinkintl.com
+2026-11-02 15:41:32,695 INFO sourcing.vendors.aviall: Login: opening https://shop.boeing.com/aviation-supply (from secret sourcing-vendor-aviall url)

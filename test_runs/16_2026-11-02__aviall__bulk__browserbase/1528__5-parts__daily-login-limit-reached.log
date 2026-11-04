@@ -1,0 +1,26 @@
+2026-11-02 15:28:47,017 INFO sourcing.job: Run local-20261102-095847-48e3: mode=REAL, browser=browserbase, store=file (/media/pragnakalpl19/projects1/Backup/sourcing-proto_share_2026-10-15/sourcing-proto/.local_store.json), llm=anthropic/claude-opus-5-5 (effort medium), chat=on, vendor secret overrides=sourcing-vendor-proponent=sourcing-vendor-test
+2026-11-02 15:28:47,018 INFO sourcing.job: Vendor config for this run: {'*': {'bulk_min_parts': 2}}
+2026-11-02 15:28:47,238 WARNING sourcing.browser: Browserbase session recording is ON: recordings show the vendor pages, login screens included. Use for local debugging only.
+2026-11-02 15:28:48,875 INFO sourcing.job: Processing 1 sheet(s): 1V-S8J4bFqw1w_WvrsQjFqR4gNhPwFyd-YS_aF7CVqak
+2026-11-02 15:28:53,700 INFO sourcing.sheets: Requests in 1V-S8J4bFqw1w_WvrsQjFqR4gNhPwFyd-YS_aF7CVqak: 5 data row(s), 5 to process (Status empty/NEW/RUNNING), skipped by Status: none, rows without a part number: 0
+2026-11-02 15:28:53,701 INFO sourcing.pipeline: Run local-20261102-095847-48e3__aF7CVqak picked up 5 NEW rows
+/media/pragnakalpl19/projects1/Backup/sourcing-proto_share_2026-10-15/sourcing-proto/.venv/lib/python3.11/site-packages/google/api_core/_python_version_support.py:254: FutureWarning: You are using a Python version (3.11.15) which Google will stop supporting in new releases of google.api_core once it reaches its end of life (2027-10-24). Please upgrade to the latest Python version, or at least Python 3.12, to continue receiving updates for google.api_core past that date.
+  warnings.warn(message, FutureWarning)
+/media/pragnakalpl19/projects1/Backup/sourcing-proto_share_2026-10-15/sourcing-proto/.venv/lib/python3.11/site-packages/google/api_core/_python_version_support.py:254: FutureWarning: You are using a Python version (3.11.15) which Google will stop supporting in new releases of google.cloud.secretmanager_v1 once it reaches its end of life (2027-10-24). Please upgrade to the latest Python version, or at least Python 3.12, to continue receiving updates for google.cloud.secretmanager_v1 past that date.
+  warnings.warn(message, FutureWarning)
+2026-11-02 15:28:56,461 INFO sourcing.pipeline: aviall / (no requester): using shared login (secret key sourcing-vendor-aviall, totp=no) for 5 row(s)
+2026-11-02 15:28:56,478 INFO sourcing.pipeline: [aviall___shared] Rows 3: same part EN2267-010A006S as row 2, one search for all
+2026-11-02 15:28:56,478 INFO sourcing.pipeline: [aviall___shared] Bulk search: 4 parts (bulk from 2), up to 25 per search
+2026-11-02 15:28:56,478 INFO sourcing.auth: [aviall___shared] Reusing saved browser Context 1babb21c-7108-4beb-a423-68c254e6cf3c (state=NEEDS_LOGIN)
+2026-11-02 15:29:06,170 INFO sourcing.browser: Opened Browserbase session 60d27180-ac16-4711-92c2-c10f4f29c527 (context=1babb21c-7108-4beb-a423-68c254e6cf3c, keep_alive=False, recording=on)
+2026-11-02 15:29:06,170 INFO sourcing.browser: Session page: https://www.browserbase.com/sessions/60d27180-ac16-4711-92c2-c10f4f29c527
+2026-11-02 15:29:06,516 INFO sourcing.browser: Session live view (while the run lasts): https://www.browserbase.com/devtools-fullscreen/inspector.html?wss=connect.browserbase.com/debug/60d27180-ac16-4711-92c2-c10f4f29c527/devtools/page/6CA6590309090422C68FE172A08CC8B6?t=eyJhbGciOiJBMjU2S1ciLCJlbmMiOiJBMjU2R0NNIn0.fbpqs5Y7u4k-DqYjjfmy7YzBPSRAG0cTKAYDxhZLhMiPw6BJEG75Zw.nQyT4DJFVJryj7vX.u6oQJLk9Q05QEGV_JFm_E1zIYdqeab0Q05b1zE0xFFYym0ZR-_Enac9wuAOjGxNxPF_8VxkEu5-Ol-Qg8W8ZNulSRQgqcMDbUtpD84wQwHFkqme5Pp2Ev-ZUndc2JR5KJZzw4xiKawY7mIvQUQ.xz5fMuYFHIfOITiQ0EXZaw&debug=true
+2026-11-02 15:29:06,517 INFO sourcing.auth: [aviall___shared] Context 1babb21c-7108-4beb-a423-68c254e6cf3c has no active sign-in (signed out at the end of the run 1h 8m ago); logging in
+2026-11-02 15:29:06,541 INFO sourcing.auth: [aviall___shared] Login not attempted: daily login limit reached (10); continues tomorrow
+2026-11-02 15:29:08,039 INFO sourcing.pipeline: Row 2 EN2267-010A006S (Aviall): -> NEW | Aviall: daily login limit reached (10); continues tomorrow
+2026-11-02 15:29:08,062 INFO sourcing.pipeline: Row 3 EN2267-010A006S (Aviall): -> NEW | Aviall: daily login limit reached (10); continues tomorrow
+2026-11-02 15:29:08,081 INFO sourcing.pipeline: Row 4 USM14-14J4G (Aviall): -> NEW | Aviall: daily login limit reached (10); continues tomorrow
+2026-11-02 15:29:08,106 INFO sourcing.pipeline: Row 5 021200-21181=32 (Aviall): -> NEW | Aviall: daily login limit reached (10); continues tomorrow
+2026-11-02 15:29:08,130 INFO sourcing.pipeline: Row 6 PKAB244CKIT (Aviall): -> NEW | Aviall: daily login limit reached (10); continues tomorrow
+2026-11-02 15:29:08,713 INFO sourcing.sheets: Requests in 1V-S8J4bFqw1w_WvrsQjFqR4gNhPwFyd-YS_aF7CVqak: 5 data row(s), 5 to process (Status empty/NEW), skipped by Status: none, rows without a part number: 0
+2026-11-02 15:29:08,736 INFO sourcing.pipeline: Run summary: {'run_id': 'local-20261102-095847-48e3__aF7CVqak', 'rows_total': 5, 'counts': {'NEW': 5}, 'llm': {'calls': 0, 'input_tokens': 0, 'output_tokens': 0, 'cache_read_tokens': 0, 'cost_usd': 0.0}, 'seconds': 15.4}

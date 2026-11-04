@@ -1,0 +1,64 @@
+2026-10-15 12:20:14,552 INFO sourcing.job: Run local-20261015-065014-8ae9: mode=REAL, browser=local, store=file (/media/pragnakalpl19/projects1/Backup/sourcing-proto/.local_store.json), llm=anthropic/claude-haiku-5-5 (effort medium), chat=on, vendor secret overrides=sourcing-vendor-proponent=sourcing-vendor-test
+2026-10-15 12:20:14,552 INFO sourcing.job: Vendor config for this run: {'*': {'bulk_min_parts': None}}
+2026-10-15 12:20:15,928 INFO sourcing.job: Processing 1 sheet(s): /tmp/claude-1001/-media-pragnakalpl19-projects1-Backup-sourcing-proto/ff6238c3-de16-4f29-9263-fb8e757ed062/scratchpad/test_3parts_local.xlsx
+2026-10-15 12:20:16,050 INFO sourcing.sheets: Opened local Excel file /tmp/claude-1001/-media-pragnakalpl19-projects1-Backup-sourcing-proto/ff6238c3-de16-4f29-9263-fb8e757ed062/scratchpad/test_3parts_local.xlsx (tabs: Requests, Results)
+2026-10-15 12:20:16,063 INFO sourcing.sheets: Requests in /tmp/claude-1001/-media-pragnakalpl19-projects1-Backup-sourcing-proto/ff6238c3-de16-4f29-9263-fb8e757ed062/scratchpad/test_3parts_local.xlsx: 3 data row(s), 3 to process (Status empty/NEW/RUNNING), skipped by Status: none, rows without a part number: 0
+2026-10-15 12:20:16,063 INFO sourcing.pipeline: Run local-20261015-065014-8ae9__test_3parts_local picked up 3 NEW rows
+/media/pragnakalpl19/projects1/Backup/sourcing-proto/.venv/lib/python3.10/site-packages/google/api_core/_python_version_support.py:223: FutureWarning: You are using a non-supported Python version (3.10.12). Google will not post any further updates to google.api_core supporting this Python version. Please upgrade to the latest Python version, or at least Python 3.11, and then update google.api_core.
+  warnings.warn(message, FutureWarning)
+/media/pragnakalpl19/projects1/Backup/sourcing-proto/.venv/lib/python3.10/site-packages/google/api_core/_python_version_support.py:223: FutureWarning: You are using a non-supported Python version (3.10.12). Google will not post any further updates to google.cloud.secretmanager_v1 supporting this Python version. Please upgrade to the latest Python version, or at least Python 3.11, and then update google.cloud.secretmanager_v1.
+  warnings.warn(message, FutureWarning)
+2026-10-15 12:20:18,663 INFO sourcing.pipeline: proponent / you@example.com: using shared login (secret key sourcing-vendor-proponent, totp=no) for 3 row(s)
+2026-10-15 12:20:18,679 INFO sourcing.pipeline: [proponent___shared] One search per part: 3 part(s)
+2026-10-15 12:20:18,679 INFO sourcing.auth: [proponent___shared] Reusing saved browser Context 6db55226-2a01-4d69-a3ad-2d663dc0962a (state=NEEDS_LOGIN)
+2026-10-15 12:20:19,292 INFO sourcing.browser: Opened local Chromium 156.0.8078.4 (session local-e465d3e5d715, headless=True; no saved cookies, context label 6db55226-2a01-4d69-a3ad-2d663dc0962a)
+2026-10-15 12:20:19,292 INFO sourcing.auth: [proponent___shared] Context 6db55226-2a01-4d69-a3ad-2d663dc0962a has no active sign-in (signed out at the end of the run 23m ago); logging in
+2026-10-15 12:20:19,292 INFO sourcing.auth: [proponent___shared] Automatic login attempt 1/2
+2026-10-15 12:20:19,292 INFO sourcing.vendors.proponent: Login: Proponent as purchasing@skylinkintl.com
+2026-10-15 12:20:19,292 INFO sourcing.vendors.proponent: Login: opening https://procart.proponent.com/Login.aspx?_gl=1*1mc7rxi*_up*MQ..*_ga*MTUwMDM3MTExMC4xNzkxNTUxMzUy*_ga_H75PGQT6EM*czE3OTE1NTEzNTEkbzEkZzAkdDE3OTE1NTEzNTEkajYwJGwwJGgyNzIyNDA1OTY. (from login page found on an earlier run)
+2026-10-15 12:20:34,473 INFO sourcing.vendors.proponent: Consent popup dialog[aria-label*='cookie' i]: clicking 'Accept'
+2026-10-15 12:20:39,481 INFO sourcing.vendors.proponent: Consent popup answered; no reload
+2026-10-15 12:20:39,541 INFO sourcing.vendors.proponent: Login: form found at https://procart.proponent.com/Login.aspx?_gl=1*1mc7rxi*_up*MQ..*_ga*MTUwMDM3MTExMC4xNzkxNTUxMzUy*_ga_H75PGQT6EM*czE3OTE1NTEzNTEkbzEkZzAkdDE3OTE1NTEzNTEkajYwJGwwJGgyNzIyNDA1OTY. (username=#MainContent_txtUserName, password=#MainContent_txtPassword)
+2026-10-15 12:20:39,586 INFO sourcing.vendors.proponent: Login: submitting with #MainContent_btnLogin
+2026-10-15 12:20:39,711 INFO sourcing.vendors.proponent: Login submit: submitted; waiting up to 90s for the page
+2026-10-15 12:20:44,257 INFO sourcing.vendors.proponent: Login submit: page ready after 4.7s (https://procart.proponent.com/Home.aspx)
+2026-10-15 12:20:44,258 INFO sourcing.vendors.proponent: Login: after submit, at https://procart.proponent.com/Home.aspx
+2026-10-15 12:20:44,335 INFO sourcing.vendors.proponent: Login: form gone and no Login button -> looks signed in (https://procart.proponent.com/Home.aspx)
+2026-10-15 12:20:47,273 INFO sourcing.vendors.proponent: Auth probe https://procart.proponent.com/: no Login button -> signed in
+2026-10-15 12:20:47,295 INFO sourcing.auth: [proponent___shared] Login OK
+2026-10-15 12:20:47,295 INFO sourcing.pipeline: Row 2: searching Proponent for F1101385-01
+2026-10-15 12:20:47,296 INFO sourcing.vendors.proponent: Search: opening https://procart.proponent.com/PartSearchResults.aspx?id=F1101385-01 directly
+2026-10-15 12:20:50,104 INFO sourcing.vendors.proponent: Search: results for F1101385-01 opened directly in 2.8s
+2026-10-15 12:20:50,587 INFO sourcing.vendors.proponent: Results: expanded all details
+2026-10-15 12:20:51,114 INFO sourcing.vendors.proponent: Results: read 1 records from the results grid
+2026-10-15 12:20:54,430 INFO httpx2: HTTP Request: POST https://api.anthropic.com/v1/messages?beta=true "HTTP/1.1 200 OK"
+2026-10-15 12:20:54,527 INFO sourcing.pipeline: Row 2: found, 1 offer(s), 7.2s, LLM 1 call(s) $0.0007
+2026-10-15 12:20:54,527 INFO sourcing.pipeline: Row 2 offer: pn=F1101385-01 price=188.84  qty=12 cond=FN lead=In stock (59 days if out of stock)
+2026-10-15 12:20:54,545 INFO sourcing.pipeline: Row 2 F1101385-01 (proponent): -> DONE
+2026-10-15 12:20:54,558 INFO sourcing.pipeline: Row 3: searching Proponent for 4066-0014
+2026-10-15 12:20:54,559 INFO sourcing.vendors.proponent: Search: opening https://procart.proponent.com/PartSearchResults.aspx?id=4066-0014 directly
+2026-10-15 12:21:00,969 INFO sourcing.vendors.proponent: Search: results for 4066-0014 opened directly in 6.4s
+2026-10-15 12:21:01,395 INFO sourcing.vendors.proponent: Results: expanded all details
+2026-10-15 12:21:01,918 INFO sourcing.vendors.proponent: Results: read 1 records from the results grid
+2026-10-15 12:21:06,395 INFO httpx2: HTTP Request: POST https://api.anthropic.com/v1/messages?beta=true "HTTP/1.1 200 OK"
+2026-10-15 12:21:06,401 INFO sourcing.pipeline: Row 3: found, 1 offer(s), 11.8s, LLM 1 call(s) $0.0009
+2026-10-15 12:21:06,401 INFO sourcing.pipeline: Row 3 offer: pn=4066-0014 price=2774.16  qty=22 cond=FN lead=In stock (132 days if out of stock)
+2026-10-15 12:21:06,431 INFO sourcing.pipeline: Row 3 4066-0014 (proponent): -> DONE
+2026-10-15 12:21:06,443 INFO sourcing.pipeline: Row 4: searching Proponent for AS15001-1P
+2026-10-15 12:21:06,444 INFO sourcing.vendors.proponent: Search: opening https://procart.proponent.com/PartSearchResults.aspx?id=AS15001-1P directly
+2026-10-15 12:21:10,056 INFO sourcing.vendors.proponent: Search: results for AS15001-1P opened directly in 3.6s
+2026-10-15 12:21:10,541 INFO sourcing.vendors.proponent: Results: expanded all details
+2026-10-15 12:21:11,060 INFO sourcing.vendors.proponent: Results: read 1 records from the results grid
+2026-10-15 12:21:16,633 INFO httpx2: HTTP Request: POST https://api.anthropic.com/v1/messages?beta=true "HTTP/1.1 200 OK"
+2026-10-15 12:21:16,639 INFO sourcing.pipeline: Row 4: found, 1 offer(s), 10.2s, LLM 1 call(s) $0.0010
+2026-10-15 12:21:16,639 INFO sourcing.pipeline: Row 4 offer: pn=AS15001-1P price=6.33  qty=150132 cond=FN lead=In stock (518 days if out of stock)
+2026-10-15 12:21:16,666 INFO sourcing.pipeline: Row 4 AS15001-1P (proponent): -> DONE
+2026-10-15 12:21:16,748 INFO sourcing.vendors.proponent: Logout: clicking a:has-text('Log out')
+2026-10-15 12:21:17,066 INFO sourcing.vendors.proponent: Logout: submitted; waiting up to 90s for the page
+2026-10-15 12:21:18,973 INFO sourcing.vendors.proponent: Logout: page ready after 2.2s (https://procart.proponent.com/)
+2026-10-15 12:21:19,020 INFO sourcing.vendors.proponent: Logout: signed out (now at https://procart.proponent.com/)
+2026-10-15 12:21:19,044 INFO sourcing.pipeline: [proponent___shared] Signed out of Proponent
+2026-10-15 12:21:19,101 INFO sourcing.pipeline: [proponent___shared] Browser session local-e465d3e5d715 released
+2026-10-15 12:21:19,114 INFO sourcing.sheets: Requests in /tmp/claude-1001/-media-pragnakalpl19-projects1-Backup-sourcing-proto/ff6238c3-de16-4f29-9263-fb8e757ed062/scratchpad/test_3parts_local.xlsx: 3 data row(s), 0 to process (Status empty/NEW), skipped by Status: DONE=3, rows without a part number: 0
+2026-10-15 12:21:19,131 INFO sourcing.pipeline: Run summary: {'run_id': 'local-20261015-065014-8ae9__test_3parts_local', 'rows_total': 3, 'counts': {'DONE': 3}, 'llm': {'calls': 3, 'input_tokens': 14942, 'output_tokens': 2198, 'cache_read_tokens': 0, 'cost_usd': 0.002593}, 'seconds': 63.1}
+2026-10-15 12:21:20,135 INFO httpx: HTTP Request: POST https://chat.googleapis.com/v1/spaces/REDACTED/messages?key=REDACTED&token=REDACTED "HTTP/1.1 200 OK"

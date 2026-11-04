@@ -1,0 +1,103 @@
+# Build the image, then deploy sourcing-api (service) and sourcing-worker (job).
+#
+#   gcloud builds submit --config cloudbuild.yaml \
+#     --substitutions=_SHEET_ID=<sheet id>,_DUMMY_MODE=1
+#   gcloud builds submit --config cloudbuild.yaml \
+#     --substitutions=_SHEET_ID=<id>,_LLM_PROVIDER=anthropic,_LLM_MODEL=<model>,_LLM_EFFORT=medium
+#
+# The LLM settings have no defaults: a real deploy (_DUMMY_MODE=0) stops at the
+# first step if one is missing, so the worker never runs a model nobody chose.
+#
+# Infra secrets are read from GCP Secret Manager at runtime (--set-secrets).
+substitutions:
+  _REGION: us-central1
+  _REPO: sourcing
+  _SHEET_ID: ""
+  _DUMMY_MODE: "0"           # 1 = Step 1 dry run (fake vendor, no browser)
+  _LLM_PROVIDER: ""          # anthropic | openai | gemini (required unless _DUMMY_MODE=1)
+  _LLM_MODEL: ""             # e.g. claude-sonnet-5-5 (required unless _DUMMY_MODE=1)
+  _LLM_EFFORT: ""            # low | medium | high | xhigh (required unless _DUMMY_MODE=1)
+  # browserbase | local (Chromium in the container). Either can also be picked per
+  # run: gcloud run jobs execute sourcing-worker --update-env-vars=BROWSER_BACKEND=local
+  _BROWSER_BACKEND: browserbase
+  # One pair, e.g. sourcing-vendor-proponent=sourcing-vendor-test (a comma would split --set-env-vars)
+  _VENDOR_SECRET_OVERRIDES: ""
+  # Login update page (docs/CREDENTIAL_UPDATE_UI_PLAN.md). _PUBLIC_BASE_URL = the
+  # sourcing-api URL, known after its first deploy (also used for Chat links).
+  _PUBLIC_BASE_URL: ""
+  _OAUTH_CLIENT_ID: ""
+  _ALLOWED_EMAIL_DOMAINS: ""   # e.g. skylink.com (several: separate with ;)
+  _CREDENTIAL_ADMINS: ""       # emails separated with ;
+
+options:
+  logging: CLOUD_LOGGING_ONLY
+  dynamicSubstitutions: true
+
+serviceAccount: projects/$PROJECT_ID/serviceAccounts/sourcing-build@$PROJECT_ID.iam.gserviceaccount.com
+
+steps:
+  - id: check-settings
+    name: bash
+    args:
+      - -c
+      - |
+        [ "${_DUMMY_MODE}" = "1" ] && exit 0
+        missing=""
+        [ -n "${_LLM_PROVIDER}" ] || missing="$$missing _LLM_PROVIDER"
+        [ -n "${_LLM_MODEL}" ] || missing="$$missing _LLM_MODEL"
+        [ -n "${_LLM_EFFORT}" ] || missing="$$missing _LLM_EFFORT"
+        if [ -n "$$missing" ]; then
+          echo "Set these substitutions for a real deploy:$$missing"; exit 1
+        fi
+
+  - id: build
+    name: gcr.io/cloud-builders/docker
+    args: ["build", "-t", "${_REGION}-docker.pkg.dev/$PROJECT_ID/${_REPO}/sourcing:$BUILD_ID", "."]
+
+  - id: push
+    name: gcr.io/cloud-builders/docker
+    args: ["push", "${_REGION}-docker.pkg.dev/$PROJECT_ID/${_REPO}/sourcing:$BUILD_ID"]
+
+  - id: deploy-api
+    name: gcr.io/google.com/cloudsdktool/cloud-sdk:slim
+    entrypoint: gcloud
+    args:
+      - run
+      - deploy
+      - sourcing-api
+      - --image=${_REGION}-docker.pkg.dev/$PROJECT_ID/${_REPO}/sourcing:$BUILD_ID
+      - --region=${_REGION}
+      - --service-account=sourcing-runtime@$PROJECT_ID.iam.gserviceaccount.com
+      # Public URL: Cloud Scheduler calls /trigger with X-Trigger-Secret; the
+      # login update page has its own Google sign-in (service/web_auth.py).
+      - --allow-unauthenticated
+      - --max-instances=2
+      # VENDOR_SECRET_OVERRIDES as in the worker: the page must write the secret the worker reads.
+      - --set-env-vars=GCP_PROJECT=$PROJECT_ID,GCP_REGION=${_REGION},WORKER_JOB_NAME=sourcing-worker,SHEET_ID=${_SHEET_ID},STORE_BACKEND=firestore,PUBLIC_BASE_URL=${_PUBLIC_BASE_URL},GOOGLE_OAUTH_CLIENT_ID=${_OAUTH_CLIENT_ID},ALLOWED_EMAIL_DOMAINS=${_ALLOWED_EMAIL_DOMAINS},CREDENTIAL_ADMINS=${_CREDENTIAL_ADMINS},VENDOR_SECRET_OVERRIDES=${_VENDOR_SECRET_OVERRIDES}
+      - --set-secrets=TRIGGER_SECRET=sourcing-trigger-secret:latest,GOOGLE_OAUTH_CLIENT_SECRET=sourcing-google-oauth-client-secret:latest,SESSION_SECRET=sourcing-session-secret:latest
+
+  - id: deploy-worker
+    name: gcr.io/google.com/cloudsdktool/cloud-sdk:slim
+    entrypoint: gcloud
+    args:
+      - run
+      - jobs
+      - deploy
+      - sourcing-worker
+      - --image=${_REGION}-docker.pkg.dev/$PROJECT_ID/${_REPO}/sourcing:$BUILD_ID
+      - --region=${_REGION}
+      - --service-account=sourcing-runtime@$PROJECT_ID.iam.gserviceaccount.com
+      - --command=python
+      - --args=-m,service.job_main,--all-sheets
+      - --tasks=1
+      - --max-retries=0
+      - --task-timeout=3600
+      # Local Chromium needs more than the 1Gi that was enough for Browserbase alone.
+      - --memory=2Gi
+      - --cpu=2
+      - --execution-environment=gen2
+      - --set-env-vars=GCP_PROJECT=$PROJECT_ID,GCP_REGION=${_REGION},SHEET_ID=${_SHEET_ID},STORE_BACKEND=firestore,DUMMY_MODE=${_DUMMY_MODE},BROWSER_BACKEND=${_BROWSER_BACKEND},LLM_PROVIDER=${_LLM_PROVIDER},LLM_MODEL=${_LLM_MODEL},LLM_EFFORT=${_LLM_EFFORT},JOB_LOCK_SECONDS=3600,VENDOR_SECRET_OVERRIDES=${_VENDOR_SECRET_OVERRIDES},PUBLIC_BASE_URL=${_PUBLIC_BASE_URL}
+      - --set-secrets=BROWSERBASE_API_KEY=sourcing-browserbase-api-key:latest,BROWSERBASE_PROJECT_ID=sourcing-browserbase-project-id:latest,ANTHROPIC_API_KEY=sourcing-anthropic-api-key:latest,OPENAI_API_KEY=sourcing-openai-api-key:latest,GEMINI_API_KEY=sourcing-gemini-api-key:latest,CHAT_WEBHOOK_URL=sourcing-chat-webhook-url:latest
+
+images:
+  - ${_REGION}-docker.pkg.dev/$PROJECT_ID/${_REPO}/sourcing:$BUILD_ID

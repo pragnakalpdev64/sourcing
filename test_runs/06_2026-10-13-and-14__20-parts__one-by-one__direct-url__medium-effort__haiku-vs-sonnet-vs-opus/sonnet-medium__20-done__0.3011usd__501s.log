@@ -1,0 +1,212 @@
+2026-10-13 19:10:41,226 INFO sourcing.job: Run local-20261013-134041-c823: mode=REAL, store=file (/home/pragnakalpl19/stagehand-browser-mcp/sourcing-proto/.local_store.json), llm=anthropic/claude-sonnet-5-5 (effort medium), chat=off, vendor secret overrides=sourcing-vendor-proponent=sourcing-vendor-test
+2026-10-13 19:10:41,431 WARNING sourcing.browser: Browserbase session recording is ON: recordings show the vendor pages, login screens included. Use for local debugging only.
+2026-10-13 19:10:42,440 INFO sourcing.job: Processing 1 registered sheet(s): 1V-S8J4bFqw1w_WvrsQjFqR4gNhPwFyd-YS_aF7CVqak
+2026-10-13 19:10:45,782 INFO sourcing.sheets: Requests in 1V-S8J4bFqw1w_WvrsQjFqR4gNhPwFyd-YS_aF7CVqak: 20 data row(s), 20 to process (Status empty/NEW/RUNNING), skipped by Status: none, rows without a part number: 0
+2026-10-13 19:10:45,783 INFO sourcing.pipeline: Run local-20261013-134041-c823__aF7CVqak picked up 20 NEW rows
+/home/pragnakalpl19/stagehand-browser-mcp/sourcing-proto/.venv/lib/python3.10/site-packages/google/api_core/_python_version_support.py:223: FutureWarning: You are using a non-supported Python version (3.10.12). Google will not post any further updates to google.api_core supporting this Python version. Please upgrade to the latest Python version, or at least Python 3.11, and then update google.api_core.
+  warnings.warn(message, FutureWarning)
+/home/pragnakalpl19/stagehand-browser-mcp/sourcing-proto/.venv/lib/python3.10/site-packages/google/api_core/_python_version_support.py:223: FutureWarning: You are using a non-supported Python version (3.10.12). Google will not post any further updates to google.cloud.secretmanager_v1 supporting this Python version. Please upgrade to the latest Python version, or at least Python 3.11, and then update google.cloud.secretmanager_v1.
+  warnings.warn(message, FutureWarning)
+2026-10-13 19:10:48,833 INFO sourcing.pipeline: proponent / (no requester): using shared login (secret key sourcing-vendor-proponent, totp=no) for 20 row(s)
+2026-10-13 19:10:48,847 INFO sourcing.pipeline: [proponent___shared] One search per part: 20 part(s)
+2026-10-13 19:10:48,848 INFO sourcing.auth: [proponent___shared] Reusing saved Browserbase Context 042d63a9-de2e-4e26-8e58-af9acdf50a25 (state=ACTIVE)
+2026-10-13 19:10:50,118 INFO httpx: HTTP Request: POST https://api.browserbase.com/v1/sessions "HTTP/1.1 201 Created"
+2026-10-13 19:10:53,608 INFO sourcing.browser: Opened Browserbase session f2d52b90-d2a5-4053-b3e1-0799924283e2 (context=042d63a9-de2e-4e26-8e58-af9acdf50a25, keep_alive=False, recording=on)
+2026-10-13 19:10:53,609 INFO sourcing.browser: Session replay: https://www.browserbase.com/sessions/f2d52b90-d2a5-4053-b3e1-0799924283e2
+2026-10-13 19:11:05,277 INFO sourcing.vendors.proponent: Auth probe https://procart.proponent.com/: no Login button -> signed in
+2026-10-13 19:11:05,278 INFO sourcing.auth: [proponent___shared] Saved Context still signed in (last login 7m ago); skipping login
+2026-10-13 19:11:05,296 INFO sourcing.pipeline: Row 2: searching Proponent for F1101385-01
+2026-10-13 19:11:05,296 INFO sourcing.vendors.proponent: Search: opening https://procart.proponent.com/PartSearchResults.aspx?id=F1101385-01 directly
+2026-10-13 19:11:15,438 INFO sourcing.vendors.proponent: Search: results for F1101385-01 opened directly in 10.1s
+2026-10-13 19:11:21,666 INFO sourcing.vendors.proponent: Results: expanded all details
+2026-10-13 19:11:23,504 INFO sourcing.vendors.proponent: Results: read 1 records from the results grid
+2026-10-13 19:11:26,057 INFO httpx2: HTTP Request: POST https://api.anthropic.com/v1/messages?beta=true "HTTP/1.1 200 OK"
+2026-10-13 19:11:26,200 INFO sourcing.pipeline: Row 2: found, 1 offer(s), 20.9s, LLM 1 call(s) $0.0136
+2026-10-13 19:11:26,200 INFO sourcing.pipeline: Row 2 offer: pn=F1101385-01 price=188.84  qty=12 cond=FN lead=In stock (59 days if out of stock)
+2026-10-13 19:11:28,367 INFO sourcing.pipeline: Row 2 F1101385-01 (proponent): -> DONE
+2026-10-13 19:11:28,381 INFO sourcing.pipeline: Row 3: searching Proponent for 4066-0014
+2026-10-13 19:11:28,382 INFO sourcing.vendors.proponent: Search: opening https://procart.proponent.com/PartSearchResults.aspx?id=4066-0014 directly
+2026-10-13 19:11:38,016 INFO sourcing.vendors.proponent: Search: results for 4066-0014 opened directly in 9.6s
+2026-10-13 19:11:43,799 INFO sourcing.vendors.proponent: Results: expanded all details
+2026-10-13 19:11:45,519 INFO sourcing.vendors.proponent: Results: read 1 records from the results grid
+2026-10-13 19:11:49,717 INFO httpx2: HTTP Request: POST https://api.anthropic.com/v1/messages?beta=true "HTTP/1.1 200 OK"
+2026-10-13 19:11:49,721 INFO sourcing.pipeline: Row 3: found, 1 offer(s), 21.3s, LLM 1 call(s) $0.0173
+2026-10-13 19:11:49,721 INFO sourcing.pipeline: Row 3 offer: pn=4066-0014 price=2774.16  qty=22 cond=FN lead=In stock (132 days if out of stock)
+2026-10-13 19:11:51,564 INFO sourcing.pipeline: Row 3 4066-0014 (proponent): -> DONE
+2026-10-13 19:11:51,578 INFO sourcing.pipeline: Row 4: searching Proponent for AS15001-1P
+2026-10-13 19:11:51,579 INFO sourcing.vendors.proponent: Search: opening https://procart.proponent.com/PartSearchResults.aspx?id=AS15001-1P directly
+2026-10-13 19:12:01,983 INFO sourcing.vendors.proponent: Search: results for AS15001-1P opened directly in 10.4s
+2026-10-13 19:12:07,605 INFO sourcing.vendors.proponent: Results: expanded all details
+2026-10-13 19:12:09,274 INFO sourcing.vendors.proponent: Results: read 1 records from the results grid
+2026-10-13 19:12:12,243 INFO httpx2: HTTP Request: POST https://api.anthropic.com/v1/messages?beta=true "HTTP/1.1 200 OK"
+2026-10-13 19:12:12,248 INFO sourcing.pipeline: Row 4: found, 1 offer(s), 20.7s, LLM 1 call(s) $0.0148
+2026-10-13 19:12:12,248 INFO sourcing.pipeline: Row 4 offer: pn=AS15001-1P price=6.33  qty=151682 cond=FN lead=In stock (518 days if out of stock)
+2026-10-13 19:12:14,146 INFO sourcing.pipeline: Row 4 AS15001-1P (proponent): -> DONE
+2026-10-13 19:12:14,161 INFO sourcing.pipeline: Row 5: searching Proponent for 5934001-217
+2026-10-13 19:12:14,162 INFO sourcing.vendors.proponent: Search: opening https://procart.proponent.com/PartSearchResults.aspx?id=5934001-217 directly
+2026-10-13 19:12:24,988 INFO sourcing.vendors.proponent: Search: results for 5934001-217 opened directly in 10.8s
+2026-10-13 19:12:31,385 INFO sourcing.vendors.proponent: Results: expanded all details
+2026-10-13 19:12:33,177 INFO sourcing.vendors.proponent: Results: read 1 records from the results grid
+2026-10-13 19:12:35,730 INFO httpx2: HTTP Request: POST https://api.anthropic.com/v1/messages?beta=true "HTTP/1.1 200 OK"
+2026-10-13 19:12:35,734 INFO sourcing.pipeline: Row 5: found, 1 offer(s), 21.6s, LLM 1 call(s) $0.0146
+2026-10-13 19:12:35,734 INFO sourcing.pipeline: Row 5 offer: pn=5934001-217 price=2719.21  qty=Out of stock cond=FN lead=129 days (next due Nov 20, 2026, qty 65; Dec 14, 2026, qty 50; Feb 5, 2027, qty 50)
+2026-10-13 19:12:37,280 INFO sourcing.pipeline: Row 5 5934001-217 (proponent): -> DONE
+2026-10-13 19:12:37,295 INFO sourcing.pipeline: Row 6: searching Proponent for 60B40018-32
+2026-10-13 19:12:37,296 INFO sourcing.vendors.proponent: Search: opening https://procart.proponent.com/PartSearchResults.aspx?id=60B40018-32 directly
+2026-10-13 19:12:48,924 INFO sourcing.vendors.proponent: Search: results for 60B40018-32 opened directly in 11.6s
+2026-10-13 19:12:55,220 INFO sourcing.vendors.proponent: Results: expanded all details
+2026-10-13 19:12:56,951 INFO sourcing.vendors.proponent: Results: read 3 records from the results grid
+2026-10-13 19:12:59,953 INFO httpx2: HTTP Request: POST https://api.anthropic.com/v1/messages?beta=true "HTTP/1.1 200 OK"
+2026-10-13 19:12:59,962 INFO sourcing.pipeline: Row 6: found, 3 offer(s), 22.7s, LLM 1 call(s) $0.0200
+2026-10-13 19:12:59,962 INFO sourcing.pipeline: Row 6 offer: pn=60B40018-32 price=1757.47  qty=Out of stock cond=FN lead=117 days (next due Feb 12, 2027, qty 10)
+2026-10-13 19:12:59,962 INFO sourcing.pipeline: Row 6 offer: pn=8112-0401 price=0  qty=Out of stock cond=FN lead=112 days
+2026-10-13 19:12:59,962 INFO sourcing.pipeline: Row 6 offer: pn=8112-0401AEC price=842.22  qty=2 cond=FN lead=In stock (77 days if out of stock)
+2026-10-13 19:13:01,804 INFO sourcing.pipeline: Row 6 60B40018-32 (proponent): -> DONE
+2026-10-13 19:13:01,817 INFO sourcing.pipeline: Row 7: searching Proponent for 4132A-934-ZB
+2026-10-13 19:13:01,817 INFO sourcing.vendors.proponent: Search: opening https://procart.proponent.com/PartSearchResults.aspx?id=4132A-934-ZB directly
+2026-10-13 19:13:13,169 INFO sourcing.vendors.proponent: Search: results for 4132A-934-ZB opened directly in 11.4s
+2026-10-13 19:13:18,897 INFO sourcing.vendors.proponent: Results: expanded all details
+2026-10-13 19:13:20,747 INFO sourcing.vendors.proponent: Results: read 1 records from the results grid
+2026-10-13 19:13:22,893 INFO httpx2: HTTP Request: POST https://api.anthropic.com/v1/messages?beta=true "HTTP/1.1 200 OK"
+2026-10-13 19:13:22,897 INFO sourcing.pipeline: Row 7: found, 1 offer(s), 21.1s, LLM 1 call(s) $0.0142
+2026-10-13 19:13:22,897 INFO sourcing.pipeline: Row 7 offer: pn=4132A-934-ZB price=86.95  qty=220 cond=FN lead=In stock (238 days if out of stock)
+2026-10-13 19:13:25,348 INFO sourcing.pipeline: Row 7 4132A-934-ZB (proponent): -> DONE
+2026-10-13 19:13:25,363 INFO sourcing.pipeline: Row 8: searching Proponent for 410946
+2026-10-13 19:13:25,363 INFO sourcing.vendors.proponent: Search: opening https://procart.proponent.com/PartSearchResults.aspx?id=410946 directly
+2026-10-13 19:13:38,046 INFO sourcing.vendors.proponent: Search: results for 410946 opened directly in 12.7s
+2026-10-13 19:13:44,181 INFO sourcing.vendors.proponent: Results: expanded all details
+2026-10-13 19:13:45,732 INFO sourcing.vendors.proponent: Results: read 2 records from the results grid
+2026-10-13 19:13:49,064 INFO httpx2: HTTP Request: POST https://api.anthropic.com/v1/messages?beta=true "HTTP/1.1 200 OK"
+2026-10-13 19:13:49,074 INFO sourcing.pipeline: Row 8: found, 2 offer(s), 23.7s, LLM 1 call(s) $0.0198
+2026-10-13 19:13:49,074 INFO sourcing.pipeline: Row 8 offer: pn=2758 price=8460.95  qty=122 cond=FN lead=In stock (379 days if out of stock)
+2026-10-13 19:13:49,074 INFO sourcing.pipeline: Row 8 offer: pn=2758 CHARGED price=8693.81  qty=122 cond=FN lead=In stock (17 days if out of stock)
+2026-10-13 19:13:50,845 INFO sourcing.pipeline: Row 8 410946 (proponent): -> DONE
+2026-10-13 19:13:50,857 INFO sourcing.pipeline: Row 9: searching Proponent for ACHC-3-13
+2026-10-13 19:13:50,858 INFO sourcing.vendors.proponent: Search: opening https://procart.proponent.com/PartSearchResults.aspx?id=ACHC-3-13 directly
+2026-10-13 19:14:02,117 INFO sourcing.vendors.proponent: Search: results for ACHC-3-13 opened directly in 11.3s
+2026-10-13 19:14:08,206 INFO sourcing.vendors.proponent: Results: expanded all details
+2026-10-13 19:14:09,795 INFO sourcing.vendors.proponent: Results: read 2 records from the results grid
+2026-10-13 19:14:12,963 INFO httpx2: HTTP Request: POST https://api.anthropic.com/v1/messages?beta=true "HTTP/1.1 200 OK"
+2026-10-13 19:14:12,972 INFO sourcing.pipeline: Row 9: found, 2 offer(s), 22.1s, LLM 1 call(s) $0.0180
+2026-10-13 19:14:12,972 INFO sourcing.pipeline: Row 9 offer: pn=ACHC-3-13 price=406.07  qty=379 cond=FN lead=In stock (249 days if out of stock)
+2026-10-13 19:14:12,972 INFO sourcing.pipeline: Row 9 offer: pn=ACHC3-13 price=8004.22  qty=10 cond=FN lead=In stock (224 days if out of stock)
+2026-10-13 19:14:15,238 INFO sourcing.pipeline: Row 9 ACHC-3-13 (proponent): -> DONE
+2026-10-13 19:14:15,256 INFO sourcing.pipeline: Row 10: searching Proponent for B7210
+2026-10-13 19:14:15,257 INFO sourcing.vendors.proponent: Search: opening https://procart.proponent.com/PartSearchResults.aspx?id=B7210 directly
+2026-10-13 19:14:26,382 INFO sourcing.vendors.proponent: Search: results for B7210 opened directly in 11.1s
+2026-10-13 19:14:32,437 INFO sourcing.vendors.proponent: Results: expanded all details
+2026-10-13 19:14:33,920 INFO sourcing.vendors.proponent: Results: read 1 records from the results grid
+2026-10-13 19:14:36,827 INFO httpx2: HTTP Request: POST https://api.anthropic.com/v1/messages?beta=true "HTTP/1.1 200 OK"
+2026-10-13 19:14:36,829 INFO sourcing.pipeline: Row 10: found, 1 offer(s), 21.6s, LLM 1 call(s) $0.0129
+2026-10-13 19:14:36,829 INFO sourcing.pipeline: Row 10 offer: pn=624018-1 price=0  qty=Out of stock cond=FN lead=109 days
+2026-10-13 19:14:38,871 INFO sourcing.pipeline: Row 10 B7210 (proponent): -> DONE
+2026-10-13 19:14:38,884 INFO sourcing.pipeline: Row 11: searching Proponent for 50831-1
+2026-10-13 19:14:38,885 INFO sourcing.vendors.proponent: Search: opening https://procart.proponent.com/PartSearchResults.aspx?id=50831-1 directly
+2026-10-13 19:14:49,831 INFO sourcing.vendors.proponent: Search: results for 50831-1 opened directly in 10.9s
+2026-10-13 19:14:55,155 INFO sourcing.vendors.proponent: Results: expanded all details
+2026-10-13 19:14:56,795 INFO sourcing.vendors.proponent: Results: read 1 records from the results grid
+2026-10-13 19:14:58,967 INFO httpx2: HTTP Request: POST https://api.anthropic.com/v1/messages?beta=true "HTTP/1.1 200 OK"
+2026-10-13 19:14:58,970 INFO sourcing.pipeline: Row 11: found, 1 offer(s), 20.1s, LLM 1 call(s) $0.0116
+2026-10-13 19:14:58,970 INFO sourcing.pipeline: Row 11 offer: pn=50831-1 price=None  qty=None cond=None lead=None
+2026-10-13 19:15:00,482 INFO sourcing.pipeline: Row 11 50831-1 (proponent): -> DONE
+2026-10-13 19:15:00,497 INFO sourcing.pipeline: Row 12: searching Proponent for ACO44521
+2026-10-13 19:15:00,497 INFO sourcing.vendors.proponent: Search: opening https://procart.proponent.com/PartSearchResults.aspx?id=ACO44521 directly
+2026-10-13 19:15:10,715 INFO sourcing.vendors.proponent: Search: results for ACO44521 opened directly in 10.2s
+2026-10-13 19:15:16,436 INFO sourcing.vendors.proponent: Results: expanded all details
+2026-10-13 19:15:17,915 INFO sourcing.vendors.proponent: Results: read 1 records from the results grid
+2026-10-13 19:15:21,481 INFO httpx2: HTTP Request: POST https://api.anthropic.com/v1/messages?beta=true "HTTP/1.1 200 OK"
+2026-10-13 19:15:21,485 INFO sourcing.pipeline: Row 12: found, 1 offer(s), 21.0s, LLM 1 call(s) $0.0139
+2026-10-13 19:15:21,485 INFO sourcing.pipeline: Row 12 offer: pn=ACO44521 price=102.52  qty=64 cond=FN lead=In stock (123 days if out of stock)
+2026-10-13 19:15:23,347 INFO sourcing.pipeline: Row 12 ACO44521 (proponent): -> DONE
+2026-10-13 19:15:23,362 INFO sourcing.pipeline: Row 13: searching Proponent for ACO47189
+2026-10-13 19:15:23,363 INFO sourcing.vendors.proponent: Search: opening https://procart.proponent.com/PartSearchResults.aspx?id=ACO47189 directly
+2026-10-13 19:15:33,933 INFO sourcing.vendors.proponent: Search: results for ACO47189 opened directly in 10.6s
+2026-10-13 19:15:40,314 INFO sourcing.vendors.proponent: Results: expanded all details
+2026-10-13 19:15:42,180 INFO sourcing.vendors.proponent: Results: read 1 records from the results grid
+2026-10-13 19:15:45,025 INFO httpx2: HTTP Request: POST https://api.anthropic.com/v1/messages?beta=true "HTTP/1.1 200 OK"
+2026-10-13 19:15:45,030 INFO sourcing.pipeline: Row 13: found, 1 offer(s), 21.7s, LLM 1 call(s) $0.0139
+2026-10-13 19:15:45,030 INFO sourcing.pipeline: Row 13 offer: pn=ACO47189 price=11514.61  qty=48 cond=FN lead=In stock (113 days if out of stock)
+2026-10-13 19:15:46,862 INFO sourcing.pipeline: Row 13 ACO47189 (proponent): -> DONE
+2026-10-13 19:15:46,873 INFO sourcing.pipeline: Row 14: searching Proponent for ACR-6-33/B
+2026-10-13 19:15:46,874 INFO sourcing.vendors.proponent: Search: opening https://procart.proponent.com/PartSearchResults.aspx?id=ACR-6-33%2FB directly
+2026-10-13 19:15:57,988 INFO sourcing.vendors.proponent: Search: results for ACR-6-33/B opened directly in 11.1s
+2026-10-13 19:16:04,017 INFO sourcing.vendors.proponent: Results: expanded all details
+2026-10-13 19:16:05,636 INFO sourcing.vendors.proponent: Results: read 1 records from the results grid
+2026-10-13 19:16:08,087 INFO httpx2: HTTP Request: POST https://api.anthropic.com/v1/messages?beta=true "HTTP/1.1 200 OK"
+2026-10-13 19:16:08,091 INFO sourcing.pipeline: Row 14: found, 1 offer(s), 21.2s, LLM 1 call(s) $0.0149
+2026-10-13 19:16:08,091 INFO sourcing.pipeline: Row 14 offer: pn=ACR-6-33/B price=41.35  qty=2813 cond=FN lead=In stock (239 days if out of stock)
+2026-10-13 19:16:09,775 INFO sourcing.pipeline: Row 14 ACR-6-33/B (proponent): -> DONE
+2026-10-13 19:16:09,789 INFO sourcing.pipeline: Row 15: searching Proponent for AEC-145-69685-005
+2026-10-13 19:16:09,789 INFO sourcing.vendors.proponent: Search: opening https://procart.proponent.com/PartSearchResults.aspx?id=AEC-145-69685-005 directly
+2026-10-13 19:16:19,224 INFO sourcing.vendors.proponent: Search: results for AEC-145-69685-005 opened directly in 9.4s
+2026-10-13 19:16:24,682 INFO sourcing.vendors.proponent: Results: expanded all details
+2026-10-13 19:16:26,753 INFO sourcing.vendors.proponent: Results: read 1 records from the results grid
+2026-10-13 19:16:30,284 INFO httpx2: HTTP Request: POST https://api.anthropic.com/v1/messages?beta=true "HTTP/1.1 200 OK"
+2026-10-13 19:16:30,287 INFO sourcing.pipeline: Row 15: found, 1 offer(s), 20.5s, LLM 1 call(s) $0.0140
+2026-10-13 19:16:30,288 INFO sourcing.pipeline: Row 15 offer: pn=AEC-145-69685-005 price=89.23  qty=12 cond=FN lead=In stock (70 days if out of stock)
+2026-10-13 19:16:32,223 INFO sourcing.pipeline: Row 15 AEC-145-69685-005 (proponent): -> DONE
+2026-10-13 19:16:32,236 INFO sourcing.pipeline: Row 16: searching Proponent for AF400
+2026-10-13 19:16:32,236 INFO sourcing.vendors.proponent: Search: opening https://procart.proponent.com/PartSearchResults.aspx?id=AF400 directly
+2026-10-13 19:16:41,860 INFO sourcing.vendors.proponent: Search: results for AF400 opened directly in 9.6s
+2026-10-13 19:16:48,021 INFO sourcing.vendors.proponent: Results: expanded all details
+2026-10-13 19:16:49,745 INFO sourcing.vendors.proponent: Results: read 1 records from the results grid
+2026-10-13 19:16:51,986 INFO httpx2: HTTP Request: POST https://api.anthropic.com/v1/messages?beta=true "HTTP/1.1 200 OK"
+2026-10-13 19:16:51,990 INFO sourcing.pipeline: Row 16: found, 1 offer(s), 19.8s, LLM 1 call(s) $0.0149
+2026-10-13 19:16:51,990 INFO sourcing.pipeline: Row 16 offer: pn=AF400 price=176.84  qty=301 cond=FN lead=In stock (59 days if out of stock)
+2026-10-13 19:16:53,847 INFO sourcing.pipeline: Row 16 AF400 (proponent): -> DONE
+2026-10-13 19:16:53,863 INFO sourcing.pipeline: Row 17: searching Proponent for AG282000-03
+2026-10-13 19:16:53,864 INFO sourcing.vendors.proponent: Search: opening https://procart.proponent.com/PartSearchResults.aspx?id=AG282000-03 directly
+2026-10-13 19:17:03,496 INFO sourcing.vendors.proponent: Search: results for AG282000-03 opened directly in 9.6s
+2026-10-13 19:17:09,582 INFO sourcing.vendors.proponent: Results: expanded all details
+2026-10-13 19:17:11,243 INFO sourcing.vendors.proponent: Results: read 1 records from the results grid
+2026-10-13 19:17:13,342 INFO httpx2: HTTP Request: POST https://api.anthropic.com/v1/messages?beta=true "HTTP/1.1 200 OK"
+2026-10-13 19:17:13,346 INFO sourcing.pipeline: Row 17: found, 1 offer(s), 19.5s, LLM 1 call(s) $0.0139
+2026-10-13 19:17:13,346 INFO sourcing.pipeline: Row 17 offer: pn=AG282000-03 price=128.62  qty=24 cond=FN lead=In stock (86 days if out of stock)
+2026-10-13 19:17:14,986 INFO sourcing.pipeline: Row 17 AG282000-03 (proponent): -> DONE
+2026-10-13 19:17:15,001 INFO sourcing.pipeline: Row 18: searching Proponent for AIS16P
+2026-10-13 19:17:15,002 INFO sourcing.vendors.proponent: Search: opening https://procart.proponent.com/PartSearchResults.aspx?id=AIS16P directly
+2026-10-13 19:17:24,671 INFO sourcing.vendors.proponent: Search: results for AIS16P opened directly in 9.7s
+2026-10-13 19:17:31,220 INFO sourcing.vendors.proponent: Results: expanded all details
+2026-10-13 19:17:32,703 INFO sourcing.vendors.proponent: Results: read 1 records from the results grid
+2026-10-13 19:17:35,485 INFO httpx2: HTTP Request: POST https://api.anthropic.com/v1/messages?beta=true "HTTP/1.1 200 OK"
+2026-10-13 19:17:35,487 INFO sourcing.pipeline: Row 18: found, 1 offer(s), 20.5s, LLM 1 call(s) $0.0137
+2026-10-13 19:17:35,487 INFO sourcing.pipeline: Row 18 offer: pn=AIS16P price=6.34  qty=1842 cond=FN lead=In stock (276 days if out of stock)
+2026-10-13 19:17:37,523 INFO sourcing.pipeline: Row 18 AIS16P (proponent): -> DONE
+2026-10-13 19:17:37,544 INFO sourcing.pipeline: Row 19: searching Proponent for AMC02RA03W
+2026-10-13 19:17:37,544 INFO sourcing.vendors.proponent: Search: opening https://procart.proponent.com/PartSearchResults.aspx?id=AMC02RA03W directly
+2026-10-13 19:17:47,503 INFO sourcing.vendors.proponent: Search: results for AMC02RA03W opened directly in 10.0s
+2026-10-13 19:17:53,125 INFO sourcing.vendors.proponent: Results: expanded all details
+2026-10-13 19:17:55,070 INFO sourcing.vendors.proponent: Results: read 1 records from the results grid
+2026-10-13 19:17:58,143 INFO httpx2: HTTP Request: POST https://api.anthropic.com/v1/messages?beta=true "HTTP/1.1 200 OK"
+2026-10-13 19:17:58,147 INFO sourcing.pipeline: Row 19: found, 1 offer(s), 20.6s, LLM 1 call(s) $0.0145
+2026-10-13 19:17:58,147 INFO sourcing.pipeline: Row 19 offer: pn=AMC02RA03W price=47.51  qty=Out of stock cond=FN lead=224 days (next due Dec 15, 2026, qty 321; May 7, 2027, qty 500)
+2026-10-13 19:17:59,827 INFO sourcing.pipeline: Row 19 AMC02RA03W (proponent): -> DONE
+2026-10-13 19:17:59,840 INFO sourcing.pipeline: Row 20: searching Proponent for AN901-4C
+2026-10-13 19:17:59,840 INFO sourcing.vendors.proponent: Search: opening https://procart.proponent.com/PartSearchResults.aspx?id=AN901-4C directly
+2026-10-13 19:18:10,771 INFO sourcing.vendors.proponent: Search: results for AN901-4C opened directly in 10.9s
+2026-10-13 19:18:16,882 INFO sourcing.vendors.proponent: Results: expanded all details
+2026-10-13 19:18:18,663 INFO sourcing.vendors.proponent: Results: read 1 records from the results grid
+2026-10-13 19:18:20,875 INFO httpx2: HTTP Request: POST https://api.anthropic.com/v1/messages?beta=true "HTTP/1.1 200 OK"
+2026-10-13 19:18:20,879 INFO sourcing.pipeline: Row 20: found, 1 offer(s), 21.0s, LLM 1 call(s) $0.0141
+2026-10-13 19:18:20,879 INFO sourcing.pipeline: Row 20 offer: pn=AN901-4C price=1.02  qty=12263 cond=FN lead=In stock (210 days if out of stock)
+2026-10-13 19:18:22,926 INFO sourcing.pipeline: Row 20 AN901-4C (proponent): -> DONE
+2026-10-13 19:18:22,937 INFO sourcing.pipeline: Row 21: searching Proponent for AQC-5729
+2026-10-13 19:18:22,937 INFO sourcing.vendors.proponent: Search: opening https://procart.proponent.com/PartSearchResults.aspx?id=AQC-5729 directly
+2026-10-13 19:18:33,705 INFO sourcing.vendors.proponent: Search: results for AQC-5729 opened directly in 10.8s
+2026-10-13 19:18:39,598 INFO sourcing.vendors.proponent: Results: expanded all details
+2026-10-13 19:18:41,060 INFO sourcing.vendors.proponent: Results: read 2 records from the results grid
+2026-10-13 19:18:44,017 INFO httpx2: HTTP Request: POST https://api.anthropic.com/v1/messages?beta=true "HTTP/1.1 200 OK"
+2026-10-13 19:18:44,025 INFO sourcing.pipeline: Row 21: found, 2 offer(s), 21.1s, LLM 1 call(s) $0.0163
+2026-10-13 19:18:44,026 INFO sourcing.pipeline: Row 21 offer: pn=AQC-5729 price=82.34  qty=21 cond=FN lead=In stock (104 days if out of stock)
+2026-10-13 19:18:44,026 INFO sourcing.pipeline: Row 21 offer: pn=56270 price=0  qty=Out of stock cond=FN lead=44 days
+2026-10-13 19:18:46,270 INFO sourcing.pipeline: Row 21 AQC-5729 (proponent): -> DONE
+2026-10-13 19:18:52,311 INFO sourcing.vendors.proponent: Logout: clicking a:has-text('Log out')
+2026-10-13 19:18:56,002 INFO sourcing.vendors.proponent: Logout: submitted; waiting up to 90s for the page
+2026-10-13 19:18:57,250 INFO sourcing.vendors.proponent: Logout: page ready after 4.9s (https://procart.proponent.com/)
+2026-10-13 19:19:03,067 INFO sourcing.vendors.proponent: Logout: signed out (now at https://procart.proponent.com/)
+2026-10-13 19:19:03,092 INFO sourcing.pipeline: [proponent___shared] Signed out of Proponent
+2026-10-13 19:19:05,111 INFO httpx: HTTP Request: POST https://api.browserbase.com/v1/sessions/f2d52b90-d2a5-4053-b3e1-0799924283e2 "HTTP/1.1 200 OK"
+2026-10-13 19:19:05,115 INFO sourcing.pipeline: [proponent___shared] Browser session f2d52b90-d2a5-4053-b3e1-0799924283e2 released
+2026-10-13 19:19:06,033 INFO sourcing.sheets: Requests in 1V-S8J4bFqw1w_WvrsQjFqR4gNhPwFyd-YS_aF7CVqak: 20 data row(s), 0 to process (Status empty/NEW), skipped by Status: DONE=20, rows without a part number: 0
+2026-10-13 19:19:06,049 INFO sourcing.pipeline: Run summary: {'run_id': 'local-20261013-134041-c823__aF7CVqak', 'rows_total': 20, 'counts': {'DONE': 20}, 'llm': {'calls': 20, 'input_tokens': 130417, 'output_tokens': 4023, 'cache_read_tokens': 0, 'cost_usd': 0.301064}, 'seconds': 500.7}
+2026-10-13 19:19:06,050 INFO sourcing.notify: [chat disabled] Sourcing run local-20261013-134041-c823__aF7CVqak: 20 rows (DONE 20). LLM cost $0.3011, 500.7s.

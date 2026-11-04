@@ -1,0 +1,32 @@
+{
+  "vendor_id": "aar",
+  "adapter": "AarAdapter",
+  "signed_in": false,
+  "login_seconds": 0.0,
+  "signed_in_check": null,
+  "parts": [],
+  "logged_out": null,
+  "stopped": "the login could not be completed (Portal shows a CAPTCHA ('captcha'))",
+  "login_only": true,
+  "learned": {},
+  "not_confirmed": [
+    "password_input",
+    "username_input"
+  ],
+  "found_by": {
+    "username_input": "saved",
+    "password_input": "saved",
+    "submit_button": "saved"
+  },
+  "llm_discovery_calls": 0,
+  "llm": {
+    "calls": 0,
+    "input_tokens": 0,
+    "output_tokens": 0,
+    "cache_read_tokens": 0,
+    "cost_usd": 0.0
+  },
+  "seconds": 159.8,
+  "ok": false,
+  "to_check": []
+}

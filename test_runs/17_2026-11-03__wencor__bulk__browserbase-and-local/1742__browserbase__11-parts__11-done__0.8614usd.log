@@ -1,0 +1,210 @@
+2026-11-03 17:42:13,044 INFO sourcing.job: Run local-20261103-121213-3650: mode=REAL, browser=browserbase, store=file (/media/pragnakalpl19/projects1/Backup/sourcing-proto_share_2026-10-15/sourcing-proto/.local_store.json), llm=anthropic/claude-opus-5-5 (effort medium), chat=on, vendor secret overrides=sourcing-vendor-proponent=sourcing-vendor-test
+2026-11-03 17:42:13,045 INFO sourcing.job: Vendor config for this run: {'*': {'bulk_min_parts': 2}}
+2026-11-03 17:42:13,521 WARNING sourcing.browser: Browserbase session recording is ON: recordings show the vendor pages, login screens included. Use for local debugging only.
+2026-11-03 17:42:16,521 INFO sourcing.job: Processing 1 sheet(s): 1V-S8J4bFqw1w_WvrsQjFqR4gNhPwFyd-YS_aF7CVqak
+2026-11-03 17:42:21,008 INFO sourcing.sheets: Requests in 1V-S8J4bFqw1w_WvrsQjFqR4gNhPwFyd-YS_aF7CVqak: 31 data row(s), 11 to process (Status empty/NEW/RUNNING), skipped by Status: DONE=15, NOT_FOUND=3, NOT_SOLD=2, rows without a part number: 0
+2026-11-03 17:42:21,009 INFO sourcing.pipeline: Run local-20261103-121213-3650__aF7CVqak picked up 11 NEW rows
+/media/pragnakalpl19/projects1/Backup/sourcing-proto_share_2026-10-15/sourcing-proto/.venv/lib/python3.11/site-packages/google/api_core/_python_version_support.py:254: FutureWarning: You are using a Python version (3.11.15) which Google will stop supporting in new releases of google.api_core once it reaches its end of life (2027-10-24). Please upgrade to the latest Python version, or at least Python 3.12, to continue receiving updates for google.api_core past that date.
+  warnings.warn(message, FutureWarning)
+/media/pragnakalpl19/projects1/Backup/sourcing-proto_share_2026-10-15/sourcing-proto/.venv/lib/python3.11/site-packages/google/api_core/_python_version_support.py:254: FutureWarning: You are using a Python version (3.11.15) which Google will stop supporting in new releases of google.cloud.secretmanager_v1 once it reaches its end of life (2027-10-24). Please upgrade to the latest Python version, or at least Python 3.12, to continue receiving updates for google.cloud.secretmanager_v1 past that date.
+  warnings.warn(message, FutureWarning)
+2026-11-03 17:42:24,090 INFO sourcing.pipeline: wencor / (no requester): using shared login (secret key sourcing-vendor-wencor, totp=no) for 11 row(s)
+2026-11-03 17:42:24,169 INFO sourcing.pipeline: [wencor___shared] Rows 32: same part 39250-20629 as row 26, one search for all
+2026-11-03 17:42:24,169 INFO sourcing.pipeline: [wencor___shared] Bulk search: 10 parts (bulk from 2), up to 5 per search
+2026-11-03 17:42:24,170 INFO sourcing.auth: [wencor___shared] Reusing saved browser Context ade99380-e3c6-40ab-8222-f6990e33133a (state=NEEDS_LOGIN)
+2026-11-03 17:42:28,146 INFO sourcing.browser: Opened Browserbase session b72850d7-8e65-4008-b757-68268001d665 (context=ade99380-e3c6-40ab-8222-f6990e33133a, keep_alive=False, recording=on)
+2026-11-03 17:42:28,146 INFO sourcing.browser: Session page: https://www.browserbase.com/sessions/b72850d7-8e65-4008-b757-68268001d665
+2026-11-03 17:42:28,489 INFO sourcing.browser: Session live view (while the run lasts): https://www.browserbase.com/devtools-fullscreen/inspector.html?wss=connect.browserbase.com/debug/b72850d7-8e65-4008-b757-68268001d665/devtools/page/7ABAD4A56BE45B86B85AD4E5D5B3E283?t=eyJhbGciOiJBMjU2S1ciLCJlbmMiOiJBMjU2R0NNIn0.JQLjp0l3beXYWhEW3eDcdfSKqnaR7VUjEKeMFJXUqANBvDucE4Vufw.6PFf0MLncRR4uaRW.iR7YHw_Jw-pNEJubUIbaJT40fP55HnIw6u3wJT5iSdqQYneCOqMIFKkkOtGnmCxo13FOg3f4ua-u5GzQt9I0BT5YFs217zlmPc29s5o7Joancg-z9mi_Fs-CD9OlDJah7uq1Aw0XZEKni7LdYg.LwGa6nbBcgMxTPHyOGhmCw&debug=true
+2026-11-03 17:42:28,489 INFO sourcing.auth: [wencor___shared] Context ade99380-e3c6-40ab-8222-f6990e33133a has no active sign-in (signed out at the end of the run 13m ago); logging in
+2026-11-03 17:42:28,490 INFO sourcing.auth: [wencor___shared] Automatic login attempt 1/2
+2026-11-03 17:42:28,530 INFO sourcing.vendors.generic: Login: Wencor as carrie@skylinkintl.com
+2026-11-03 17:42:28,530 INFO sourcing.vendors.wencor: Login: opening https://fly.wencor.com/log-in (from secret sourcing-vendor-wencor url)
+2026-11-03 17:42:35,614 INFO sourcing.vendors.wencor: Wencor step 1 (sign in): the page's own login form at https://fly.wencor.com/log-in
+2026-11-03 17:42:41,620 INFO sourcing.vendors.generic: Login step 1 at https://fly.wencor.com/log-in: username=form.login-form:not([id*='_INSTANCE_1234_']) input[id$='_username'] password=form.login-form:not([id*='_INSTANCE_1234_']) input[type='password']
+2026-11-03 17:42:48,165 INFO sourcing.vendors.generic: Login: submitting with form.login-form:not([id*='_INSTANCE_1234_']) button[type='submit']
+2026-11-03 17:42:50,532 INFO sourcing.vendors.web: Login submit: submitted; waiting up to 90s for the page
+2026-11-03 17:42:55,250 INFO sourcing.vendors.web: Login submit: page ready after 7.1s (https://fly.wencor.com/search)
+2026-11-03 17:43:12,701 INFO sourcing.vendors.generic: Account menu button[aria-label*='account' i]: holds a:has-text('Log out')
+2026-11-03 17:43:13,266 INFO sourcing.vendors.generic: Login: signed in (a:has-text('Log out') visible)
+2026-11-03 17:43:13,266 INFO sourcing.auth: [wencor___shared] Sign-in seen by the login (a:has-text('Log out') at https://fly.wencor.com/search); no separate probe
+2026-11-03 17:43:13,370 INFO sourcing.auth: [wencor___shared] Login OK
+2026-11-03 17:43:13,417 INFO sourcing.pipeline: Rows 22,23,24,25,26: bulk searching Wencor for 5 parts
+2026-11-03 17:43:23,417 INFO sourcing.vendors.wencor: Wencor step 2 (bulk): 5 line(s) in PowerSearch
+2026-11-03 17:43:35,960 INFO sourcing.vendors.web: Saved results page to /media/pragnakalpl19/projects1/Backup/sourcing-proto_share_2026-10-15/sourcing-proto/debug_pages/20261103-174335-wencor-powersearch.(txt|html)
+2026-11-03 17:43:35,961 INFO sourcing.vendors.wencor: Wencor PowerSearch: 5 of 5 part(s) listed; minimum order quantity for AS3209-120 100
+2026-11-03 17:43:36,936 INFO sourcing.vendors.web: Saved results page to /media/pragnakalpl19/projects1/Backup/sourcing-proto_share_2026-10-15/sourcing-proto/debug_pages/20261103-174336-wencor-dashboard.(txt|html)
+2026-11-03 17:43:36,936 INFO sourcing.vendors.generic: Search: opening https://fly.wencor.com/products/-/o/category/all/cn/All-Products/ecom-search/N120-47934-071 directly
+2026-11-03 17:43:48,205 INFO sourcing.vendors.wencor: Wencor step 3 (open): 1 listed part(s) are N120-47934-071: https://fly.wencor.com/product-details/-/o/cn/Cabin-Interiors/d/N120-47934-071/ecom-item/10013439
+2026-11-03 17:43:57,935 INFO sourcing.vendors.wencor: Wencor: no stock link on https://fly.wencor.com/product-details/-/o/cn/Cabin-Interiors/d/N120-47934-071/ecom-item/10013439
+2026-11-03 17:43:58,933 INFO sourcing.vendors.web: Saved results page to /media/pragnakalpl19/projects1/Backup/sourcing-proto_share_2026-10-15/sourcing-proto/debug_pages/20261103-174358-wencor-N120-47934-071-1.(txt|html)
+2026-11-03 17:43:58,933 INFO sourcing.vendors.wencor: Wencor step 4 (read): product page 1 of 1 at https://fly.wencor.com/product-details/-/o/cn/Cabin-Interiors/d/N120-47934-071/ecom-item/10013439
+2026-11-03 17:44:09,003 INFO sourcing.vendors.web: Saved results page to /media/pragnakalpl19/projects1/Backup/sourcing-proto_share_2026-10-15/sourcing-proto/debug_pages/20261103-174408-wencor-N120-47934-071-sub1.(txt|html)
+2026-11-03 17:44:09,004 INFO sourcing.vendors.wencor: Wencor: substitute 120-37661-001 of N120-47934-071 read (https://fly.wencor.com/product-details/-/o/cn/Cabin-Interiors/ecom-item/10093645)
+2026-11-03 17:44:17,868 INFO sourcing.vendors.web: Saved results page to /media/pragnakalpl19/projects1/Backup/sourcing-proto_share_2026-10-15/sourcing-proto/debug_pages/20261103-174417-wencor-N120-47934-071-sub2.(txt|html)
+2026-11-03 17:44:17,868 INFO sourcing.vendors.wencor: Wencor: substitute 120-47517-001 of N120-47934-071 read (https://fly.wencor.com/product-details/-/o/cn/Cabin-Interiors/ecom-item/10093674)
+2026-11-03 17:44:26,604 INFO sourcing.vendors.web: Saved results page to /media/pragnakalpl19/projects1/Backup/sourcing-proto_share_2026-10-15/sourcing-proto/debug_pages/20261103-174426-wencor-N120-47934-071-sub3.(txt|html)
+2026-11-03 17:44:26,605 INFO sourcing.vendors.wencor: Wencor: substitute 120-47672-001 of N120-47934-071 read (https://fly.wencor.com/product-details/-/o/cn/Cabin-Interiors/ecom-item/10093675)
+2026-11-03 17:44:35,487 INFO sourcing.vendors.web: Saved results page to /media/pragnakalpl19/projects1/Backup/sourcing-proto_share_2026-10-15/sourcing-proto/debug_pages/20261103-174435-wencor-N120-47934-071-sub4.(txt|html)
+2026-11-03 17:44:35,488 INFO sourcing.vendors.wencor: Wencor: substitute 120-47934-001 of N120-47934-071 read (https://fly.wencor.com/product-details/-/o/cn/Cabin-Interiors/ecom-item/10093676)
+2026-11-03 17:44:44,331 INFO sourcing.vendors.web: Saved results page to /media/pragnakalpl19/projects1/Backup/sourcing-proto_share_2026-10-15/sourcing-proto/debug_pages/20261103-174443-wencor-N120-47934-071-sub5.(txt|html)
+2026-11-03 17:44:44,331 INFO sourcing.vendors.wencor: Wencor: substitute 120-47934-009 of N120-47934-071 read (https://fly.wencor.com/product-details/-/o/cn/Cabin-Interiors/ecom-item/10093677)
+2026-11-03 17:44:53,017 INFO sourcing.vendors.web: Saved results page to /media/pragnakalpl19/projects1/Backup/sourcing-proto_share_2026-10-15/sourcing-proto/debug_pages/20261103-174452-wencor-N120-47934-071-sub6.(txt|html)
+2026-11-03 17:44:53,017 INFO sourcing.vendors.wencor: Wencor: substitute 120-47934-011 of N120-47934-071 read (https://fly.wencor.com/product-details/-/o/cn/Cabin-Interiors/ecom-item/10093678)
+2026-11-03 17:45:02,155 INFO sourcing.vendors.web: Saved results page to /media/pragnakalpl19/projects1/Backup/sourcing-proto_share_2026-10-15/sourcing-proto/debug_pages/20261103-174501-wencor-N120-47934-071-sub7.(txt|html)
+2026-11-03 17:45:02,155 INFO sourcing.vendors.wencor: Wencor: substitute 120-47934-013 of N120-47934-071 read (https://fly.wencor.com/product-details/-/o/cn/Cabin-Interiors/ecom-item/10093679)
+2026-11-03 17:45:11,877 INFO sourcing.vendors.web: Saved results page to /media/pragnakalpl19/projects1/Backup/sourcing-proto_share_2026-10-15/sourcing-proto/debug_pages/20261103-174511-wencor-N120-47934-071-sub8.(txt|html)
+2026-11-03 17:45:11,877 INFO sourcing.vendors.wencor: Wencor: substitute 120-47934-019 of N120-47934-071 read (https://fly.wencor.com/product-details/-/o/cn/MISCELLANEOUS/ecom-item/10093680)
+2026-11-03 17:45:46,054 INFO sourcing.vendors.generic: Search: opening https://fly.wencor.com/products/-/o/category/all/cn/All-Products/ecom-search/21FA407G directly
+2026-11-03 17:46:01,057 INFO sourcing.vendors.wencor: Wencor step 3 (open): 1 listed part(s) are 21FA407G: https://fly.wencor.com/product-details/-/o/cn/Filters/d/21FA407G/ecom-item/10047883
+2026-11-03 17:46:10,425 INFO sourcing.vendors.wencor: Wencor: no stock link on https://fly.wencor.com/product-details/-/o/cn/Filters/d/21FA407G/ecom-item/10047883
+2026-11-03 17:46:11,323 INFO sourcing.vendors.web: Saved results page to /media/pragnakalpl19/projects1/Backup/sourcing-proto_share_2026-10-15/sourcing-proto/debug_pages/20261103-174610-wencor-21FA407G-1.(txt|html)
+2026-11-03 17:46:11,323 INFO sourcing.vendors.wencor: Wencor step 4 (read): product page 1 of 1 at https://fly.wencor.com/product-details/-/o/cn/Filters/d/21FA407G/ecom-item/10047883
+2026-11-03 17:46:20,035 INFO sourcing.vendors.web: Saved results page to /media/pragnakalpl19/projects1/Backup/sourcing-proto_share_2026-10-15/sourcing-proto/debug_pages/20261103-174619-wencor-21FA407G-sub1.(txt|html)
+2026-11-03 17:46:20,035 INFO sourcing.vendors.wencor: Wencor: substitute 1762992 of 21FA407G read (https://fly.wencor.com/product-details/-/o/cn/Filters/ecom-item/10121549)
+2026-11-03 17:46:29,161 INFO sourcing.vendors.wencor: Wencor: order rules on https://fly.wencor.com/product-details/-/o/cn/Filters/ecom-item/10007523: Minimum order quantity: 10
+2026-11-03 17:46:30,070 INFO sourcing.vendors.web: Saved results page to /media/pragnakalpl19/projects1/Backup/sourcing-proto_share_2026-10-15/sourcing-proto/debug_pages/20261103-174629-wencor-21FA407G-sub2.(txt|html)
+2026-11-03 17:46:30,070 INFO sourcing.vendors.wencor: Wencor: substitute 21FA507G of 21FA407G read (https://fly.wencor.com/product-details/-/o/cn/Filters/ecom-item/10007523)
+2026-11-03 17:46:39,012 INFO sourcing.vendors.web: Saved results page to /media/pragnakalpl19/projects1/Backup/sourcing-proto_share_2026-10-15/sourcing-proto/debug_pages/20261103-174638-wencor-21FA407G-sub3.(txt|html)
+2026-11-03 17:46:39,012 INFO sourcing.vendors.wencor: Wencor: substitute 7600002-101 of 21FA407G read (https://fly.wencor.com/product-details/-/o/cn/Filters/ecom-item/10047338)
+2026-11-03 17:46:48,328 INFO sourcing.vendors.web: Saved results page to /media/pragnakalpl19/projects1/Backup/sourcing-proto_share_2026-10-15/sourcing-proto/debug_pages/20261103-174647-wencor-21FA407G-sub4.(txt|html)
+2026-11-03 17:46:48,329 INFO sourcing.vendors.wencor: Wencor: substitute CD01068F4 of 21FA407G read (https://fly.wencor.com/product-details/-/o/cn/Filters/ecom-item/10650326)
+2026-11-03 17:46:58,571 INFO sourcing.vendors.web: Saved results page to /media/pragnakalpl19/projects1/Backup/sourcing-proto_share_2026-10-15/sourcing-proto/debug_pages/20261103-174657-wencor-21FA407G-sub5.(txt|html)
+2026-11-03 17:46:58,571 INFO sourcing.vendors.wencor: Wencor: substitute P199753 of 21FA407G read (https://fly.wencor.com/product-details/-/o/cn/Filters/ecom-item/10014502)
+2026-11-03 17:47:07,779 INFO sourcing.vendors.web: Saved results page to /media/pragnakalpl19/projects1/Backup/sourcing-proto_share_2026-10-15/sourcing-proto/debug_pages/20261103-174707-wencor-21FA407G-sub6.(txt|html)
+2026-11-03 17:47:07,779 INFO sourcing.vendors.wencor: Wencor: substitute P513753 of 21FA407G read (https://fly.wencor.com/product-details/-/o/cn/Filters/ecom-item/11104060)
+2026-11-03 17:47:17,407 INFO sourcing.vendors.web: Saved results page to /media/pragnakalpl19/projects1/Backup/sourcing-proto_share_2026-10-15/sourcing-proto/debug_pages/20261103-174716-wencor-21FA407G-sub7.(txt|html)
+2026-11-03 17:47:17,407 INFO sourcing.vendors.wencor: Wencor: substitute S161N300-1 of 21FA407G read (https://fly.wencor.com/product-details/-/o/cn/Filters/ecom-item/11149049)
+2026-11-03 17:47:35,853 INFO sourcing.vendors.generic: Search: opening https://fly.wencor.com/products/-/o/category/all/cn/All-Products/ecom-search/MS9385-09 directly
+2026-11-03 17:47:43,866 INFO sourcing.vendors.wencor: Wencor step 3 (open): 1 listed part(s) are MS9385-09: https://fly.wencor.com/product-details/-/o/cn/Seals/d/MS9385-09/ecom-item/10015706
+2026-11-03 17:48:13,926 WARNING sourcing.vendors.wencor: Wencor: stock link 'Availability for All Warehouses' not read: TimeoutError('Page.click: Timeout 20000ms exceeded.\nCall log:\n  - waiting for locator("[data-sourcing-wencor=\'s0\']")\n')
+2026-11-03 17:48:14,923 INFO sourcing.vendors.web: Saved results page to /media/pragnakalpl19/projects1/Backup/sourcing-proto_share_2026-10-15/sourcing-proto/debug_pages/20261103-174814-wencor-MS9385-09-1.(txt|html)
+2026-11-03 17:48:14,923 INFO sourcing.vendors.wencor: Wencor step 4 (read): product page 1 of 1 at https://fly.wencor.com/product-details/-/o/cn/Seals/d/MS9385-09/ecom-item/10015706
+2026-11-03 17:48:24,183 INFO sourcing.vendors.generic: Search: opening https://fly.wencor.com/products/-/o/category/all/cn/All-Products/ecom-search/AS3209-120 directly
+2026-11-03 17:48:33,505 INFO sourcing.vendors.wencor: Wencor step 3 (open): 1 listed part(s) are AS3209-120: https://fly.wencor.com/product-details/-/o/cn/Seals/d/AS3209-120/ecom-item/10017622
+2026-11-03 17:48:41,541 INFO sourcing.vendors.wencor: Wencor: order rules on https://fly.wencor.com/product-details/-/o/cn/Seals/d/AS3209-120/ecom-item/10017622: Minimum order quantity: 100; Ordered in multiples of: 100
+2026-11-03 17:49:04,096 WARNING sourcing.vendors.wencor: Wencor: stock link 'Availability for All Warehouses' not read: TimeoutError('Page.click: Timeout 20000ms exceeded.\nCall log:\n  - waiting for locator("[data-sourcing-wencor=\'s0\']")\n')
+2026-11-03 17:49:04,977 INFO sourcing.vendors.web: Saved results page to /media/pragnakalpl19/projects1/Backup/sourcing-proto_share_2026-10-15/sourcing-proto/debug_pages/20261103-174904-wencor-AS3209-120-1.(txt|html)
+2026-11-03 17:49:04,978 INFO sourcing.vendors.wencor: Wencor step 4 (read): product page 1 of 1 at https://fly.wencor.com/product-details/-/o/cn/Seals/d/AS3209-120/ecom-item/10017622
+2026-11-03 17:49:14,116 INFO sourcing.vendors.web: Saved results page to /media/pragnakalpl19/projects1/Backup/sourcing-proto_share_2026-10-15/sourcing-proto/debug_pages/20261103-174913-wencor-AS3209-120-sub1.(txt|html)
+2026-11-03 17:49:14,116 INFO sourcing.vendors.wencor: Wencor: substitute M83248-1-120 of AS3209-120 read (https://fly.wencor.com/product-details/-/o/cn/Seals/ecom-item/10920219)
+2026-11-03 17:49:25,038 INFO sourcing.vendors.generic: Search: opening https://fly.wencor.com/products/-/o/category/all/cn/All-Products/ecom-search/39250-20629 directly
+2026-11-03 17:49:34,142 INFO sourcing.vendors.wencor: Wencor step 3 (open): 1 listed part(s) are 39250-20629: https://fly.wencor.com/product-details/-/o/cn/Bearings/d/39250-20629/ecom-item/10000664
+2026-11-03 17:49:43,730 INFO sourcing.vendors.wencor: Wencor: no stock link on https://fly.wencor.com/product-details/-/o/cn/Bearings/d/39250-20629/ecom-item/10000664
+2026-11-03 17:49:44,615 INFO sourcing.vendors.web: Saved results page to /media/pragnakalpl19/projects1/Backup/sourcing-proto_share_2026-10-15/sourcing-proto/debug_pages/20261103-174944-wencor-39250-20629-1.(txt|html)
+2026-11-03 17:49:44,615 INFO sourcing.vendors.wencor: Wencor step 4 (read): product page 1 of 1 at https://fly.wencor.com/product-details/-/o/cn/Bearings/d/39250-20629/ecom-item/10000664
+2026-11-03 17:49:53,199 INFO sourcing.vendors.web: Saved results page to /media/pragnakalpl19/projects1/Backup/sourcing-proto_share_2026-10-15/sourcing-proto/debug_pages/20261103-174952-wencor-39250-20629-sub1.(txt|html)
+2026-11-03 17:49:53,199 INFO sourcing.vendors.wencor: Wencor: substitute 39250 of 39250-20629 read (https://fly.wencor.com/product-details/-/o/cn/Bearings/ecom-item/10236374)
+2026-11-03 17:50:03,359 INFO sourcing.pipeline: Bulk search: 5 found, 0 not found, 409.9s, LLM 5 call(s) $0.4825
+2026-11-03 17:50:03,359 INFO sourcing.pipeline: Row 22: found, 9 offer(s), 409.9s, LLM 1 call(s) $0.1432
+2026-11-03 17:50:03,359 INFO sourcing.pipeline: Row 22 offer: pn=N120-47934-071 price=917.14  qty=271 cond=NE lead=In stock (50 days if out of stock)
+2026-11-03 17:50:03,359 INFO sourcing.pipeline: Row 22 offer: pn=120-37661-001 price=None  qty=None cond=NE lead=None
+2026-11-03 17:50:03,359 INFO sourcing.pipeline: Row 22 offer: pn=120-47517-001 price=None  qty=None cond=NE lead=None
+2026-11-03 17:50:03,359 INFO sourcing.pipeline: Row 22 offer: pn=120-47672-001 price=None  qty=None cond=NE lead=None
+2026-11-03 17:50:03,359 INFO sourcing.pipeline: Row 22 offer: pn=120-47934-001 price=None  qty=None cond=NE lead=None
+2026-11-03 17:50:03,359 INFO sourcing.pipeline: Row 22 offer: pn=120-47934-009 price=None  qty=None cond=NE lead=None
+2026-11-03 17:50:03,359 INFO sourcing.pipeline: Row 22 offer: pn=120-47934-011 price=None  qty=None cond=NE lead=None
+2026-11-03 17:50:03,359 INFO sourcing.pipeline: Row 22 offer: pn=120-47934-013 price=None  qty=None cond=NE lead=None
+2026-11-03 17:50:03,359 INFO sourcing.pipeline: Row 22 offer: pn=120-47934-019 price=None  qty=None cond=NE lead=None
+2026-11-03 17:50:03,360 INFO sourcing.pipeline: Row 23: found, 8 offer(s), 409.9s, LLM 1 call(s) $0.1336
+2026-11-03 17:50:03,360 INFO sourcing.pipeline: Row 23 offer: pn=21FA407G price=407.95  qty=681 cond=NE lead=In stock (185 days if out of stock)
+2026-11-03 17:50:03,360 INFO sourcing.pipeline: Row 23 offer: pn=1762992 price=None  qty=None cond=NE lead=None
+2026-11-03 17:50:03,360 INFO sourcing.pipeline: Row 23 offer: pn=21FA507G price=None  qty=None cond=NE lead=None
+2026-11-03 17:50:03,360 INFO sourcing.pipeline: Row 23 offer: pn=7600002-101 price=None  qty=None cond=NE lead=None
+2026-11-03 17:50:03,360 INFO sourcing.pipeline: Row 23 offer: pn=CD01068F4 price=None  qty=None cond=NE lead=None
+2026-11-03 17:50:03,360 INFO sourcing.pipeline: Row 23 offer: pn=P199753 price=None  qty=None cond=NE lead=None
+2026-11-03 17:50:03,360 INFO sourcing.pipeline: Row 23 offer: pn=P513753 price=None  qty=None cond=NE lead=None
+2026-11-03 17:50:03,360 INFO sourcing.pipeline: Row 23 offer: pn=S161N300-1 price=None  qty=None cond=NE lead=None
+2026-11-03 17:50:03,361 INFO sourcing.pipeline: Row 24: found, 1 offer(s), 409.9s, LLM 1 call(s) $0.0595
+2026-11-03 17:50:03,361 INFO sourcing.pipeline: Row 24 offer: pn=MS9385-09 price=1.05  qty=4319 cond=NE lead=In stock (46 days if out of stock)
+2026-11-03 17:50:03,361 INFO sourcing.pipeline: Row 25: found, 2 offer(s), 409.9s, LLM 1 call(s) $0.0726
+2026-11-03 17:50:03,361 INFO sourcing.pipeline: Row 25 offer: pn=AS3209-120 price=0.87  qty=3494 cond=NE lead=In stock (99 days if out of stock)
+2026-11-03 17:50:03,361 INFO sourcing.pipeline: Row 25 offer: pn=M83248-1-120 price=None  qty=None cond=NE lead=None
+2026-11-03 17:50:03,361 INFO sourcing.pipeline: Row 26: found, 2 offer(s), 409.9s, LLM 1 call(s) $0.0736
+2026-11-03 17:50:03,361 INFO sourcing.pipeline: Row 26 offer: pn=39250-20629 price=83.75  qty=Out of stock cond=NE lead=211 days
+2026-11-03 17:50:03,361 INFO sourcing.pipeline: Row 26 offer: pn=39250 price=None  qty=None cond=NE lead=None
+2026-11-03 17:50:03,361 INFO sourcing.pipeline: Row 32: same part as row 26, using its search
+2026-11-03 17:50:03,361 INFO sourcing.pipeline: Row 32: found, 2 offer(s), 409.9s, LLM 0 call(s) $0.0000
+2026-11-03 17:50:03,361 INFO sourcing.pipeline: Row 32 offer: pn=39250-20629 price=83.75  qty=Out of stock cond=NE lead=211 days
+2026-11-03 17:50:03,361 INFO sourcing.pipeline: Row 32 offer: pn=39250 price=None  qty=None cond=NE lead=None
+2026-11-03 17:50:08,086 INFO sourcing.pipeline: Row 22 N120-47934-071 (wencor): -> DONE
+2026-11-03 17:50:08,099 INFO sourcing.pipeline: Row 23 21FA407G (wencor): -> DONE
+2026-11-03 17:50:08,111 INFO sourcing.pipeline: Row 24 MS9385-09 (wencor): -> DONE
+2026-11-03 17:50:08,123 INFO sourcing.pipeline: Row 25 AS3209-120 (wencor): -> DONE
+2026-11-03 17:50:08,135 INFO sourcing.pipeline: Row 26 39250-20629 (wencor): -> DONE
+2026-11-03 17:50:08,146 INFO sourcing.pipeline: Row 32 39250-20629 (wencor): -> DONE
+2026-11-03 17:50:08,168 INFO sourcing.pipeline: Rows 27,28,29,30,31: bulk searching Wencor for 5 parts
+2026-11-03 17:50:18,008 INFO sourcing.vendors.wencor: Wencor step 2 (bulk): 5 line(s) in PowerSearch
+2026-11-03 17:50:27,665 INFO sourcing.vendors.web: Saved results page to /media/pragnakalpl19/projects1/Backup/sourcing-proto_share_2026-10-15/sourcing-proto/debug_pages/20261103-175027-wencor-powersearch.(txt|html)
+2026-11-03 17:50:27,665 INFO sourcing.vendors.wencor: Wencor PowerSearch: 5 of 5 part(s) listed; minimum order quantity for NAS1611-121 20, AA55549-13 5
+2026-11-03 17:50:27,665 INFO sourcing.vendors.generic: Search: opening https://fly.wencor.com/products/-/o/category/all/cn/All-Products/ecom-search/39412-20629 directly
+2026-11-03 17:50:39,757 INFO sourcing.vendors.wencor: Wencor step 3 (open): 1 listed part(s) are 39412-20629: https://fly.wencor.com/product-details/-/o/cn/Bearings/d/39412-20629/ecom-item/10038003
+2026-11-03 17:50:50,732 INFO sourcing.vendors.wencor: Wencor: no stock link on https://fly.wencor.com/product-details/-/o/cn/Bearings/d/39412-20629/ecom-item/10038003
+2026-11-03 17:50:52,194 INFO sourcing.vendors.web: Saved results page to /media/pragnakalpl19/projects1/Backup/sourcing-proto_share_2026-10-15/sourcing-proto/debug_pages/20261103-175051-wencor-39412-20629-1.(txt|html)
+2026-11-03 17:50:52,194 INFO sourcing.vendors.wencor: Wencor step 4 (read): product page 1 of 1 at https://fly.wencor.com/product-details/-/o/cn/Bearings/d/39412-20629/ecom-item/10038003
+2026-11-03 17:51:02,839 INFO sourcing.vendors.web: Saved results page to /media/pragnakalpl19/projects1/Backup/sourcing-proto_share_2026-10-15/sourcing-proto/debug_pages/20261103-175102-wencor-39412-20629-sub1.(txt|html)
+2026-11-03 17:51:02,839 INFO sourcing.vendors.wencor: Wencor: substitute 39412 of 39412-20629 read (https://fly.wencor.com/product-details/-/o/cn/Bearings/ecom-item/10237101)
+2026-11-03 17:51:14,433 INFO sourcing.vendors.generic: Search: opening https://fly.wencor.com/products/-/o/category/all/cn/All-Products/ecom-search/18590-20629 directly
+2026-11-03 17:51:25,364 INFO sourcing.vendors.wencor: Wencor step 3 (open): 1 listed part(s) are 18590-20629: https://fly.wencor.com/product-details/-/o/cn/Bearings/d/18590-20629/ecom-item/10013171
+2026-11-03 17:51:35,652 INFO sourcing.vendors.wencor: Wencor: no stock link on https://fly.wencor.com/product-details/-/o/cn/Bearings/d/18590-20629/ecom-item/10013171
+2026-11-03 17:51:36,766 INFO sourcing.vendors.web: Saved results page to /media/pragnakalpl19/projects1/Backup/sourcing-proto_share_2026-10-15/sourcing-proto/debug_pages/20261103-175136-wencor-18590-20629-1.(txt|html)
+2026-11-03 17:51:36,766 INFO sourcing.vendors.wencor: Wencor step 4 (read): product page 1 of 1 at https://fly.wencor.com/product-details/-/o/cn/Bearings/d/18590-20629/ecom-item/10013171
+2026-11-03 17:51:46,880 INFO sourcing.vendors.web: Saved results page to /media/pragnakalpl19/projects1/Backup/sourcing-proto_share_2026-10-15/sourcing-proto/debug_pages/20261103-175146-wencor-18590-20629-sub1.(txt|html)
+2026-11-03 17:51:46,880 INFO sourcing.vendors.wencor: Wencor: substitute 18590 of 18590-20629 read (https://fly.wencor.com/product-details/-/o/cn/Bearings/ecom-item/10123365)
+2026-11-03 17:51:56,705 INFO sourcing.vendors.generic: Search: opening https://fly.wencor.com/products/-/o/category/all/cn/All-Products/ecom-search/NAS1611-121 directly
+2026-11-03 17:52:16,379 INFO sourcing.vendors.wencor: Wencor step 3 (open): 1 listed part(s) are NAS1611-121: https://fly.wencor.com/product-details/-/o/cn/Seals/d/NAS1611-121/ecom-item/10017715
+2026-11-03 17:52:47,552 WARNING sourcing.vendors.wencor: Wencor: stock link 'Availability for All Warehouses' not read: TimeoutError('Page.click: Timeout 20000ms exceeded.\nCall log:\n  - waiting for locator("[data-sourcing-wencor=\'s0\']")\n')
+2026-11-03 17:52:48,437 INFO sourcing.vendors.web: Saved results page to /media/pragnakalpl19/projects1/Backup/sourcing-proto_share_2026-10-15/sourcing-proto/debug_pages/20261103-175248-wencor-NAS1611-121-1.(txt|html)
+2026-11-03 17:52:48,437 INFO sourcing.vendors.wencor: Wencor step 4 (read): product page 1 of 1 at https://fly.wencor.com/product-details/-/o/cn/Seals/d/NAS1611-121/ecom-item/10017715
+2026-11-03 17:52:57,153 INFO sourcing.vendors.web: Saved results page to /media/pragnakalpl19/projects1/Backup/sourcing-proto_share_2026-10-15/sourcing-proto/debug_pages/20261103-175256-wencor-NAS1611-121-sub1.(txt|html)
+2026-11-03 17:52:57,153 INFO sourcing.vendors.wencor: Wencor: substitute NAS1601-121 of NAS1611-121 read (https://fly.wencor.com/product-details/-/o/cn/Seals/ecom-item/11063579)
+2026-11-03 17:53:06,759 INFO sourcing.vendors.generic: Search: opening https://fly.wencor.com/products/-/o/category/all/cn/All-Products/ecom-search/AA55549-13 directly
+2026-11-03 17:53:16,904 INFO sourcing.vendors.wencor: Wencor step 3 (open): 1 listed part(s) are AA55549-13: https://fly.wencor.com/product-details/-/o/cn/Seals/d/AA55549-13/ecom-item/10004653
+2026-11-03 17:53:25,303 INFO sourcing.vendors.wencor: Wencor: order rules on https://fly.wencor.com/product-details/-/o/cn/Seals/d/AA55549-13/ecom-item/10004653: Minimum order quantity: 5
+2026-11-03 17:53:25,864 INFO sourcing.vendors.wencor: Wencor: no stock link on https://fly.wencor.com/product-details/-/o/cn/Seals/d/AA55549-13/ecom-item/10004653
+2026-11-03 17:53:26,760 INFO sourcing.vendors.web: Saved results page to /media/pragnakalpl19/projects1/Backup/sourcing-proto_share_2026-10-15/sourcing-proto/debug_pages/20261103-175326-wencor-AA55549-13-1.(txt|html)
+2026-11-03 17:53:26,760 INFO sourcing.vendors.wencor: Wencor step 4 (read): product page 1 of 1 at https://fly.wencor.com/product-details/-/o/cn/Seals/d/AA55549-13/ecom-item/10004653
+2026-11-03 17:53:35,113 INFO sourcing.vendors.web: Saved results page to /media/pragnakalpl19/projects1/Backup/sourcing-proto_share_2026-10-15/sourcing-proto/debug_pages/20261103-175334-wencor-AA55549-13-sub1.(txt|html)
+2026-11-03 17:53:35,113 INFO sourcing.vendors.wencor: Wencor: substitute MS90064-05 of AA55549-13 read (https://fly.wencor.com/product-details/-/o/cn/Seals/ecom-item/11046249)
+2026-11-03 17:53:43,879 INFO sourcing.vendors.web: Saved results page to /media/pragnakalpl19/projects1/Backup/sourcing-proto_share_2026-10-15/sourcing-proto/debug_pages/20261103-175343-wencor-AA55549-13-sub2.(txt|html)
+2026-11-03 17:53:43,879 INFO sourcing.vendors.wencor: Wencor: substitute MS90064-13 of AA55549-13 read (https://fly.wencor.com/product-details/-/o/cn/Seals/ecom-item/11046252)
+2026-11-03 17:53:52,571 INFO sourcing.vendors.web: Saved results page to /media/pragnakalpl19/projects1/Backup/sourcing-proto_share_2026-10-15/sourcing-proto/debug_pages/20261103-175352-wencor-AA55549-13-sub3.(txt|html)
+2026-11-03 17:53:52,572 INFO sourcing.vendors.wencor: Wencor: substitute MS90064-13W of AA55549-13 read (https://fly.wencor.com/product-details/-/o/cn/Seals/ecom-item/11046254)
+2026-11-03 17:54:04,553 INFO sourcing.vendors.generic: Search: opening https://fly.wencor.com/products/-/o/category/all/cn/All-Products/ecom-search/DAS10-26B1-504 directly
+2026-11-03 17:54:13,505 INFO sourcing.vendors.wencor: Wencor step 3 (open): 1 listed part(s) are DAS10-26B1-504: https://fly.wencor.com/product-details/-/o/cn/Bearings/d/DAS10-26B1-504/ecom-item/10011007
+2026-11-03 17:54:22,138 INFO sourcing.vendors.wencor: Wencor: no stock link on https://fly.wencor.com/product-details/-/o/cn/Bearings/d/DAS10-26B1-504/ecom-item/10011007
+2026-11-03 17:54:23,030 INFO sourcing.vendors.web: Saved results page to /media/pragnakalpl19/projects1/Backup/sourcing-proto_share_2026-10-15/sourcing-proto/debug_pages/20261103-175422-wencor-DAS10-26B1-504-1.(txt|html)
+2026-11-03 17:54:23,030 INFO sourcing.vendors.wencor: Wencor step 4 (read): product page 1 of 1 at https://fly.wencor.com/product-details/-/o/cn/Bearings/d/DAS10-26B1-504/ecom-item/10011007
+2026-11-03 17:54:32,102 INFO sourcing.vendors.web: Saved results page to /media/pragnakalpl19/projects1/Backup/sourcing-proto_share_2026-10-15/sourcing-proto/debug_pages/20261103-175431-wencor-DAS10-26B1-504-sub1.(txt|html)
+2026-11-03 17:54:32,102 INFO sourcing.vendors.wencor: Wencor: substitute DAS10-26B1-502 of DAS10-26B1-504 read (https://fly.wencor.com/product-details/-/o/cn/Bearings/ecom-item/10747036)
+2026-11-03 17:54:41,598 INFO sourcing.pipeline: Bulk search: 5 found, 0 not found, 273.4s, LLM 5 call(s) $0.3788
+2026-11-03 17:54:41,598 INFO sourcing.pipeline: Row 27: found, 2 offer(s), 273.4s, LLM 1 call(s) $0.0708
+2026-11-03 17:54:41,598 INFO sourcing.pipeline: Row 27 offer: pn=39412-20629 price=73.25  qty=33 cond=NE lead=In stock (225 days if out of stock)
+2026-11-03 17:54:41,598 INFO sourcing.pipeline: Row 27 offer: pn=39412 price=None  qty=None cond=NE lead=None
+2026-11-03 17:54:41,599 INFO sourcing.pipeline: Row 28: found, 2 offer(s), 273.4s, LLM 1 call(s) $0.0722
+2026-11-03 17:54:41,599 INFO sourcing.pipeline: Row 28 offer: pn=18590-20629 price=178.55  qty=94 cond=NE lead=In stock (211 days if out of stock)
+2026-11-03 17:54:41,599 INFO sourcing.pipeline: Row 28 offer: pn=18590 price=None  qty=None cond=NE lead=None
+2026-11-03 17:54:41,600 INFO sourcing.pipeline: Row 29: found, 2 offer(s), 273.4s, LLM 1 call(s) $0.0718
+2026-11-03 17:54:41,600 INFO sourcing.pipeline: Row 29 offer: pn=NAS1611-121 price=1.60  qty=1857 cond=NE lead=In stock (43 days if out of stock)
+2026-11-03 17:54:41,600 INFO sourcing.pipeline: Row 29 offer: pn=NAS1601-121 price=None  qty=None cond=NE lead=None
+2026-11-03 17:54:41,600 INFO sourcing.pipeline: Row 30: found, 4 offer(s), 273.4s, LLM 1 call(s) $0.0902
+2026-11-03 17:54:41,600 INFO sourcing.pipeline: Row 30 offer: pn=AA55549-13 price=5.27  qty=567 cond=NE lead=In stock (71 days if out of stock)
+2026-11-03 17:54:41,600 INFO sourcing.pipeline: Row 30 offer: pn=MS90064-05 price=None  qty=None cond=NE lead=None
+2026-11-03 17:54:41,600 INFO sourcing.pipeline: Row 30 offer: pn=MS90064-13 price=None  qty=None cond=NE lead=None
+2026-11-03 17:54:41,600 INFO sourcing.pipeline: Row 30 offer: pn=MS90064-13W price=None  qty=None cond=NE lead=None
+2026-11-03 17:54:41,601 INFO sourcing.pipeline: Row 31: found, 2 offer(s), 273.4s, LLM 1 call(s) $0.0738
+2026-11-03 17:54:41,601 INFO sourcing.pipeline: Row 31 offer: pn=DAS10-26B1-504 price=773.00  qty=76 cond=NE lead=In stock (365 days if out of stock)
+2026-11-03 17:54:41,601 INFO sourcing.pipeline: Row 31 offer: pn=DAS10-26B1-502 price=None  qty=None cond=NE lead=None
+2026-11-03 17:54:45,182 INFO sourcing.pipeline: Row 27 39412-20629 (wencor): -> DONE
+2026-11-03 17:54:45,193 INFO sourcing.pipeline: Row 28 18590-20629 (wencor): -> DONE
+2026-11-03 17:54:45,204 INFO sourcing.pipeline: Row 29 NAS1611-121 (wencor): -> DONE
+2026-11-03 17:54:45,214 INFO sourcing.pipeline: Row 30 AA55549-13 (wencor): -> DONE
+2026-11-03 17:54:45,224 INFO sourcing.pipeline: Row 31 DAS10-26B1-504 (wencor): -> DONE
+2026-11-03 17:54:58,397 INFO sourcing.vendors.generic: Account menu button[aria-label*='account' i]: holds a:has-text('Log out')
+2026-11-03 17:54:58,398 INFO sourcing.vendors.generic: Logout: clicking a:has-text('Log out')
+2026-11-03 17:55:00,649 INFO sourcing.vendors.web: Logout: submitted; waiting up to 90s for the page
+2026-11-03 17:55:03,384 INFO sourcing.vendors.web: Logout: page ready after 5.0s (https://fly.wencor.com/home)
+2026-11-03 17:55:08,407 INFO sourcing.vendors.generic: Logout: signed out (now at https://fly.wencor.com/home)
+2026-11-03 17:55:08,439 INFO sourcing.pipeline: [wencor___shared] Signed out of Wencor
+2026-11-03 17:55:09,988 INFO sourcing.pipeline: [wencor___shared] Browser session b72850d7-8e65-4008-b757-68268001d665 released
+2026-11-03 17:55:10,980 INFO sourcing.sheets: Requests in 1V-S8J4bFqw1w_WvrsQjFqR4gNhPwFyd-YS_aF7CVqak: 31 data row(s), 0 to process (Status empty/NEW), skipped by Status: DONE=26, NOT_FOUND=3, NOT_SOLD=2, rows without a part number: 0
+2026-11-03 17:55:11,001 INFO sourcing.pipeline: Run summary: {'run_id': 'local-20261103-121213-3650__aF7CVqak', 'rows_total': 11, 'counts': {'DONE': 11}, 'llm': {'calls': 10, 'input_tokens': 160252, 'output_tokens': 11018, 'cache_read_tokens': 0, 'cost_usd': 0.861368}, 'seconds': 770.5}

@@ -1,0 +1,120 @@
+2026-10-29 18:42:56,092 INFO sourcing.job: Run local-20261029-131256-9f0d: mode=REAL, browser=browserbase, store=file (/media/pragnakalpl19/projects1/Backup/sourcing-proto_share_2026-10-15/sourcing-proto/.local_store.json), llm=anthropic/claude-opus-5-5 (effort medium), chat=on, vendor secret overrides=sourcing-vendor-proponent=sourcing-vendor-test
+2026-10-29 18:42:56,092 INFO sourcing.job: Vendor config for this run: {'*': {'bulk_min_parts': 2}}
+2026-10-29 18:42:56,287 WARNING sourcing.browser: Browserbase session recording is ON: recordings show the vendor pages, login screens included. Use for local debugging only.
+2026-10-29 18:42:57,503 INFO sourcing.job: Processing 1 sheet(s): 1V-S8J4bFqw1w_WvrsQjFqR4gNhPwFyd-YS_aF7CVqak
+2026-10-29 18:43:01,229 INFO sourcing.sheets: Requests in 1V-S8J4bFqw1w_WvrsQjFqR4gNhPwFyd-YS_aF7CVqak: 10 data row(s), 10 to process (Status empty/NEW/RUNNING), skipped by Status: none, rows without a part number: 0
+2026-10-29 18:43:01,229 INFO sourcing.pipeline: Run local-20261029-131256-9f0d__aF7CVqak picked up 10 NEW rows
+/media/pragnakalpl19/projects1/Backup/sourcing-proto_share_2026-10-15/sourcing-proto/.venv/lib/python3.11/site-packages/google/api_core/_python_version_support.py:254: FutureWarning: You are using a Python version (3.11.15) which Google will stop supporting in new releases of google.api_core once it reaches its end of life (2027-10-24). Please upgrade to the latest Python version, or at least Python 3.12, to continue receiving updates for google.api_core past that date.
+  warnings.warn(message, FutureWarning)
+/media/pragnakalpl19/projects1/Backup/sourcing-proto_share_2026-10-15/sourcing-proto/.venv/lib/python3.11/site-packages/google/api_core/_python_version_support.py:254: FutureWarning: You are using a Python version (3.11.15) which Google will stop supporting in new releases of google.cloud.secretmanager_v1 once it reaches its end of life (2027-10-24). Please upgrade to the latest Python version, or at least Python 3.12, to continue receiving updates for google.cloud.secretmanager_v1 past that date.
+  warnings.warn(message, FutureWarning)
+2026-10-29 18:43:03,672 INFO sourcing.pipeline: dasi / (no requester): using shared login (secret key sourcing-vendor-dasi, totp=no) for 10 row(s)
+2026-10-29 18:43:03,687 INFO sourcing.pipeline: [dasi___shared] Bulk search: 10 parts (bulk from 2), up to 25 per search
+2026-10-29 18:43:03,687 INFO sourcing.auth: [dasi___shared] Reusing saved browser Context 89050f15-39a7-49d3-ba35-354aa6315636 (state=NEEDS_LOGIN)
+2026-10-29 18:43:07,299 INFO sourcing.browser: Opened Browserbase session fec0f41f-739e-4e38-9254-96c1210c63fe (context=89050f15-39a7-49d3-ba35-354aa6315636, keep_alive=False, recording=on)
+2026-10-29 18:43:07,299 INFO sourcing.browser: Session page: https://www.browserbase.com/sessions/fec0f41f-739e-4e38-9254-96c1210c63fe
+2026-10-29 18:43:07,667 INFO sourcing.browser: Session live view (while the run lasts): https://www.browserbase.com/devtools-fullscreen/inspector.html?wss=connect.browserbase.com/debug/fec0f41f-739e-4e38-9254-96c1210c63fe/devtools/page/C633D0B2A3C88CC870FA9D5AF868B657?t=eyJhbGciOiJBMjU2S1ciLCJlbmMiOiJBMjU2R0NNIn0.Maw3qqCtfn7tzsTh6uOH9vQaVZC2I2TiiMTpCU3Ha0TmePFnsOeruQ.g3rrXiDv2NY2EY8f._UDoYtEM85JriK7Igh_s4atN3BXVtPBcgNh-RSDclwJiL5CxuTuCJhEZu3XToChki_UcfsKMdZDWSD8lotVPyHql7PNLw6UCIQGQxRg_SuPpD_HYW9GMKTlu2QVUiVOKRXACXrERL4nEFijZCA.MOLapvSb9o5Y7uDzCzQYJQ&debug=true
+2026-10-29 18:43:07,667 INFO sourcing.auth: [dasi___shared] Context 89050f15-39a7-49d3-ba35-354aa6315636 has no active sign-in (signed out at the end of the run 8m ago); logging in
+2026-10-29 18:43:07,667 INFO sourcing.auth: [dasi___shared] Automatic login attempt 1/2
+2026-10-29 18:43:07,689 INFO sourcing.vendors.generic: Login: dasi as purchasing@skylinkintl.com
+2026-10-29 18:43:07,689 INFO sourcing.vendors.generic: Login: opening https://store.dasi.com/login (from secret sourcing-vendor-dasi url)
+2026-10-29 18:43:35,229 INFO sourcing.vendors.generic: Login step 1 at https://store.dasi.com/login: username=input[autocomplete='username'] password=input[type='password']:not([aria-hidden='true']):not([tabindex='-1'])
+2026-10-29 18:43:39,930 INFO sourcing.vendors.generic: Login: submitting with button:has-text('Log in')
+2026-10-29 18:43:42,289 INFO sourcing.vendors.web: Login submit: submitted; waiting up to 90s for the page
+2026-10-29 18:43:43,098 INFO sourcing.vendors.web: Login submit: page ready after 3.2s (https://store.dasi.com/vforcesite/secur/frontdoor.jsp?allp=1&appkp=1&apv=1&cshc=o000006oMoHo000000wM6b&refURL=https%3A%2F%2Fstore.dasi.com%2Fvforcesite%2Fsecur%2Ffrontdoor.jsp&retURL=%2Fmyprofile&sid=00Dao000000wM6b%21AQEAQNSWqxj28X9mSJBbU2sdQ0GdcNsMEiXzY6XcDq_S.DQpO0yLjz9sUalPTh77zY_mM1hupm6wTUQqIpWY4SYfU5Ucc586&untethered=)
+2026-10-29 18:44:08,180 INFO sourcing.vendors.generic: Account menu button[aria-label*='profile' i]: holds a:has-text('Log out')
+2026-10-29 18:44:08,745 INFO sourcing.vendors.generic: Login: signed in (a:has-text('Log out') visible)
+2026-10-29 18:44:43,862 INFO sourcing.vendors.generic: Account menu button[aria-label*='profile' i]: holds a:has-text('Log out')
+2026-10-29 18:44:44,443 INFO sourcing.vendors.generic: Auth probe https://store.dasi.com/my-orders: a:has-text('Log out') in the account menu -> signed in
+2026-10-29 18:44:44,483 INFO sourcing.auth: [dasi___shared] Login OK
+2026-10-29 18:44:44,501 INFO sourcing.pipeline: Rows 2,3,4,5,6,7,8,9,10,11: bulk searching dasi for 10 parts
+2026-10-29 18:44:44,501 INFO sourcing.vendors.dasi: Bulk search: 10 parts in one search (https://store.dasi.com/product-search?type=multiple&exact=true&product=MS24665-132&product=MS20470AD4-3&product=MS20470AD4-4&product=MS20470AD3-4&product=MS20470AD5-4&product=NAS1149C0863R&product=NAS1149C0432R&product=NAS1149C0332R&product=NAS1149D0863H&product=NAS1352-5LE16P)
+2026-10-29 18:45:03,980 INFO sourcing.vendors.dasi: DASI: page shows 105 of 105 items
+2026-10-29 18:45:11,417 INFO sourcing.vendors.dasi: DASI: Fulfilled by = DASI Only set
+2026-10-29 18:45:19,736 INFO sourcing.vendors.dasi: DASI: Location = DASI Miami HQ (FL) set
+2026-10-29 18:45:36,032 INFO sourcing.vendors.dasi: DASI: 9 of 9 part block(s) open (9 all at once; 9 clicked at once)
+2026-10-29 18:45:36,629 INFO sourcing.vendors.dasi: DASI: read 39 lot(s) from 9 part block(s)
+2026-10-29 18:45:36,629 INFO sourcing.vendors.dasi: Saved the text read for dasi-bulk to /media/pragnakalpl19/projects1/Backup/sourcing-proto_share_2026-10-15/sourcing-proto/debug_pages/20261029-184536-dasi-bulk-dasi-read.txt
+2026-10-29 18:45:36,629 INFO sourcing.vendors.dasi: DASI: reading 39 lot record(s) in 3 LLM calls at once
+2026-10-29 18:46:35,123 INFO sourcing.vendors.dasi: Bulk search: offers for 9 of 10 parts
+2026-10-29 18:47:09,872 INFO sourcing.vendors.generic: Account menu button[aria-label*='profile' i]: holds a:has-text('Log out')
+2026-10-29 18:47:10,402 INFO sourcing.vendors.generic: Auth probe https://store.dasi.com/my-orders: a:has-text('Log out') in the account menu -> signed in
+2026-10-29 18:47:10,402 INFO sourcing.pipeline: Bulk search: 9 found, 1 not found, 145.9s, LLM 3 call(s) $0.3912
+2026-10-29 18:47:10,402 INFO sourcing.pipeline: Row 2: found, 5 offer(s), 145.9s, LLM 0 call(s) $0.0000
+2026-10-29 18:47:10,402 INFO sourcing.pipeline: Row 2 offer: pn=MS24665-132 price=0.15  qty=273 cond=NS lead=In stock (0 days)
+2026-10-29 18:47:10,402 INFO sourcing.pipeline: Row 2 offer: pn=MS24665-132 price=0.38  qty=54 cond=NS lead=In stock (0 days)
+2026-10-29 18:47:10,402 INFO sourcing.pipeline: Row 2 offer: pn=MS24665-132 price=0.67  qty=30 cond=NS lead=In stock (0 days)
+2026-10-29 18:47:10,402 INFO sourcing.pipeline: Row 2 offer: pn=MS24665-132 price=0.06  qty=389 cond=NE lead=In stock (0 days)
+2026-10-29 18:47:10,402 INFO sourcing.pipeline: Row 2 offer: pn=MS24665-132 price=0.10  qty=200 cond=NS lead=In stock (0 days)
+2026-10-29 18:47:10,404 INFO sourcing.pipeline: Row 3: found, 5 offer(s), 145.9s, LLM 0 call(s) $0.0000
+2026-10-29 18:47:10,404 INFO sourcing.pipeline: Row 3 offer: pn=MS20470AD4-3 price=2.23  qty=9 cond=NS lead=In stock (0 days)
+2026-10-29 18:47:10,404 INFO sourcing.pipeline: Row 3 offer: pn=MS20470AD4-3 price=3.34  qty=6 cond=NS lead=In stock (0 days)
+2026-10-29 18:47:10,404 INFO sourcing.pipeline: Row 3 offer: pn=MS20470AD4-3 price=0.28  qty=73 cond=NS lead=In stock (0 days)
+2026-10-29 18:47:10,404 INFO sourcing.pipeline: Row 3 offer: pn=MS20470AD4-3 price=0.43  qty=47 cond=NS lead=In stock (0 days)
+2026-10-29 18:47:10,404 INFO sourcing.pipeline: Row 3 offer: pn=MS20470AD4-3 price=20.00  qty=2 cond=NS lead=In stock (0 days)
+2026-10-29 18:47:10,405 INFO sourcing.pipeline: Row 4: found, 2 offer(s), 145.9s, LLM 0 call(s) $0.0000
+2026-10-29 18:47:10,405 INFO sourcing.pipeline: Row 4 offer: pn=MS20470AD4-4 price=1.54  qty=13 cond=NS lead=In stock (0 days)
+2026-10-29 18:47:10,405 INFO sourcing.pipeline: Row 4 offer: pn=MS20470AD4-4 price=1.82  qty=1238 cond=NS lead=In stock (0 days)
+2026-10-29 18:47:10,406 INFO sourcing.pipeline: Row 5: found, 10 offer(s), 145.9s, LLM 0 call(s) $0.0000
+2026-10-29 18:47:10,406 INFO sourcing.pipeline: Row 5 offer: pn=MS20470AD3-4 price=0.02  qty=4038 cond=NS lead=In stock (0 days)
+2026-10-29 18:47:10,406 INFO sourcing.pipeline: Row 5 offer: pn=MS20470AD3-4 price=20.00  qty=7 cond=NS lead=In stock (0 days) | removed: TRACE_NOT_ON_PAGE
+2026-10-29 18:47:10,406 INFO sourcing.pipeline: Row 5 offer: pn=MS20470AD3-4 price=0.10  qty=200 cond=NS lead=In stock (0 days)
+2026-10-29 18:47:10,406 INFO sourcing.pipeline: Row 5 offer: pn=MS20470AD3-4 price=0.04  qty=1150 cond=NS lead=In stock (0 days)
+2026-10-29 18:47:10,406 INFO sourcing.pipeline: Row 5 offer: pn=MS20470AD3-4 price=2.50  qty=8 cond=NS lead=In stock (0 days)
+2026-10-29 18:47:10,406 INFO sourcing.pipeline: Row 5 offer: pn=MS20470AD3-4 price=0.36  qty=57 cond=NS lead=In stock (0 days)
+2026-10-29 18:47:10,406 INFO sourcing.pipeline: Row 5 offer: pn=MS20470AD3-4 price=10.00  qty=2 cond=NS lead=In stock (0 days)
+2026-10-29 18:47:10,406 INFO sourcing.pipeline: Row 5 offer: pn=MS20470AD3-4 price=0.05  qty=403 cond=NS lead=In stock (0 days)
+2026-10-29 18:47:10,406 INFO sourcing.pipeline: Row 5 offer: pn=MS20470AD3-4 price=0.03  qty=1326 cond=NE lead=In stock (0 days)
+2026-10-29 18:47:10,406 INFO sourcing.pipeline: Row 5 offer: pn=MS20470AD3-4 price=None  qty=3233 cond=SV lead=In stock (0 days)
+2026-10-29 18:47:10,407 INFO sourcing.pipeline: Row 6: found, 5 offer(s), 145.9s, LLM 0 call(s) $0.0000
+2026-10-29 18:47:10,407 INFO sourcing.pipeline: Row 6 offer: pn=MS20470AD5-4 price=0.14  qty=151 cond=NS lead=In stock (0 days)
+2026-10-29 18:47:10,408 INFO sourcing.pipeline: Row 6 offer: pn=MS20470AD5-4 price=0.25  qty=82 cond=NS lead=In stock (0 days)
+2026-10-29 18:47:10,408 INFO sourcing.pipeline: Row 6 offer: pn=MS20470AD5-4 price=5.00  qty=4 cond=NS lead=In stock (0 days)
+2026-10-29 18:47:10,408 INFO sourcing.pipeline: Row 6 offer: pn=MS20470AD5-4 price=0.16  qty=133 cond=NS lead=In stock (0 days)
+2026-10-29 18:47:10,408 INFO sourcing.pipeline: Row 6 offer: pn=MS20470AD5-4 price=1.34  qty=760 cond=NE lead=In stock (0 days)
+2026-10-29 18:47:10,408 INFO sourcing.pipeline: Row 7: found, 2 offer(s), 145.9s, LLM 0 call(s) $0.0000
+2026-10-29 18:47:10,409 INFO sourcing.pipeline: Row 7 offer: pn=NAS1149C0863R price=None  qty=8 cond=SV lead=In stock (0 days)
+2026-10-29 18:47:10,409 INFO sourcing.pipeline: Row 7 offer: pn=NAS1149C0863R price=0.96  qty=21 cond=NE lead=In stock (0 days)
+2026-10-29 18:47:10,409 INFO sourcing.pipeline: Row 8: found, 5 offer(s), 145.9s, LLM 0 call(s) $0.0000
+2026-10-29 18:47:10,409 INFO sourcing.pipeline: Row 8 offer: pn=NAS1149C0432R price=2.50  qty=8 cond=NS lead=In stock (0 days)
+2026-10-29 18:47:10,409 INFO sourcing.pipeline: Row 8 offer: pn=NAS1149C0432R price=1.25  qty=16 cond=NS lead=In stock (0 days)
+2026-10-29 18:47:10,409 INFO sourcing.pipeline: Row 8 offer: pn=NAS1149C0432R price=10.00  qty=2 cond=NS lead=In stock (0 days)
+2026-10-29 18:47:10,409 INFO sourcing.pipeline: Row 8 offer: pn=NAS1149C0432R price=0.72  qty=28 cond=NS lead=In stock (0 days)
+2026-10-29 18:47:10,409 INFO sourcing.pipeline: Row 8 offer: pn=NAS1149C0432R price=1.43  qty=14 cond=NS lead=In stock (0 days)
+2026-10-29 18:47:10,410 INFO sourcing.pipeline: Row 9: found, 3 offer(s), 145.9s, LLM 0 call(s) $0.0000
+2026-10-29 18:47:10,410 INFO sourcing.pipeline: Row 9 offer: pn=NAS1149C0332R price=20.00  qty=1 cond=NS lead=In stock (0 days)
+2026-10-29 18:47:10,410 INFO sourcing.pipeline: Row 9 offer: pn=NAS1149C0332R price=5.00  qty=4 cond=NS lead=In stock (0 days)
+2026-10-29 18:47:10,410 INFO sourcing.pipeline: Row 9 offer: pn=NAS1149C0332R price=20.00  qty=1 cond=NE lead=In stock (0 days)
+2026-10-29 18:47:10,410 INFO sourcing.pipeline: Row 10: found, 2 offer(s), 145.9s, LLM 0 call(s) $0.0000
+2026-10-29 18:47:10,410 INFO sourcing.pipeline: Row 10 offer: pn=NAS1149D0863H price=15.60  qty=3240 cond=NS lead=In stock (0 days)
+2026-10-29 18:47:10,410 INFO sourcing.pipeline: Row 10 offer: pn=NAS1149D0863H price=15.60  qty=484 cond=NE lead=In stock (0 days)
+2026-10-29 18:47:13,664 INFO sourcing.pipeline: Row 2 MS24665-132 (dasi): -> DONE
+2026-10-29 18:47:13,696 INFO sourcing.pipeline: Row 3 MS20470AD4-3 (dasi): -> DONE
+2026-10-29 18:47:13,722 INFO sourcing.pipeline: Row 4 MS20470AD4-4 (dasi): -> DONE
+2026-10-29 18:47:13,745 INFO sourcing.pipeline: Row 5 MS20470AD3-4 (dasi): -> DONE
+2026-10-29 18:47:13,768 INFO sourcing.pipeline: Row 6 MS20470AD5-4 (dasi): -> DONE
+2026-10-29 18:47:13,791 INFO sourcing.pipeline: Row 7 NAS1149C0863R (dasi): -> DONE
+2026-10-29 18:47:13,820 INFO sourcing.pipeline: Row 8 NAS1149C0432R (dasi): -> DONE
+2026-10-29 18:47:13,844 INFO sourcing.pipeline: Row 9 NAS1149C0332R (dasi): -> DONE
+2026-10-29 18:47:13,867 INFO sourcing.pipeline: Row 10 NAS1149D0863H (dasi): -> DONE
+2026-10-29 18:47:13,890 INFO sourcing.pipeline: [dasi___shared] Searching 1 part(s) again one by one before logout (not found in bulk, empty page or search error)
+2026-10-29 18:47:13,915 INFO sourcing.pipeline: Row 11: searching dasi for NAS1352-5LE16P
+2026-10-29 18:47:13,915 INFO sourcing.vendors.generic: Search: opening https://store.dasi.com/product-search?type=simple&searchterms=NAS1352-5LE16P&exact=true directly
+2026-10-29 18:47:34,294 INFO sourcing.vendors.dasi: DASI: page shows 0 of 0 items
+2026-10-29 18:47:38,104 INFO sourcing.vendors.dasi: DASI: Location filter not set (Locator.click: Timeout 3000ms exceeded.); keeping only Ship From DASI Miami HQ (FL) lots
+2026-10-29 18:47:40,511 INFO sourcing.vendors.dasi: DASI: 0 of 0 part block(s) open (none; 0 clicked at once)
+2026-10-29 18:47:42,399 INFO sourcing.vendors.web: Saved results page to /media/pragnakalpl19/projects1/Backup/sourcing-proto_share_2026-10-15/sourcing-proto/debug_pages/20261029-184742-generic-NAS1352-5LE16P.(txt|html)
+2026-10-29 18:47:42,399 INFO sourcing.vendors.dasi: Saved the text read for generic-NAS1352-5LE16P to /media/pragnakalpl19/projects1/Backup/sourcing-proto_share_2026-10-15/sourcing-proto/debug_pages/20261029-184742-generic-NAS1352-5LE16P-dasi-read.txt
+2026-10-29 18:48:21,064 INFO sourcing.vendors.generic: Account menu button[aria-label*='profile' i]: holds a:has-text('Log out')
+2026-10-29 18:48:21,616 INFO sourcing.vendors.generic: Auth probe https://store.dasi.com/my-orders: a:has-text('Log out') in the account menu -> signed in
+2026-10-29 18:48:21,616 INFO sourcing.pipeline: Row 11: no results, 0 offer(s), 32.5s, LLM 2 call(s) $0.0404
+2026-10-29 18:48:22,576 INFO sourcing.pipeline: Row 11 NAS1352-5LE16P (dasi): -> NOT_FOUND
+2026-10-29 18:48:39,275 INFO sourcing.vendors.generic: Account menu button[aria-label*='profile' i]: holds a:has-text('Log out')
+2026-10-29 18:48:39,276 INFO sourcing.vendors.generic: Logout: clicking a:has-text('Log out')
+2026-10-29 18:48:41,509 INFO sourcing.vendors.web: Logout: submitted; waiting up to 90s for the page
+2026-10-29 18:48:56,828 INFO sourcing.vendors.web: Logout: page ready after 17.6s (https://store.dasi.com/login)
+2026-10-29 18:49:11,173 INFO sourcing.vendors.generic: Logout: signed out (now at https://store.dasi.com/login)
+2026-10-29 18:49:11,222 INFO sourcing.pipeline: [dasi___shared] Signed out of dasi
+2026-10-29 18:49:12,414 INFO sourcing.pipeline: [dasi___shared] Browser session fec0f41f-739e-4e38-9254-96c1210c63fe released
+2026-10-29 18:49:13,144 INFO sourcing.sheets: Requests in 1V-S8J4bFqw1w_WvrsQjFqR4gNhPwFyd-YS_aF7CVqak: 10 data row(s), 0 to process (Status empty/NEW), skipped by Status: DONE=9, NOT_FOUND=1, rows without a part number: 0
+2026-10-29 18:49:13,167 INFO sourcing.pipeline: Run summary: {'run_id': 'local-20261029-131256-9f0d__aF7CVqak', 'rows_total': 10, 'counts': {'DONE': 9, 'NOT_FOUND': 1}, 'llm': {'calls': 5, 'input_tokens': 42104, 'output_tokens': 13158, 'cache_read_tokens': 0, 'cost_usd': 0.431576}, 'seconds': 372.4}

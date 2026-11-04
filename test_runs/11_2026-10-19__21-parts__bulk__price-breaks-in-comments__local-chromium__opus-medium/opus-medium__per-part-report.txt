@@ -1,0 +1,32 @@
+Run local-20261019-082220-69b5__bulk_price_breaks
+
+ Row  Part number          Status     Offers   Secs  In tok Out tok   Cost $
+   2  F1101385-01          DONE            1  118.4       0       0   0.0166
+   3  4066-0014            DONE            1  118.4       0       0   0.0166
+   4  AS15001-1P           DONE            1  118.4       0       0   0.0166
+   5  5934001-217          DONE            1  118.4       0       0   0.0166
+   6  60B40018-32          DONE            3  118.4       0       0   0.0166
+   7  4132A-934-ZB         DONE            1  118.4       0       0   0.0166
+   8  410946               DONE            3  118.4       0       0   0.0166
+   9  ACHC-3-13            DONE            2  118.4       0       0   0.0166
+  10  B7210                DONE            2  118.4       0       0   0.0166
+  11  50831-1              NOT_SOLD           118.4       0       0   0.0166
+  12  ACO44521             DONE            1  118.4       0       0   0.0166
+  13  ACO47189             DONE            1  118.4       0       0   0.0166
+  14  ACR-6-33/B           DONE            1  118.4       0       0   0.0166
+  15  AEC-145-69685-005    DONE            1  118.4       0       0   0.0166
+  16  AF400                DONE            1  118.4       0       0   0.0166
+  17  AG282000-03          DONE            1  118.4       0       0   0.0166
+  18  AIS16P               DONE            1  118.4       0       0   0.0166
+  19  AMC02RA03W           DONE            1  118.4       0       0   0.0166
+  20  AN901-4C             DONE            1  118.4       0       0   0.0166
+  21  AQC-5729             DONE            2  118.4       0       0   0.0166
+  22  AS1895/7-300         DONE            3  118.4       0       0   0.0166
+
+Parts: 21   statuses: {'DONE': 20, 'NOT_SOLD': 1}
+Search time per part: avg 118.4s, min 118.4s, max 118.4s
+Tokens: 0 in + 0 out (avg 0 in + 0 out per part)
+LLM cost: $0.3494 total, $0.0166 per part
+Whole run (login and sheet writes included): 170s, 8.1s per part
+
+Saved test_runs/11_2026-10-19__21-parts__bulk__price-breaks-in-comments__local-chromium__opus-medium/opus-medium__per-part-report.csv

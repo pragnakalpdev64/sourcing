@@ -1,0 +1,27 @@
+{
+  "vendor_id": "aviall",
+  "adapter": "AviallAdapter",
+  "signed_in": false,
+  "login_seconds": 0.0,
+  "signed_in_check": null,
+  "parts": [],
+  "logged_out": null,
+  "stopped": "the login could not be completed (No sign-in form found (tried: https://auth.boeing.com/sp/ACS.saml2; https://shop.boeing.com/))",
+  "login_only": true,
+  "learned": {},
+  "not_confirmed": [],
+  "found_by": {
+    "login_link": "generic list"
+  },
+  "llm_discovery_calls": 1,
+  "llm": {
+    "calls": 1,
+    "input_tokens": 618,
+    "output_tokens": 8,
+    "cache_read_tokens": 0,
+    "cost_usd": 0.002632
+  },
+  "seconds": 105.3,
+  "ok": false,
+  "to_check": []
+}

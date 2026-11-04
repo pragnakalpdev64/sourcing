@@ -1,0 +1,31 @@
+Run local-20261013-120754-8d70__aF7CVqak
+
+ Row  Part number          Status     Offers   Secs  In tok Out tok   Cost $
+   2  F1101385-01          DONE            1   21.4    6145     461   0.0008
+   3  4066-0014            DONE            1   22.6    6319     867   0.0011
+   4  AS15001-1P           DONE            1   25.5    6457    1421   0.0014
+   5  5934001-217          DONE            1   22.8    6226    1029   0.0011
+   6  60B40018-32          DONE            3   27.9    8231    1765   0.0017
+   7  4132A-934-ZB         DONE            1   22.6    6299     633   0.0009
+   8  410946               DONE            2   29.6    8381    2291   0.0020
+   9  ACHC-3-13            DONE            2   28.4    7568    2386   0.0019
+  10  B7210                DONE            1   21.5    5884     580   0.0009
+  11  50831-1              DONE            1   21.3    5174     705   0.0009
+  12  ACO44521             DONE            1   22.0    6158     666   0.0009
+  13  ACO47189             DONE            1   21.2    6213     468   0.0009
+  14  ACR-6-33/B           DONE            1   24.2    6544    1381   0.0013
+  15  AEC-145-69685-005    DONE            1   28.2    6163     561   0.0009
+  16  AF400                DONE            1   23.6    6523    1061   0.0012
+  17  AG282000-03          DONE            1   22.1    6287     610   0.0009
+  18  AIS16P               DONE            1   22.5    6114     682   0.0010
+  19  AMC02RA03W           DONE            1   26.4    6312    1402   0.0013
+  20  AN901-4C             DONE            1   22.0    6366     645   0.0010
+  21  AQC-5729             DONE            2   24.0    7063     969   0.0012
+
+Parts: 20   statuses: {'DONE': 20}
+Search time per part: avg 24.0s, min 21.2s, max 29.6s
+Tokens: 130427 in + 20583 out (avg 6521 in + 1029 out per part)
+LLM cost: $0.0233 total, $0.0012 per part
+Whole run (login and sheet writes included): 560s, 28.0s per part
+
+Saved report_20_haiku.csv

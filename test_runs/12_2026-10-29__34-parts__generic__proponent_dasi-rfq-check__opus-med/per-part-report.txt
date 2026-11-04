@@ -1,0 +1,45 @@
+Run local-20261029-095011-b8c2__aF7CVqak
+
+ Row  Part number          Status     Offers   Secs  In tok Out tok   Cost $
+   2  620-1-200            DONE            2  149.8       0       0   0.0185
+   3  4066-0014            DONE            1  149.8       0       0   0.0185
+   4  406Q80-1             DONE            1  149.8       0       0   0.0185
+   5  4140073-1            DONE            1  149.8       0       0   0.0185
+   6  415-654-1            DONE            1  149.8       0       0   0.0185
+   7  416F25-4             DONE            3  149.8       0       0   0.0185
+   8  418-09104            DONE            1  149.8       0       0   0.0185
+   9  424B200-7            DONE            2  149.8       0       0   0.0185
+  10  426EN10-8            DONE            1  149.8       0       0   0.0185
+  11  42TC12-2             DONE            2  149.8       0       0   0.0185
+  12  43-1329              DONE            1  149.8       0       0   0.0185
+  13  432004031            DONE            1  149.8       0       0   0.0185
+  14  44267KS-10SL-4SN     DONE            1  149.8       0       0   0.0185
+  15  446667-1             DONE            1  149.8       0       0   0.0185
+  16  453A1810-10          DONE            1  149.8       0       0   0.0185
+  17  465-000092-2ADSTC    DONE            1  149.8       0       0   0.0185
+  18  4900397-7            DONE            1  149.8       0       0   0.0185
+  19  AN960-10L            DONE            1  149.8       0       0   0.0185
+  20  NAS1149F0363P        DONE            1  149.8       0       0   0.0185
+  21  AS3491-01            DONE            1  149.8       0       0   0.0185
+  22  ACHC-3-13            DONE            1  149.8       0       0   0.0185
+  23  RA71CM012AT99NG      DONE            1  149.8       0       0   0.0185
+  24  426EN9-8             DONE            2  149.8       0       0   0.0185
+  25  MS20470AD4-3         NEEDS_ATTE      2  166.0       0       0   0.0173  Couldn't tell whether the sign-in worked at https://store.da
+  26  MS20470AD4-4         NEEDS_ATTE      1  141.7       0       0   0.0145  Couldn't tell whether the sign-in worked at https://store.da
+  27  MS20470AD3-4         NEEDS_ATTE      1  120.9       0       0   0.0122  Couldn't tell whether the sign-in worked at https://store.da
+  28  MS20470AD5-4         NEEDS_ATTE      1  120.9       0       0   0.0122  Couldn't tell whether the sign-in worked at https://store.da
+  29  NAS1149C0863R        NEEDS_ATTE      1  120.9       0       0   0.0122  Couldn't tell whether the sign-in worked at https://store.da
+  30  NAS1149C0432R        NEEDS_ATTE      1  120.9       0       0   0.0122  Couldn't tell whether the sign-in worked at https://store.da
+  31  NAS1149C0332R        NEEDS_ATTE      1  120.9       0       0   0.0122  Couldn't tell whether the sign-in worked at https://store.da
+  32  NAS1149D0863H        NEEDS_ATTE      1  120.9       0       0   0.0122  Couldn't tell whether the sign-in worked at https://store.da
+  33  NAS1352-5LE16P       NEEDS_ATTE      1  120.9       0       0   0.0122  Couldn't tell whether the sign-in worked at https://store.da
+  34  AN960-10             NEEDS_ATTE      2  120.9       0       0   0.0122  Couldn't tell whether the sign-in worked at https://store.da
+  35  MS24665-132          NEEDS_ATTE      1  120.9       0       0   0.0122  Couldn't tell whether the sign-in worked at https://store.da
+
+Parts: 34   statuses: {'NEEDS_ATTENTION': 11, 'DONE': 23}
+Search time per part: avg 142.4s, min 120.9s, max 166.0s
+Tokens: 0 in + 0 out (avg 0 in + 0 out per part)
+LLM cost: $0.5684 total, $0.0167 per part
+Whole run (login and sheet writes included): 191s, 5.6s per part
+
+Saved test_runs/12_2026-10-29__34-parts__generic__proponent_dasi-rfq-check__opus-med/per-part-report.csv

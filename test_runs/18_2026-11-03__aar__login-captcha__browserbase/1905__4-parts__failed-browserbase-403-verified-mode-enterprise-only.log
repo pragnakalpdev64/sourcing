@@ -1,0 +1,48 @@
+2026-11-03 19:05:15,411 INFO sourcing.job: Run local-20261103-133515-b13f: mode=REAL, browser=browserbase, store=file (/media/pragnakalpl19/projects1/Backup/sourcing-proto_share_2026-10-15/sourcing-proto/.local_store.json), llm=anthropic/claude-opus-5-5 (effort medium), chat=on, vendor secret overrides=sourcing-vendor-proponent=sourcing-vendor-test
+2026-11-03 19:05:15,411 INFO sourcing.job: Vendor config for this run: {'*': {'bulk_min_parts': 2}}
+2026-11-03 19:05:15,515 WARNING sourcing.browser: Browserbase session recording is ON: recordings show the vendor pages, login screens included. Use for local debugging only.
+2026-11-03 19:05:16,143 INFO sourcing.job: Processing 1 sheet(s): 1V-S8J4bFqw1w_WvrsQjFqR4gNhPwFyd-YS_aF7CVqak
+2026-11-03 19:05:21,763 INFO sourcing.sheets: Requests in 1V-S8J4bFqw1w_WvrsQjFqR4gNhPwFyd-YS_aF7CVqak: 35 data row(s), 4 to process (Status empty/NEW/RUNNING), skipped by Status: DONE=26, NOT_FOUND=3, NOT_SOLD=2, rows without a part number: 0
+2026-11-03 19:05:21,764 INFO sourcing.pipeline: Run local-20261103-133515-b13f__aF7CVqak picked up 4 NEW rows
+/media/pragnakalpl19/projects1/Backup/sourcing-proto_share_2026-10-15/sourcing-proto/.venv/lib/python3.11/site-packages/google/api_core/_python_version_support.py:254: FutureWarning: You are using a Python version (3.11.15) which Google will stop supporting in new releases of google.api_core once it reaches its end of life (2027-10-24). Please upgrade to the latest Python version, or at least Python 3.12, to continue receiving updates for google.api_core past that date.
+  warnings.warn(message, FutureWarning)
+/media/pragnakalpl19/projects1/Backup/sourcing-proto_share_2026-10-15/sourcing-proto/.venv/lib/python3.11/site-packages/google/api_core/_python_version_support.py:254: FutureWarning: You are using a Python version (3.11.15) which Google will stop supporting in new releases of google.cloud.secretmanager_v1 once it reaches its end of life (2027-10-24). Please upgrade to the latest Python version, or at least Python 3.12, to continue receiving updates for google.cloud.secretmanager_v1 past that date.
+  warnings.warn(message, FutureWarning)
+2026-11-03 19:05:23,807 INFO sourcing.pipeline: aar / (no requester): using shared login (secret key sourcing-vendor-aar, totp=no) for 4 row(s)
+2026-11-03 19:05:23,831 INFO sourcing.pipeline: [aar___shared] Bulk search: 4 parts (bulk from 2), up to 10 per search
+2026-11-03 19:05:23,831 INFO sourcing.auth: [aar___shared] Reusing saved browser Context 9799f387-c9e8-46a1-bf7e-b3493983f432 (state=NEEDS_LOGIN)
+2026-11-03 19:05:24,817 ERROR sourcing.pipeline: [aar___shared] Unexpected error
+Traceback (most recent call last):
+  File "/media/pragnakalpl19/projects1/Backup/sourcing-proto_share_2026-10-15/sourcing-proto/sourcing/pipeline.py", line 983, in _process_account
+    handle = await self.auth.open_authenticated(adapter, cred, people)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/media/pragnakalpl19/projects1/Backup/sourcing-proto_share_2026-10-15/sourcing-proto/sourcing/auth/manager.py", line 102, in open_authenticated
+    handle = await self.browser.open(context_id, metadata={"account": aid},
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/media/pragnakalpl19/projects1/Backup/sourcing-proto_share_2026-10-15/sourcing-proto/sourcing/browser/browserbase.py", line 57, in open
+    session = await self._create_session(context_id, keep_alive, timeout_seconds,
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/media/pragnakalpl19/projects1/Backup/sourcing-proto_share_2026-10-15/sourcing-proto/sourcing/browser/browserbase.py", line 106, in _create_session
+    return await asyncio.to_thread(
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/pragnakalpl19/.local/share/uv/python/cpython-3.11.15-linux-x86_64-gnu/lib/python3.11/asyncio/threads.py", line 25, in to_thread
+    return await loop.run_in_executor(None, func_call)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/pragnakalpl19/.local/share/uv/python/cpython-3.11.15-linux-x86_64-gnu/lib/python3.11/concurrent/futures/thread.py", line 58, in run
+    result = self.fn(*self.args, **self.kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/media/pragnakalpl19/projects1/Backup/sourcing-proto_share_2026-10-15/sourcing-proto/.venv/lib/python3.11/site-packages/browserbase/resources/sessions/sessions.py", line 167, in create
+    return self._post(
+           ^^^^^^^^^^^
+  File "/media/pragnakalpl19/projects1/Backup/sourcing-proto_share_2026-10-15/sourcing-proto/.venv/lib/python3.11/site-packages/browserbase/_base_client.py", line 1299, in post
+    return cast(ResponseT, self.request(cast_to, opts, stream=stream, stream_cls=stream_cls))
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/media/pragnakalpl19/projects1/Backup/sourcing-proto_share_2026-10-15/sourcing-proto/.venv/lib/python3.11/site-packages/browserbase/_base_client.py", line 1086, in request
+    raise self._make_status_error_from_response(err.response) from None
+browserbase.PermissionDeniedError: Error code: 403 - {'statusCode': 403, 'error': 'Forbidden', 'message': 'Verified mode is only available on the Enterprise plan'}
+2026-11-03 19:05:25,316 INFO sourcing.pipeline: Row 33 44066 (aar corp): -> FAILED | Unexpected error: PermissionDeniedError("Error code: 403 - {'statusCode': 403, 'error': 'Forbidden', 'message': 'Verified mode is only available on the Enterprise plan'}")
+2026-11-03 19:05:25,332 INFO sourcing.pipeline: Row 34 1381-1176 (aar corp): -> FAILED | Unexpected error: PermissionDeniedError("Error code: 403 - {'statusCode': 403, 'error': 'Forbidden', 'message': 'Verified mode is only available on the Enterprise plan'}")
+2026-11-03 19:05:25,343 INFO sourcing.pipeline: Row 35 3880938-1 (aar corp): -> FAILED | Unexpected error: PermissionDeniedError("Error code: 403 - {'statusCode': 403, 'error': 'Forbidden', 'message': 'Verified mode is only available on the Enterprise plan'}")
+2026-11-03 19:05:25,353 INFO sourcing.pipeline: Row 36 C100-013080 (aar corp): -> FAILED | Unexpected error: PermissionDeniedError("Error code: 403 - {'statusCode': 403, 'error': 'Forbidden', 'message': 'Verified mode is only available on the Enterprise plan'}")
+2026-11-03 19:05:25,834 INFO sourcing.sheets: Requests in 1V-S8J4bFqw1w_WvrsQjFqR4gNhPwFyd-YS_aF7CVqak: 35 data row(s), 0 to process (Status empty/NEW), skipped by Status: DONE=26, FAILED=4, NOT_FOUND=3, NOT_SOLD=2, rows without a part number: 0
+2026-11-03 19:05:25,860 INFO sourcing.pipeline: Run summary: {'run_id': 'local-20261103-133515-b13f__aF7CVqak', 'rows_total': 4, 'counts': {'FAILED': 4}, 'llm': {'calls': 0, 'input_tokens': 0, 'output_tokens': 0, 'cache_read_tokens': 0, 'cost_usd': 0.0}, 'seconds': 4.7}

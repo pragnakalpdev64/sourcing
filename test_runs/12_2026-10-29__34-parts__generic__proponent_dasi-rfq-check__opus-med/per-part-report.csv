@@ -1,0 +1,35 @@
+row,part_number,status,offers,seconds,calls,input_tokens,output_tokens,cost_usd,error
+2,620-1-200,DONE,2,149.8,0,0,0,0.018537,
+3,4066-0014,DONE,1,149.8,0,0,0,0.018537,
+4,406Q80-1,DONE,1,149.8,0,0,0,0.018537,
+5,4140073-1,DONE,1,149.8,0,0,0,0.018537,
+6,415-654-1,DONE,1,149.8,0,0,0,0.018537,
+7,416F25-4,DONE,3,149.8,0,0,0,0.018537,
+8,418-09104,DONE,1,149.8,0,0,0,0.018537,
+9,424B200-7,DONE,2,149.8,0,0,0,0.018537,
+10,426EN10-8,DONE,1,149.8,0,0,0,0.018537,
+11,42TC12-2,DONE,2,149.8,0,0,0,0.018537,
+12,43-1329,DONE,1,149.8,0,0,0,0.018537,
+13,432004031,DONE,1,149.8,0,0,0,0.018537,
+14,44267KS-10SL-4SN,DONE,1,149.8,0,0,0,0.018537,
+15,446667-1,DONE,1,149.8,0,0,0,0.018537,
+16,453A1810-10,DONE,1,149.8,0,0,0,0.018537,
+17,465-000092-2ADSTC,DONE,1,149.8,0,0,0,0.018537,
+18,4900397-7,DONE,1,149.8,0,0,0,0.018537,
+19,AN960-10L,DONE,1,149.8,0,0,0,0.018537,
+20,NAS1149F0363P,DONE,1,149.8,0,0,0,0.018537,
+21,AS3491-01,DONE,1,149.8,0,0,0,0.018537,
+22,ACHC-3-13,DONE,1,149.8,0,0,0,0.018537,
+23,RA71CM012AT99NG,DONE,1,149.8,0,0,0,0.018537,
+24,426EN9-8,DONE,2,149.8,0,0,0,0.018537,
+25,MS20470AD4-3,NEEDS_ATTENTION,2,166.0,0,0,0,0.017323,Couldn't tell whether the sign-in worked at https://store.dasi.com/myprofile
+26,MS20470AD4-4,NEEDS_ATTENTION,1,141.7,0,0,0,0.014456,Couldn't tell whether the sign-in worked at https://store.dasi.com/myprofile
+27,MS20470AD3-4,NEEDS_ATTENTION,1,120.9,0,0,0,0.012247,Couldn't tell whether the sign-in worked at https://store.dasi.com/myprofile
+28,MS20470AD5-4,NEEDS_ATTENTION,1,120.9,0,0,0,0.012247,Couldn't tell whether the sign-in worked at https://store.dasi.com/myprofile
+29,NAS1149C0863R,NEEDS_ATTENTION,1,120.9,0,0,0,0.012247,Couldn't tell whether the sign-in worked at https://store.dasi.com/myprofile
+30,NAS1149C0432R,NEEDS_ATTENTION,1,120.9,0,0,0,0.012247,Couldn't tell whether the sign-in worked at https://store.dasi.com/myprofile
+31,NAS1149C0332R,NEEDS_ATTENTION,1,120.9,0,0,0,0.012247,Couldn't tell whether the sign-in worked at https://store.dasi.com/myprofile
+32,NAS1149D0863H,NEEDS_ATTENTION,1,120.9,0,0,0,0.012247,Couldn't tell whether the sign-in worked at https://store.dasi.com/myprofile
+33,NAS1352-5LE16P,NEEDS_ATTENTION,1,120.9,0,0,0,0.012247,Couldn't tell whether the sign-in worked at https://store.dasi.com/myprofile
+34,AN960-10,NEEDS_ATTENTION,2,120.9,0,0,0,0.012247,Couldn't tell whether the sign-in worked at https://store.dasi.com/myprofile
+35,MS24665-132,NEEDS_ATTENTION,1,120.9,0,0,0,0.012247,Couldn't tell whether the sign-in worked at https://store.dasi.com/myprofile
