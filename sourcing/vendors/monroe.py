@@ -224,7 +224,13 @@ PRODUCT_HTML_JS = """(html) => {
 # HTML writes some with a "note-" / "spec-" prefix.
 _MIN_ORDER = re.compile(r"Minimum order is ([\d,]+)", re.I)
 _MIN_PURCHASE = re.compile(r"Minimum Purchase:\s*([\d,]+)\s*units?", re.I)
-_INDUSTRY = re.compile(r"(?:note-|spec-)?Industry Standards/Certification:\s*([^\n]+)", re.I)
+# Tagged By only from a label that names who tags / certifies the part (team,
+# 2026-11-05). "Industry Standards/Certification: MS25036" is the part's spec
+# standard, not a tag, and went out as Tagged By on 2026-11-04: never used.
+# No Monroe page seen so far has such a label, so Tagged By stays blank.
+_TAG_SOURCE = re.compile(r"^(?:note-|spec-)?(?:Tagged By|Tag Source|Tag Type|"
+                         r"Cert(?:ificate)? Source|Release Certificate):\s*([^\n]+)",
+                         re.I | re.M)
 _STOCK_LINE = re.compile(r"In Stock - ([\d,]+) units? available", re.I)
 _OUT_OF_STOCK = re.compile(r"\bOut of Stock\b|\bSold Out\b", re.I)
 _TABLE = re.compile(r"Available:\s*([\d,]+)(?:;.*?Unit Price:\s*\$([\d,.]+))?", re.I)
@@ -246,7 +252,8 @@ def _plain(number: str) -> str:
 
 
 def page_facts(product: dict) -> dict:
-    """The values one product's page states: moq, tagged_by, qty, price, breaks.
+    """The values one product's page states: moq, tagged_by (a named tag / cert
+    source only), qty, price, breaks.
     A key is missing when the page doesn't state it (then the offer has none)."""
     text = product.get("text") or ""
     table = "\n".join(product.get("variants") or [])
@@ -254,9 +261,10 @@ def page_facts(product: dict) -> dict:
     moq = _MIN_ORDER.search(text) or _MIN_PURCHASE.search(text)
     if moq:
         facts["moq"] = _plain(moq.group(1))
-    cert = _INDUSTRY.search(text)
-    value = cert.group(1).strip() if cert else ""
-    if value and not value.endswith(":"):         # an empty label: not the next label
+    tag = _TAG_SOURCE.search(text)
+    value = tag.group(1).strip() if tag else ""
+    # Not an empty label (the next label), nor a filter list's "(Required)" / "Any".
+    if value and not value.endswith(":") and not value.startswith("(") and value != "Any":
         facts["tagged_by"] = value
     row = _TABLE.search(table)
     stock = _STOCK_LINE.search(text)
@@ -462,8 +470,9 @@ class MonroeAdapter(GenericAdapter):
         """Every value checked against what that product's page states (team,
         2026-11-04: no random values). The run of 16:53 wrote MOQ 500 from the
         bulk rates, "MFR Certificate" / "Trace To MFR" from the variants filters
-        and a per-manufacturer note; the page states MOQ 100 (MS28773-04: 10) and
-        "Industry Standards/Certification: MS25036". So: MOQ, tagged_by, stock,
+        and a per-manufacturer note; the page states MOQ 100 (MS28773-04: 10), and
+        its "Industry Standards/Certification: MS25036" is a spec standard, not a
+        tag (team, 2026-11-05: Tagged By blank). So: MOQ, tagged_by, stock,
         unit price and price breaks are the page's own; trace, warehouses and a
         lead time other than "In stock" are cleared (Monroe shows none). Then the
         condition Monroe doesn't show (condition_not_shown)."""

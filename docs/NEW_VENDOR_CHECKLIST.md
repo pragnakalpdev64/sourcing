@@ -1,7 +1,7 @@
 # New vendor checklist: what the working adapters already taught us
 
 Read this before writing a new adapter or prompt. Every line comes from a real
-run on Proponent, DASI, Aviall, Wencor, AAR or Monroe; the file and date are
+run on Proponent, DASI, Aviall, Wencor, AAR, Monroe or Aircraft Spruce; the file and date are
 where it was seen. Start from the closest working adapter, not from scratch:
 
 | The new site looks like | Start from |
@@ -11,6 +11,8 @@ where it was seen. Start from the closest working adapter, not from scratch:
 | Salesforce Experience site, grid of lots per part | `dasi.py` |
 | Search bar + list + product pages, quantity rules in the page's inputs | `wencor.py` |
 | Many steps, pop-ups, SSO buttons, big slow site | `aviall.py` |
+| One product page per part number by address, no multi-part search | `aircraft_spruce.py` |
+| Single-page app (Angular / React) whose pages load JSON from an API | `incora.py` |
 | ASP.NET page with a jqGrid | `proponent.py` + `grid.py` |
 | Anything else | `generic.py` alone first (vendor record only), then an adapter |
 
@@ -30,8 +32,16 @@ where it was seen. Start from the closest working adapter, not from scratch:
   (Monroe). Forgot / reset / register links are excluded in `web.LOGIN_LINK_SELECTORS`.
 - **Two forms on one page** (Wencor header drop-down + page form): pin the page's
   own form in `KNOWN_SELECTORS`.
+- **A newsletter box is often the page's only `input[type=email]`** (Aircraft Spruce
+  2026-11-05: the User ID field is a plain text box labelled "User ID / Dealer #", so the
+  login typed the email into the footer's newsletter box). Look at the login form's
+  own fields and pin them.
 - **Direct login page can trip a CAPTCHA** where the site's own path doesn't
   (AAR: landing page -> avatar -> "Sign In or Register"); `human_typing` helped.
+- **An image CAPTCHA has no wording in the page** (Aircraft Spruce 2026-11-05: Google's
+  reCAPTCHA challenge sits in its `recaptcha/api2/bframe` frame). Detect the shown frame and
+  hand it to a person (`MfaRequired("captcha")` -> Live View); retrying only raises Google's
+  risk score. The program never solves one.
 - **Login button opens a dialog, not a page** (Aviall): wait for what comes next,
   don't wait only for navigation.
 - **The page after sign-in may show nothing the rules know** (AAR home page):
@@ -46,6 +56,7 @@ where it was seen. Start from the closest working adapter, not from scratch:
 - Use the platform's own logout address when it has one (Magento
   `/customer/account/logout/`, BigCommerce `/login.php?action=logout`) and confirm
   it with the same check. Logout must be confirmed before the browser closes.
+- **An OAuth / Azure AD B2C sign-in address is one sign-in's own** (Incora 2026-11-05: `authorize?state=...&code_challenge=...`). Saved as the login page and opened on the next run, B2C took the password and the app refused the answer ("Still on the sign-in form"). Start on the app's own page every time and never save the B2C address (`IncoraAdapter.login_url_candidates`, `_remember_login_page`). Short-lived tokens (Incora: signed out ~3.5 min after login) are refreshed by the app while its page is open: wait on the open page before opening the next one.
 - The login page comes from the secret's `url` (vendor config `login_url` wins).
   Don't hard-code one in the adapter unless the team says so (Monroe, 2026-11-04).
 
@@ -69,8 +80,9 @@ where it was seen. Start from the closest working adapter, not from scratch:
   browser after the page's scripts ran, and open what only shows on demand
   (pop-ups). Don't pass on filter choices (Monroe's Manufacturer / Revision /
   MFR Certificate drop-downs): the team saw them turn into values that weren't
-  the product's (2026-11-04). Map certificates only from the label the team
-  names (Monroe: `Industry Standards/Certification`).
+  the product's (2026-11-04). Tagged By only from a label that names who tags
+  or certifies the part; a spec standard (Monroe's `Industry Standards/Certification:
+  MS25036`) is not a tag (team, 2026-11-05: blank unless a real tag / cert source).
 - **Check the LLM's offer against facts the program reads itself** when the page
   states them in fixed wording (Monroe `page_facts` / `_finish`, 2026-11-04): MOQ,
   certificate label, stock, unit price, price-break rows are set to the page's own;
@@ -84,10 +96,26 @@ where it was seen. Start from the closest working adapter, not from scratch:
   search lists (not even searched alone) is reported as not found** to the
   pipeline, so it isn't searched again one by one (no ghost retries).
 - Don't open what adds nothing (DASI's View dialog: ~13s each, dropped 2026-10-29).
+- **A search box can POST** (Aircraft Spruce, 2026-11-05): `search.php?s=...` by GET listed
+  nothing, so the box is used. Check the form's method before calling an address "direct".
+- **Stock can depend on the quantity in the box** (Aircraft Spruce: no stock number, "In Stock"
+  / "Partial Stock" / "No Stock" worked out by script for the Quantity box). Type the requested
+  quantity and read the line again; the price too, before and after.
+- **A product address can answer with another part** (Aircraft Spruce `pnpages/MS20470AD4-4.php`
+  shows AN470AD-4-4): compare the page's own part number (and MFR number) with the request.
 - A public site still needs a sign-in check on the search page: signed-out pages
   show public prices (Monroe `_open_results`).
 
 ## 4. Reading the page
+
+- **A single-page app keeps what it shows in its own data** (Incora 2026-11-05, Angular): read
+  its script bundle (`main.*.js`) before the first login: routes, API addresses, what it keeps
+  in localStorage. Incora's Bulk Search takes its parts from localStorage and saves the whole
+  result there: writing the list + opening the page is the search, and the stored result has
+  every row of every table page (the paginator's "1 - 50 of N" checks it). Values only behind
+  a click (the $ price pop-up) come from the same address the app asks, called from inside the
+  page (`page.evaluate(fetch)`), never `page.request` (not routed in tests: it reached the real
+  site once).
 
 - Give the LLM the program's own text per card (`--- Card n: <link> ---` blocks),
   not the whole page: menus, filters and look-alike cards stay out (AAR, Monroe).
@@ -107,6 +135,20 @@ where it was seen. Start from the closest working adapter, not from scratch:
   without `?searchuuid=`).
 - Quantity rules can live in input attributes, not text (Wencor `data-min`).
 
+## 4b. Page actions: coded, then the LLM, never a quiet gap
+
+- Every action that fills in data (a dropdown entry, a pop-up, a "show more")
+  goes through `self.assist.act(...)` when its coded way fails: a saved recipe,
+  then the LLM picks the clicks, and the adapter's own **check** decides whether
+  the data appeared (Proponent warehouses: the row's numbers change; Monroe:
+  the bulk rates are there). Give it a `scope` near the control.
+- Whatever is still missing is **flagged on the line** (Proponent
+  `WAREHOUSES_INCOMPLETE` + "OTHER WAREHOUSES NOT READ: ..."; Monroe
+  `PRICE_BREAKS_NOT_READ`; any vendor `WAREHOUSES_SHORT` when warehouses add up
+  to less than the total). Never let a gap look like complete data.
+- The run's Chat summary lists the actions the code couldn't do alone: the cue
+  to update the adapter.
+
 ## 5. Prompt (`<vendor>_prompt.py`)
 
 - Extend the shared `EXTRACT_SYSTEM` with one section; the client's field rules
@@ -122,6 +164,8 @@ where it was seen. Start from the closest working adapter, not from scratch:
 
 ## 6. Tests and runs
 
+- `route.fulfill(status=302)` in a mock: the browser fetches the redirect target from the
+  **real** site (not routed). Redirect by script in mocks (Aircraft Spruce tests, 2026-11-05).
 - `page.route` doesn't intercept `page.request`: patch `_account_state` /
   `_fetch_html` in tests, or they hit the real site.
 - A form inside a script-made `about:blank` iframe gets no `submit` event in

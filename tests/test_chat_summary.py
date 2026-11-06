@@ -39,3 +39,13 @@ def test_problems_in_title_and_long_lists_cut():
     assert "`test.xlsx` (local file)" in text
     assert "• Model:" not in text
     assert f"… and {15 - CHAT_MAX_LISTED_ROWS} more" in text
+
+
+def test_page_actions_are_in_the_summary():
+    summary = _summary([])
+    summary.vendors["proponent"].parts = 11
+    summary.vendors["proponent"].page_actions = [
+        "proponent_warehouse_pick: done with the LLM (2 click(s)) (x6)"]
+    text = summary_message(summary, _result({"DONE": 11}), "test.xlsx", "")
+    assert "Page actions the code couldn't do alone" in text
+    assert "proponent_warehouse_pick: done with the LLM" in text

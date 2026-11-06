@@ -1,0 +1,102 @@
+2026-11-05 17:16:52,012 INFO sourcing.job: Run local-20261105-114652-0946: mode=REAL, browser=browserbase, store=file (/media/pragnakalpl19/projects1/Backup/sourcing-proto_share_2026-10-15/sourcing-proto/.local_store.json), llm=anthropic/claude-opus-5-5 (effort medium), chat=on, vendor secret overrides=sourcing-vendor-proponent=sourcing-vendor-test
+2026-11-05 17:16:52,012 INFO sourcing.job: Vendor config for this run: {'*': {'bulk_min_parts': 2}}
+2026-11-05 17:16:52,112 WARNING sourcing.browser: Browserbase session recording is ON: recordings show the vendor pages, login screens included. Use for local debugging only.
+2026-11-05 17:16:52,777 INFO sourcing.job: Processing 1 sheet(s): 1V-S8J4bFqw1w_WvrsQjFqR4gNhPwFyd-YS_aF7CVqak
+2026-11-05 17:16:56,024 INFO sourcing.sheets: Requests in 1V-S8J4bFqw1w_WvrsQjFqR4gNhPwFyd-YS_aF7CVqak: 63 data row(s), 17 to process (Status empty/NEW/RUNNING), skipped by Status: DONE=41, NOT_FOUND=3, NOT_SOLD=2, rows without a part number: 0
+2026-11-05 17:16:56,025 INFO sourcing.pipeline: Run local-20261105-114652-0946__aF7CVqak picked up 17 NEW rows
+/media/pragnakalpl19/projects1/Backup/sourcing-proto_share_2026-10-15/sourcing-proto/.venv/lib/python3.11/site-packages/google/api_core/_python_version_support.py:254: FutureWarning: You are using a Python version (3.11.15) which Google will stop supporting in new releases of google.api_core once it reaches its end of life (2027-10-24). Please upgrade to the latest Python version, or at least Python 3.12, to continue receiving updates for google.api_core past that date.
+  warnings.warn(message, FutureWarning)
+/media/pragnakalpl19/projects1/Backup/sourcing-proto_share_2026-10-15/sourcing-proto/.venv/lib/python3.11/site-packages/google/api_core/_python_version_support.py:254: FutureWarning: You are using a Python version (3.11.15) which Google will stop supporting in new releases of google.cloud.secretmanager_v1 once it reaches its end of life (2027-10-24). Please upgrade to the latest Python version, or at least Python 3.12, to continue receiving updates for google.cloud.secretmanager_v1 past that date.
+  warnings.warn(message, FutureWarning)
+2026-11-05 17:16:58,107 INFO sourcing.pipeline: incora / (no requester): using shared login (secret key sourcing-vendor-incora, totp=no) for 17 row(s)
+2026-11-05 17:16:58,132 INFO sourcing.pipeline: [incora___shared] Bulk search: 17 parts (bulk from 2), up to 25 per search
+2026-11-05 17:16:58,133 INFO sourcing.auth: [incora___shared] Reusing saved browser Context 55e8327d-8134-458c-86dd-06e6ee0736bd (state=NEEDS_LOGIN)
+2026-11-05 17:17:02,059 INFO sourcing.browser: Opened Browserbase session fafaa836-e3a5-4079-a069-868ac4ca86a0 (context=55e8327d-8134-458c-86dd-06e6ee0736bd, keep_alive=False, recording=on, stealth=basic)
+2026-11-05 17:17:02,059 INFO sourcing.browser: Session page: https://www.browserbase.com/sessions/fafaa836-e3a5-4079-a069-868ac4ca86a0
+2026-11-05 17:17:02,463 INFO sourcing.browser: Session live view (while the run lasts): https://www.browserbase.com/devtools-fullscreen/inspector.html?wss=connect.browserbase.com/debug/fafaa836-e3a5-4079-a069-868ac4ca86a0/devtools/page/A7FF72842BD13F3C93C692113F87484E?t=REDACTED&debug=true
+2026-11-05 17:17:08,493 INFO sourcing.vendors.incora: Incora sign-in check at https://login.incora.com/a42f291c-cd14-4967-9b76-39b8737608f1/b2c_1a_signup_signin_oauth_30m/oauth2/v2.0/authorize?response_type=code&client_id=ff03286c-0ac8-4b18-bb10-98e9f780055e&state=blcya0MzREI0LUdESFB4a3VMamRZZ35ROGZ4WnRLQ2FHZkVTTW40Mm4yMmtz%3B%257B%2522redirectURL%2522%253A%2522%252Fhome%2522%257D&redirect_uri=https%3A%2F%2Fshop.incora.com%2Fauth-redirect&scope=openid%20profile%20email%20offline_access%20https%3A%2F%2Flogin.incora.com%2Ff5c73591-4844-4350-93f0-2749ece220fb%2Fread&code_challenge=xcCmzm2Je4GyeA7uzPT0CCATl0cUTX1U7Il24x97qpM&code_challenge_method=S256&nonce=blcya0MzREI0LUdESFB4a3VMamRZZ35ROGZ4WnRLQ2FHZkVTTW40Mm4yMmtz&prompt=login: signed out
+2026-11-05 17:17:08,493 INFO sourcing.auth: [incora___shared] Saved Context is no longer signed in (last login 37m ago); logging in
+2026-11-05 17:17:08,493 INFO sourcing.auth: [incora___shared] Automatic login attempt 1/2
+2026-11-05 17:17:08,513 INFO sourcing.vendors.generic: Login: Incora as carrie@skylinkintl.com
+2026-11-05 17:17:08,513 INFO sourcing.vendors.incora: Login: B2C address(es) not used as the start page (one sign-in each): https://login.incora.com/a42f291c-cd14-4967-9b76-39b8737608f1/b2c_1a_signup_signin_oauth_30m/oauth2/v2.0/authorize, https://login.incora.com/
+2026-11-05 17:17:08,513 INFO sourcing.vendors.incora: Login: opening https://shop.incora.com/
+2026-11-05 17:17:24,945 INFO sourcing.vendors.generic: Login step 1 at https://login.incora.com/a42f291c-cd14-4967-9b76-39b8737608f1/b2c_1a_signup_signin_oauth_30m/oauth2/v2.0/authorize?response_type=code&client_id=ff03286c-0ac8-4b18-bb10-98e9f780055e&state=WmpRUFRBYWJKUjBfYlNZczRtY2VyZk8tYWRtRHVUMXo2dlhOfll6eExNVnFT%3B%257B%2522redirectURL%2522%253A%2522%252Fhome%2522%257D&redirect_uri=https%3A%2F%2Fshop.incora.com%2Fauth-redirect&scope=openid%20profile%20email%20offline_access%20https%3A%2F%2Flogin.incora.com%2Ff5c73591-4844-4350-93f0-2749ece220fb%2Fread&code_challenge=fqyUr72AXnPqPRPdT-UXsYNXn77lu9arBVTK6gRus5s&code_challenge_method=S256&nonce=WmpRUFRBYWJKUjBfYlNZczRtY2VyZk8tYWRtRHVUMXo2dlhOfll6eExNVnFT&prompt=login: username=input#signInName, input#email password=input#password
+2026-11-05 17:17:32,137 INFO sourcing.vendors.generic: Login: submitting with button#next
+2026-11-05 17:17:35,419 INFO sourcing.vendors.web: Login submit: submitted; waiting up to 90s for the page
+2026-11-05 17:17:41,000 INFO sourcing.vendors.web: Login submit: page ready after 8.9s (https://shop.incora.com/home)
+2026-11-05 17:17:41,853 INFO sourcing.vendors.incora: Login: signed in (Incora token valid for 29.9 min; now at https://shop.incora.com/home)
+2026-11-05 17:17:41,853 INFO sourcing.auth: [incora___shared] Sign-in seen by the login (OAuth token on https://shop.incora.com/home); no separate probe
+2026-11-05 17:17:41,878 INFO sourcing.auth: [incora___shared] Login OK
+2026-11-05 17:17:41,890 INFO sourcing.pipeline: Rows 48,49,50,51,52,53,54,55,56,57,58,59,60,61,62,63,64: bulk searching Incora for 17 parts
+2026-11-05 17:17:42,746 INFO sourcing.vendors.incora: Incora step 2 (search): 17 part(s) on https://shop.incora.com/shop/products/bulk-search
+2026-11-05 17:18:14,041 INFO sourcing.vendors.incora: Incora results table: 1 – 17 of 17 (all read from the page's data)
+2026-11-05 17:18:14,041 INFO sourcing.vendors.incora: Incora step 3 (read): 17 part(s), 8 with stock, 14 stock line(s)
+2026-11-05 17:18:22,235 INFO sourcing.vendors.incora: Incora step 4 (prices): 14 stock line(s) in 8.2s, 0 not read
+2026-11-05 17:18:58,147 INFO sourcing.vendors.incora: Saved the results page (part open, $ pop-up) to /media/pragnakalpl19/projects1/Backup/sourcing-proto_share_2026-10-15/sourcing-proto/debug_pages/20261105-171844-incora-bulk-page.html
+2026-11-05 17:19:07,252 INFO sourcing.vendors.incora: Incora page check: MS20470AD4-4 opened, qty = data, $ pop-up 8 row(s) = data; × hover text not shown
+2026-11-05 17:19:07,257 INFO sourcing.vendors.incora: Saved the text read for bulk to /media/pragnakalpl19/projects1/Backup/sourcing-proto_share_2026-10-15/sourcing-proto/debug_pages/20261105-171907-incora-bulk-read.txt
+2026-11-05 17:20:14,830 WARNING sourcing.vendors.incora: Incora MS20470AD4-4 line 1: set to what the page states: price_breaks [('1', '', '25.0000'), ('25', '', '1.0000'), ('50', '', '0.5000'), ('100', '', '0.2500'), ('250', '', '0.1000'), ('500', '', '0.0600'), ('1000', '', '0.0600'), ('10000', '', '0.0500')] -> [('1', '24', '25.0000'), ('25', '49', '1.0000'), ('50', '99', '0.5000'), ('100', '249', '0.2500'), ('250', '499', '0.1000'), ('500', '999', '0.0600'), ('1000', '9999', '0.0600'), ('10000', '', '0.0500')]
+2026-11-05 17:20:14,830 WARNING sourcing.vendors.incora: Incora MS20470AD4-4 line 2: set to what the page states: price_breaks [('1', '', '25.0000'), ('25', '', '1.0000'), ('50', '', '0.5000'), ('100', '', '0.2500'), ('250', '', '0.1000'), ('500', '', '0.0600'), ('1000', '', '0.0600'), ('10000', '', '0.0500')] -> [('1', '24', '25.0000'), ('25', '49', '1.0000'), ('50', '99', '0.5000'), ('100', '249', '0.2500'), ('250', '499', '0.1000'), ('500', '999', '0.0600'), ('1000', '9999', '0.0600'), ('10000', '', '0.0500')]
+2026-11-05 17:20:14,830 WARNING sourcing.vendors.incora: Incora MS24665-132 line 1: set to what the page states: price_breaks [('1', '', '25.0000'), ('25', '', '1.0000'), ('50', '', '0.5000'), ('100', '', '0.2500'), ('250', '', '0.1000'), ('500', '', '0.0500'), ('1000', '', '0.0400')] -> [('1', '24', '25.0000'), ('25', '49', '1.0000'), ('50', '99', '0.5000'), ('100', '249', '0.2500'), ('250', '499', '0.1000'), ('500', '999', '0.0500'), ('1000', '', '0.0400')]
+2026-11-05 17:20:14,830 WARNING sourcing.vendors.incora: Incora MS35206-246 line 1: set to what the page states: price_breaks [('1', '', '25.0000'), ('25', '', '1.0000'), ('50', '', '0.5000'), ('100', '', '0.2500'), ('250', '', '0.1000'), ('500', '', '0.0700'), ('1000', '', '0.0700'), ('10000', '', '0.0600')] -> [('1', '24', '25.0000'), ('25', '49', '1.0000'), ('50', '99', '0.5000'), ('100', '249', '0.2500'), ('250', '499', '0.1000'), ('500', '999', '0.0700'), ('1000', '9999', '0.0700'), ('10000', '', '0.0600')]
+2026-11-05 17:20:14,830 WARNING sourcing.vendors.incora: Incora MS35206-246 line 2: set to what the page states: price_breaks [('1', '', '25.0000'), ('25', '', '1.0000'), ('50', '', '0.5000'), ('100', '', '0.2500'), ('250', '', '0.1000'), ('500', '', '0.0700'), ('1000', '', '0.0700'), ('10000', '', '0.0600')] -> [('1', '24', '25.0000'), ('25', '49', '1.0000'), ('50', '99', '0.5000'), ('100', '249', '0.2500'), ('250', '499', '0.1000'), ('500', '999', '0.0700'), ('1000', '9999', '0.0700'), ('10000', '', '0.0600')]
+2026-11-05 17:20:14,830 WARNING sourcing.vendors.incora: Incora MS35206-246 line 3: set to what the page states: price_breaks [('1', '', '25.0000'), ('25', '', '1.0000'), ('50', '', '0.5000'), ('100', '', '0.2500'), ('250', '', '0.1000'), ('500', '', '0.0700'), ('1000', '', '0.0700'), ('10000', '', '0.0600')] -> [('1', '24', '25.0000'), ('25', '49', '1.0000'), ('50', '99', '0.5000'), ('100', '249', '0.2500'), ('250', '499', '0.1000'), ('500', '999', '0.0700'), ('1000', '9999', '0.0700'), ('10000', '', '0.0600')]
+2026-11-05 17:20:14,830 WARNING sourcing.vendors.incora: Incora MS3367-5-9 line 1: set to what the page states: price_breaks [('1', '', '25.0000'), ('25', '', '1.0000'), ('50', '', '0.5000'), ('100', '', '0.2500'), ('250', '', '0.1000'), ('500', '', '0.0500'), ('1000', '', '0.0300'), ('10000', '', '0.0200')] -> [('1', '24', '25.0000'), ('25', '49', '1.0000'), ('50', '99', '0.5000'), ('100', '249', '0.2500'), ('250', '499', '0.1000'), ('500', '999', '0.0500'), ('1000', '9999', '0.0300'), ('10000', '', '0.0200')]
+2026-11-05 17:20:14,830 INFO sourcing.vendors.incora: Incora bulk search: offers for 8 of 17 part(s)
+2026-11-05 17:20:14,830 INFO sourcing.pipeline: Bulk search: 17 found, 0 not found, 152.9s, LLM 1 call(s) $0.2506
+2026-11-05 17:20:14,830 INFO sourcing.pipeline: Row 48: found, 2 offer(s), 152.9s, LLM 0 call(s) $0.0000
+2026-11-05 17:20:14,830 INFO sourcing.pipeline: Row 48 offer: pn=MS20470AD4-4 price=25.0000 USD qty=207169 cond=NE lead=In stock | removed: TRACE_NOT_ON_PAGE
+2026-11-05 17:20:14,830 INFO sourcing.pipeline: Row 48 offer: pn=MS20470AD4-4 price=25.0000 USD qty=326148 cond=NE lead=In stock | removed: TRACE_NOT_ON_PAGE
+2026-11-05 17:20:14,831 INFO sourcing.pipeline: Row 49: no results, 0 offer(s), 152.9s, LLM 0 call(s) $0.0000
+2026-11-05 17:20:14,831 INFO sourcing.pipeline: Row 50: found, 1 offer(s), 152.9s, LLM 0 call(s) $0.0000
+2026-11-05 17:20:14,831 INFO sourcing.pipeline: Row 50 offer: pn=NAS1097AD4-4 price=0.0200 USD qty=51002 cond=NE lead=In stock | removed: TRACE_NOT_ON_PAGE
+2026-11-05 17:20:14,831 INFO sourcing.pipeline: Row 51: no results, 0 offer(s), 152.9s, LLM 0 call(s) $0.0000
+2026-11-05 17:20:14,831 INFO sourcing.pipeline: Row 52: no results, 0 offer(s), 152.9s, LLM 0 call(s) $0.0000
+2026-11-05 17:20:14,831 INFO sourcing.pipeline: Row 53: no results, 0 offer(s), 152.9s, LLM 0 call(s) $0.0000
+2026-11-05 17:20:14,831 INFO sourcing.pipeline: Row 54: no results, 0 offer(s), 152.9s, LLM 0 call(s) $0.0000
+2026-11-05 17:20:14,831 INFO sourcing.pipeline: Row 55: no results, 0 offer(s), 152.9s, LLM 0 call(s) $0.0000
+2026-11-05 17:20:14,831 INFO sourcing.pipeline: Row 56: no results, 0 offer(s), 152.9s, LLM 0 call(s) $0.0000
+2026-11-05 17:20:14,831 INFO sourcing.pipeline: Row 57: no results, 0 offer(s), 152.9s, LLM 0 call(s) $0.0000
+2026-11-05 17:20:14,831 INFO sourcing.pipeline: Row 58: found, 1 offer(s), 152.9s, LLM 0 call(s) $0.0000
+2026-11-05 17:20:14,831 INFO sourcing.pipeline: Row 58 offer: pn=AN310-4 price=None  qty=7566 cond=NE lead=In stock | removed: TRACE_NOT_ON_PAGE
+2026-11-05 17:20:14,831 INFO sourcing.pipeline: Row 59: no results, 0 offer(s), 152.9s, LLM 0 call(s) $0.0000
+2026-11-05 17:20:14,831 INFO sourcing.pipeline: Row 60: found, 3 offer(s), 152.9s, LLM 0 call(s) $0.0000
+2026-11-05 17:20:14,831 INFO sourcing.pipeline: Row 60 offer: pn=AN525-10R8 price=None  qty=799 cond=NE lead=In stock | removed: TRACE_NOT_ON_PAGE
+2026-11-05 17:20:14,831 INFO sourcing.pipeline: Row 60 offer: pn=AN525-10R8 price=None  qty=113175 cond=NE lead=In stock | removed: TRACE_NOT_ON_PAGE
+2026-11-05 17:20:14,831 INFO sourcing.pipeline: Row 60 offer: pn=AN525-10R8 price=None  qty=228 cond=NE lead=In stock | removed: TRACE_NOT_ON_PAGE
+2026-11-05 17:20:14,832 INFO sourcing.pipeline: Row 61: found, 2 offer(s), 152.9s, LLM 0 call(s) $0.0000
+2026-11-05 17:20:14,832 INFO sourcing.pipeline: Row 61 offer: pn=MS21042L3 price=None  qty=1879 cond=NE lead=In stock | removed: TRACE_NOT_ON_PAGE
+2026-11-05 17:20:14,832 INFO sourcing.pipeline: Row 61 offer: pn=MS21042L3 price=None  qty=1760 cond=NE lead=In stock | removed: TRACE_NOT_ON_PAGE
+2026-11-05 17:20:14,832 INFO sourcing.pipeline: Row 62: found, 1 offer(s), 152.9s, LLM 0 call(s) $0.0000
+2026-11-05 17:20:14,832 INFO sourcing.pipeline: Row 62 offer: pn=MS24665-132 price=25.0000 USD qty=1191 cond=NE lead=In stock | removed: TRACE_NOT_ON_PAGE
+2026-11-05 17:20:14,832 INFO sourcing.pipeline: Row 63: found, 3 offer(s), 152.9s, LLM 0 call(s) $0.0000
+2026-11-05 17:20:14,832 INFO sourcing.pipeline: Row 63 offer: pn=MS35206-246 price=25.0000 USD qty=182 cond=NE lead=In stock | removed: TRACE_NOT_ON_PAGE
+2026-11-05 17:20:14,832 INFO sourcing.pipeline: Row 63 offer: pn=MS35206-246 price=25.0000 USD qty=2782 cond=NE lead=In stock | removed: TRACE_NOT_ON_PAGE
+2026-11-05 17:20:14,832 INFO sourcing.pipeline: Row 63 offer: pn=MS35206-246 price=25.0000 USD qty=38825 cond=NE lead=In stock | removed: TRACE_NOT_ON_PAGE
+2026-11-05 17:20:14,832 INFO sourcing.pipeline: Row 64: found, 1 offer(s), 152.9s, LLM 0 call(s) $0.0000
+2026-11-05 17:20:14,832 INFO sourcing.pipeline: Row 64 offer: pn=MS3367-5-9 price=25.0000 USD qty=11181 cond=NE lead=In stock
+2026-11-05 17:20:17,739 INFO sourcing.pipeline: Row 49 MS20426AD4-6 (Incora): -> NOT_FOUND
+2026-11-05 17:20:17,753 INFO sourcing.pipeline: Row 51 MS20600AD4-4 (Incora): -> NOT_FOUND
+2026-11-05 17:20:17,764 INFO sourcing.pipeline: Row 52 NAS1149C0863R (Incora): -> NOT_FOUND
+2026-11-05 17:20:17,774 INFO sourcing.pipeline: Row 53 NAS1352-5LE16P (Incora): -> NOT_FOUND
+2026-11-05 17:20:17,785 INFO sourcing.pipeline: Row 54 NAS6604-6 (Incora): -> NOT_FOUND
+2026-11-05 17:20:17,796 INFO sourcing.pipeline: Row 55 AN3-5A (Incora): -> NOT_FOUND
+2026-11-05 17:20:17,806 INFO sourcing.pipeline: Row 56 AN960-10 (Incora): -> NOT_FOUND
+2026-11-05 17:20:17,817 INFO sourcing.pipeline: Row 57 AN960-416L (Incora): -> NOT_FOUND
+2026-11-05 17:20:17,828 INFO sourcing.pipeline: Row 59 AN365-428A (Incora): -> NOT_FOUND
+2026-11-05 17:20:17,838 INFO sourcing.pipeline: Row 48 MS20470AD4-4 (Incora): -> DONE
+2026-11-05 17:20:17,848 INFO sourcing.pipeline: Row 50 NAS1097AD4-4 (Incora): -> DONE
+2026-11-05 17:20:17,859 INFO sourcing.pipeline: Row 58 AN310-4 (Incora): -> DONE
+2026-11-05 17:20:17,870 INFO sourcing.pipeline: Row 60 AN525-10R8 (Incora): -> DONE
+2026-11-05 17:20:17,880 INFO sourcing.pipeline: Row 61 MS21042L3 (Incora): -> DONE
+2026-11-05 17:20:17,891 INFO sourcing.pipeline: Row 62 MS24665-132 (Incora): -> DONE
+2026-11-05 17:20:17,901 INFO sourcing.pipeline: Row 63 MS35206-246 (Incora): -> DONE
+2026-11-05 17:20:17,912 INFO sourcing.pipeline: Row 64 MS3367-5-9 (Incora): -> DONE
+2026-11-05 17:20:18,225 INFO sourcing.vendors.incora: Logout: tokens removed; B2C end-session
+2026-11-05 17:20:25,356 INFO sourcing.vendors.incora: Incora sign-in check at https://login.incora.com/a42f291c-cd14-4967-9b76-39b8737608f1/b2c_1a_signup_signin_oauth_30m/oauth2/v2.0/authorize?response_type=code&client_id=ff03286c-0ac8-4b18-bb10-98e9f780055e&state=Lnh4WERmRkE1LVFRTG9WTk5vVG4xNX5TU2JXSHViNkxmMXhnQ1hmYkJDTTIw%3B%257B%2522redirectURL%2522%253A%2522%252Fhome%2522%257D&redirect_uri=https%3A%2F%2Fshop.incora.com%2Fauth-redirect&scope=openid%20profile%20email%20offline_access%20https%3A%2F%2Flogin.incora.com%2Ff5c73591-4844-4350-93f0-2749ece220fb%2Fread&code_challenge=2CZcP6fgB3-ydjL2U9LX0Xx87IqLLJWr8bBBay6EpV8&code_challenge_method=S256&nonce=Lnh4WERmRkE1LVFRTG9WTk5vVG4xNX5TU2JXSHViNkxmMXhnQ1hmYkJDTTIw&prompt=login: signed out
+2026-11-05 17:20:25,357 INFO sourcing.vendors.incora: Logout: signed out
+2026-11-05 17:20:25,380 INFO sourcing.pipeline: [incora___shared] Signed out of Incora
+2026-11-05 17:20:26,596 INFO sourcing.pipeline: [incora___shared] Browser session fafaa836-e3a5-4079-a069-868ac4ca86a0 released
+2026-11-05 17:20:27,649 INFO sourcing.sheets: Requests in 1V-S8J4bFqw1w_WvrsQjFqR4gNhPwFyd-YS_aF7CVqak: 63 data row(s), 0 to process (Status empty/NEW), skipped by Status: DONE=49, NOT_FOUND=12, NOT_SOLD=2, rows without a part number: 0
+2026-11-05 17:20:27,666 INFO sourcing.pipeline: Run summary: {'run_id': 'local-20261105-114652-0946__aF7CVqak', 'rows_total': 17, 'counts': {'NOT_FOUND': 9, 'DONE': 8}, 'llm': {'calls': 1, 'input_tokens': 16179, 'output_tokens': 9296, 'cache_read_tokens': 0, 'cost_usd': 0.250636}, 'seconds': 212.3}
+2026-11-05 17:20:27,679 WARNING sourcing.pipeline: Possible page change at Incora: 93% of offers had values that couldn't be verified against the page (usually n/a) — the results layout may have moved

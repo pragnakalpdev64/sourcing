@@ -554,7 +554,8 @@ New in this copy (the main copy has none of it):
       listed even alone -> not-found outcome (no pipeline retry). **adapt**.
 - [ ] `pipeline.min_order`: a stated MOQ always wins over where price breaks start (Monroe,
       2026-11-04). Monroe: variants table totals only (no filter choices, no per-choice note);
-      `tagged_by` from `Industry Standards/Certification`. Offers checked against
+      `tagged_by` only from a named tag / cert source label (`_TAG_SOURCE`); never
+      `Industry Standards/Certification` (a spec standard, team 2026-11-05). Offers checked against
       `page_facts` (`MonroeAdapter._finish`): MOQ / tag / stock / price / breaks the page's own,
       trace and warehouses cleared, offers for no product read dropped. **adapt**.
 - [ ] Monroe currency from the page's `data-currency-code` ("Currency code of the page: USD"),
@@ -562,6 +563,12 @@ New in this copy (the main copy has none of it):
 - [ ] `extract.py`: `"In stock"` without a number kept by `_verify` (`IN_STOCK_STATUS`), counted
       by `in_stock()`; prompt 2.2 / 3.2 say so (Monroe run 16:28: every line No Quote). **adapt**.
 - [ ] `docs/NEW_VENDOR_CHECKLIST.md`. **copy**.
+- [ ] `sourcing/vendors/assist.py` (PageAssist) + `VendorAdapter.assist`; generic `confirmed_learned`
+      keeps `assist_*` recipes. Proponent: warehouse dropdown click on the new custom control
+      (`bb-custom-select`), LLM fallback with the row check, gaps flagged `WAREHOUSES_INCOMPLETE`
+      + "OTHER WAREHOUSES NOT READ"; "2758 CHARGED" substitute parsing. Monroe: LLM opens the
+      Bulk Discounts pop-up when its rates aren't read, else `PRICE_BREAKS_NOT_READ`. Pipeline:
+      `WAREHOUSES_SHORT` flag, page actions in the Chat summary. **adapt**.
 - [ ] Login says signed in but the probe can't prove it (`login_claimed`, set in
       `GenericAdapter._signed_in`): the auth manager searches once instead of logging in again
       (audit `login_unconfirmed`); empty results still need the probe for NOT_FOUND. Monroe:
@@ -569,5 +576,45 @@ New in this copy (the main copy has none of it):
       Extraction prompt: "sign in to see price" pages are `login_page`. **adapt**.
 - [ ] Not signed in on the live portal yet; the secret `sourcing-vendor-monroe` is added later
       (`/credentials/new`). Checked against the public pages only (cards, product page).
+
+## Aircraft Spruce adapter (2026-11-05)
+
+- [ ] `sourcing/vendors/aircraft_spruce.py` + `aircraft_spruce_prompt.py`, registered in
+      `vendors/__init__.py` (`aircraft_spruce`, `aircraftspruce`, `spruce`, ...); tests
+      `tests/test_aircraft_spruce_adapter.py`. Product page by `catalog/pnpages/<part>.php`, else
+      the search box (a POST) with the part number, else with the Part Description / Keyword
+      (`FOUND_BY_DESCRIPTION`); the requested quantity typed into the Quantity box (stock line per
+      quantity, no stock number on the site); signed in = navbar logout link. **copy** (built on
+      `GenericAdapter`). Login fields pinned (`KNOWN_SELECTORS`, `human_typing`); reCAPTCHA image
+      challenge -> `MfaRequired("captcha")` (person through Live View, no retry).
+- [ ] Secret `sourcing-vendor-aircraft-spruce` is added later (`/credentials/new`). Checked
+      against the public pages only.
+
+## CAPTCHA solving trial switch (2026-11-05, development only)
+
+- [ ] `DEV_ALLOW_CAPTCHA_SOLVING` (`config.captcha_solving_allowed`, default off): Browserbase
+      `solve_captchas` on, Aircraft Spruce waits up to 45s for the solver before asking a person.
+      Client paused the "never solve a CAPTCHA" rule for a few days. **don't port** unless the
+      client keeps it; code marked `REMOVE-AFTER-CAPTCHA-TRIAL`.
+
+## Incora adapter (2026-11-05)
+
+- [ ] `sourcing/vendors/incora.py` + `incora_prompt.py`, registered in `vendors/__init__.py`
+      (`incora`, `shop_incora`, `wesco`, `wesco_aircraft`); tests `tests/test_incora_adapter.py`.
+      Angular app on shop.incora.com, sign-in at Azure AD B2C (login.incora.com), OAuth tokens in
+      localStorage (signed in = live `access_token`). Search = the Bulk Search page with the parts
+      written to localStorage `ecom.products.bulk.search.search.code`; the result is read from
+      the page's stored data `ecom.products.bulk.search` (all parts, all stock lines, every table
+      page); price breaks per stock line from the $ pop-up's own address (fetched inside the
+      page). Logout = the app's logOut (tokens removed, B2C end-session -> /logged-out).
+      **copy** (built on `GenericAdapter`).
+- [ ] First live runs 2026-11-05 (test_runs/22): login only from shop.incora.com (B2C addresses
+      never saved/reused), token refresh waited for, Shelf Life 0 left out, empty price list ->
+      "NO PRICE SHOWN ON INCORA", `pricingUnitOfMeasure` -> `PRICING_UOM_DIFFERS`; prompt: the seen
+      certification wordings. **copy**.
+- [ ] Vendor setting `delivery_days` (`VendorAdapter.default_delivery_days`, Incora "7"): RFQ
+      Delivery of an in-stock line instead of 0 (client, 2026-11-06). **copy**.
+- [ ] Pipeline: `LlmKeyRejected` / `llm_key_rejected` (a 401/403 from the LLM provider stops the
+      account's searches; rows FAILED). Tests `tests/test_llm_key_rejected.py`. **copy**.
 
 - [ ] This file itself, once everything above is ticked.

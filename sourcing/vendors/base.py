@@ -230,6 +230,10 @@ class VendorAdapter(ABC):
     # instead of filled at once (vendor config `human_typing` wins). Generic login
     # only. On for AAR (testing 2026-11-04, its invisible reCAPTCHA).
     default_human_typing: bool = False
+    # RFQ Delivery (days) for an in-stock line, instead of 0: a vendor that takes a
+    # fixed time to ship (vendor config `delivery_days` wins). Incora: 7 (client,
+    # 2026-11-06: "they typically take 7 days to ship"). "" = 0 in stock.
+    default_delivery_days: str = ""
 
     def __init__(self, *, extractor=None, selectors: Optional[dict] = None,
                  vendor_config: Optional[dict] = None, max_page_chars: int = 60000) -> None:
@@ -260,6 +264,12 @@ class VendorAdapter(ABC):
     @property
     def human_typing(self) -> bool:
         return bool(self.config.get("human_typing", self.default_human_typing))
+
+    @property
+    def delivery_days(self) -> str:
+        """Days an in-stock line takes to ship ("" = 0)."""
+        value = self.config.get("delivery_days", self.default_delivery_days)
+        return str(value).strip() if value not in (None, "") else ""
 
     @property
     def browser_options(self) -> dict:

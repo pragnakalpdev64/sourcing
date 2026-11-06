@@ -1252,3 +1252,85 @@ async def test_custom_warehouse_dropdown_is_picked_by_clicks(page_for):
     assert "Warehouse: Singapore\t\t\t5" in block               # the other warehouse
     assert await page.evaluate("document.querySelector('select').value") == "MAIN"
     assert await page.evaluate("window.picks") == 2             # Singapore, then Brea, CA
+
+
+# The UI changes again (class names the code doesn't know; roles as before): the
+# coded pick finds nothing, the LLM picks opener then warehouse, the row's
+# numbers prove it, and the recipe saved does it next run without the LLM.
+RENAMED_LAYOUT_HTML = (CUSTOM_LAYOUT_HTML
+                       .replace("bb-custom-select-container", "zz-dropdown")
+                       .replace("bb-custom-select-opener", "zz-opener")
+                       .replace("bb-custom-select-panel", "zz-panel")
+                       .replace("bb-custom-select-option", "zz-item")
+                       .replace(".bb-custom-select-panel", ".zz-panel")
+                       .replace("'.bb-custom-select-container'", "'.zz-dropdown'"))
+
+
+class PickingExtractor(FakeExtractor):
+    """Stands in for the LLM's pick_element: the opener, then the option named in
+    the goal. Records each call."""
+
+    def __init__(self):
+        super().__init__()
+        self.picks: list[str] = []
+
+    async def pick_element(self, elements, what):
+        self.picks.append(what)
+        label = what.split("choose '")[-1].split("'")[0]
+        option = next((e for e in elements if e.get("role") == "option"
+                       and e.get("text") == label), None)
+        opener = next((e for e in elements if e.get("role") == "combobox"), None)
+        el = option or opener
+        return (el["index"] if el else None), LlmUsage(calls=1)
+
+
+@pytest.mark.asyncio
+async def test_changed_dropdown_is_done_by_the_llm_checked_and_learned(page_for):
+    from sourcing.vendors import proponent
+
+    page = await page_for(MockProcart())
+    await page.set_content(RENAMED_LAYOUT_HTML)
+    llm = PickingExtractor()
+    adapter = ProponentAdapter(extractor=llm)
+    await adapter._expand_all_details(page)
+    text = await proponent._page_text(page, "bulk")
+    block = text[text.index("4066-0014"):text.index("Details for Warehouse")]
+    assert "Warehouse: Singapore\t\t\t5" in block and "Nov 26, 2026\t30\t17" in block
+    assert await page.evaluate("document.querySelector('select').value") == "MAIN"
+    assert llm.picks                                         # the LLM was asked
+    assert adapter.usage.calls == len(llm.picks)             # and its cost counted
+    assert "assist_proponent_warehouse_pick" in adapter.confirmed_learned()
+    assert any("done with the LLM" in e for e in adapter.assist.events)
+
+    # Next run: the saved recipe, no LLM.
+    page2 = await page_for(MockProcart())
+    await page2.set_content(RENAMED_LAYOUT_HTML)
+    llm2 = PickingExtractor()
+    adapter2 = ProponentAdapter(extractor=llm2, selectors=adapter.confirmed_learned())
+    await adapter2._expand_all_details(page2)
+    text2 = await proponent._page_text(page2, "bulk")
+    assert "Warehouse: Singapore\t\t\t5" in text2 and llm2.picks == []
+    assert any("saved recipe" in e for e in adapter2.assist.events)
+
+
+@pytest.mark.asyncio
+async def test_warehouse_not_read_is_flagged_on_its_line(page_for):
+    from sourcing.models import Offer
+
+    page = await page_for(MockProcart())
+    await page.set_content(RENAMED_LAYOUT_HTML)
+    adapter = ProponentAdapter(extractor=FakeExtractor())      # no pick_element: no LLM
+    await adapter._expand_all_details(page)
+    offer = Offer(part_number="4066-0014", price="2774.16", qty_available="22")
+    adapter._mark_gaps([offer])
+    assert "WAREHOUSES_INCOMPLETE" in offer.review
+    assert offer.vendor_note == "OTHER WAREHOUSES NOT READ: SINGAPORE"
+    assert any("not reached" in e for e in adapter.assist.events)
+
+
+def test_risky_elements_are_never_offered_to_the_llm():
+    from sourcing.vendors.assist import _risky
+    for text in ("Add To Cart", "UPDATE", "UPDATE SLR", "Log out", "Checkout", "Delete"):
+        assert _risky({"text": text})
+    for text in ("Warehouse: Singapore", "Bulk Discounts", "Show 2 Approved Substitutes"):
+        assert not _risky({"text": text})

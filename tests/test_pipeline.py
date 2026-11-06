@@ -1431,3 +1431,46 @@ def test_a_twin_gets_its_own_offers_priced_for_its_quantity():
     copy = twin_outcome(outcome, searched, twin)
     assert copy.offers[0].qty_price == "2.15" and outcome.offers[0].qty_price == "15.64"
     assert copy.usage.calls == 0 and copy.offers[0] is not outcome.offers[0]
+
+
+def test_warehouses_holding_less_than_the_total_are_flagged():
+    # Proponent 4066-0014, 2026-11-04: 22 in total, only Brea, CA's 17 read.
+    from sourcing.pipeline import flag_for
+    row = RequestRow(sheet_row=2, rfq_id="R", vendor_raw="Proponent", part_number="P1",
+                     qty_needed="1")
+    short = Offer(part_number="P1", price="1.00", qty_available="22", condition="NE",
+                  warehouses="Warehouse: Brea, CA\nQty on hand: 17")
+    assert "WAREHOUSES_SHORT" in flag_for(short, row)
+    whole = Offer(part_number="P1", price="1.00", qty_available="22", condition="NE",
+                  warehouses="Warehouse: Brea, CA\nQty on hand: 17\n\n"
+                             "Warehouse: Singapore\nQty on hand: 5")
+    assert "WAREHOUSES_SHORT" not in flag_for(whole, row)
+
+
+@pytest.mark.asyncio
+async def test_delivery_is_the_vendors_shipping_days_when_it_has_them():
+    # Incora (client, 2026-11-06): in stock -> 7; No Quote -> none; out of stock keeps
+    # its own rule (no lead time -> No Quote, not quoted at 7 days).
+    deps, sheet = _offer_rows([
+        Offer(part_number="P1", price="2.00", qty_available="12", condition="NE"),
+        Offer(part_number="P1", price=None, qty_available="40", condition="NE"),
+        Offer(part_number="P1", price="2.00", qty_available="Out of stock", condition="NE")])
+    portal_factory = deps.adapter_factory
+
+    def factory(vid, sel, cfg):
+        adapter = portal_factory(vid, sel, cfg)
+        adapter.config["delivery_days"] = "7"
+        return adapter
+    deps.adapter_factory = factory
+    await run(deps)
+    rfq = [r.as_rfq_record() for r in deps.sink.rows]
+    assert [(r["Type Quoted"], r["Delivery"]) for r in rfq] == [
+        ("Outright", "7"), ("No Quote", ""), ("No Quote", "")]
+
+
+def test_incora_ships_in_7_days_by_default():
+    from sourcing.vendors.incora import IncoraAdapter
+    from sourcing.vendors.proponent import ProponentAdapter
+    assert IncoraAdapter().delivery_days == "7"
+    assert IncoraAdapter(vendor_config={"delivery_days": 5}).delivery_days == "5"
+    assert ProponentAdapter().delivery_days == ""

@@ -63,6 +63,20 @@ async def test_stealth_sessions_only_for_vendors_that_ask(vendor, config, stealt
     assert adapter_class(vendor)(vendor_config={"browser_stealth": False}).browser_options == {}
 
 
+@pytest.mark.asyncio
+@pytest.mark.parametrize("env, solve", [("", False), ("1", True)])
+async def test_captcha_solving_only_with_the_dev_switch(monkeypatch, env, solve):
+    # REMOVE-AFTER-CAPTCHA-TRIAL: rule paused for development 2026-11-05.
+    monkeypatch.setenv("DEV_ALLOW_CAPTCHA_SOLVING", env)
+    client = BrowserbaseClient("bb-key", "bb-proj")
+    calls = []
+    client._bb.sessions.create = lambda **kw: calls.append(kw) or (_ for _ in ()).throw(
+        RuntimeError("stop after create"))
+    with pytest.raises(RuntimeError, match="stop after create"):
+        await client.open("ctx-1")
+    assert calls[0]["browser_settings"]["solve_captchas"] is solve
+
+
 async def open_local_or_skip(client: LocalBrowserClient):
     try:
         return await client.open(await client.create_context())

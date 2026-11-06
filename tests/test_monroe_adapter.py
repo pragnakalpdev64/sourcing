@@ -433,7 +433,8 @@ def test_page_facts_are_what_the_page_states():
                         "variants": ["Available: 3,130; Unit of Measure: EA; Unit Price: $1.20"],
                         "bulk": ["Buy 100 - 499 and pay only $1.16 each",
                                  "Buy 2500 - 9999 and pay only $0.91 each"]})
-    assert facts == {"moq": "10", "tagged_by": "MS28773", "qty": "3130", "price": "1.20",
+    # "Industry Standards/Certification: MS28773" is a spec standard, not a tag.
+    assert facts == {"moq": "10", "qty": "3130", "price": "1.20",
                      "bulk_shown": False,
                      "breaks": [("100", "499", "1.16"), ("2500", "9999", "0.91")]}
     empty = page_facts({"text": "Industry Standards/Certification:\nSold In:\nEA"})
@@ -454,7 +455,7 @@ def test_llm_values_the_page_doesnt_state_are_replaced_or_cleared():
                   price_breaks=[("1", "99", "1.20"), ("100", "499", "1.16")],
                   review="MOQ_NOT_ON_PAGE")
     [kept] = adapter._finish([offer])
-    assert (kept.moq, kept.tagged_by, kept.trace, kept.warehouses) == ("10", "MS28773", None, None)
+    assert (kept.moq, kept.tagged_by, kept.trace, kept.warehouses) == ("10", None, None, None)
     assert kept.price_breaks == [("100", "499", "1.16")]        # no invented base row
     assert kept.qty_available == "3130" and kept.price == "1.20" and kept.condition == "NE"
     assert kept.lead_time == "In stock" and kept.review is None
@@ -487,3 +488,20 @@ def test_currency_and_increments_come_from_the_page():
     adapter._facts = {link: {**facts, "sku": "MS2877304"}}
     [kept] = adapter._finish([Offer("MS28773-04", "1.20", None, "3130", None, None, link)])
     assert kept.currency == "USD" and kept.vendor_note == "SOLD IN INCREMENTS OF 100"
+
+
+def test_tagged_by_only_from_a_named_tag_or_cert_source():
+    # Team, 2026-11-05: "MS25036" (Industry Standards/Certification) went out as
+    # Tagged By; it is the spec, not who tagged the part.
+    from sourcing.vendors.monroe import page_facts
+    assert "tagged_by" not in page_facts({"text": "Industry Standards/Certification:\nMS25036"})
+    assert page_facts({"text": "Cert Source:\nBoeing 8130-3"})["tagged_by"] == "Boeing 8130-3"
+    # A filter list's label is no source.
+    assert "tagged_by" not in page_facts({"text": "Certification Source:\n(Required)\nAny"})
+    adapter = MonroeAdapter()
+    link = "https://monroeaerospace.com/ring-terminals/ms25036-149/"
+    adapter._facts = {link: {**page_facts({"text": "Industry Standards/Certification:\nMS25036"}),
+                             "sku": "MS25036149"}}
+    [kept] = adapter._finish([Offer("MS25036-149", "0.55", "USD", "17740", None, None, link,
+                                    tagged_by="MS25036")])
+    assert kept.tagged_by is None

@@ -156,6 +156,20 @@ class RunSummary:
 CHAT_MAX_LISTED_ROWS = 10
 
 
+class LlmKeyRejected(Exception):
+    """The LLM provider refused our key (401 / 403). No search can be read until
+    the key is fixed, so the account stops searching (runs 2026-11-05 16:37 and
+    16:44: an invalid key made the pipeline search Incora's live portal ~40 times,
+    bulk twice, then one by one, then again before logout)."""
+
+
+def llm_key_rejected(exc: BaseException) -> bool:
+    """An authentication / permission error from an LLM provider's SDK."""
+    module = type(exc).__module__.split(".")[0]
+    return (module in ("anthropic", "openai", "google")
+            and getattr(exc, "status_code", None) in (401, 403))
+
+
 def _vendor_name(vendor_id: str, names: Optional[dict] = None) -> str:
     if names and names.get(vendor_id):
         return names[vendor_id]
@@ -1122,8 +1136,18 @@ class Pipeline:
             await self._notify_requesters(
                 pending, f"{adapter.display_name} login for {cred.owner} stopped: {exc.reason} "
                 f"(account is now {exc.state.value}). {len(pending)} part(s) are waiting.{fix}")
+        except LlmKeyRejected as exc:
+            pending = pending + (retry or [])
+            logger.error("[%s] The LLM provider rejected the API key (%s); no more searches "
+                         "on %s this run", aid, exc, adapter.display_name)
+            await self._set(pending, RowStatus.FAILED,
+                            f"LLM API key rejected ({exc}); not searched. Fix the key, then "
+                            "set Status back to NEW"[:300])
         except Exception as exc:
-            logger.exception("[%s] Unexpected error", aid)
+            if llm_key_rejected(exc):            # e.g. while reading the login page
+                logger.error("[%s] The LLM provider rejected the API key: %s", aid, exc)
+            else:
+                logger.exception("[%s] Unexpected error", aid)
             pending = pending + (retry or [])  # parts still waiting for their retry
             await self._set(pending, RowStatus.FAILED, f"Unexpected error: {exc!r}"[:300])
         finally:
@@ -1255,6 +1279,8 @@ class Pipeline:
                                 {"seconds": round(time.time() - started, 1)})
             return
         except Exception as exc:
+            if llm_key_rejected(exc):
+                raise LlmKeyRejected(str(exc).splitlines()[0][:200]) from exc
             logger.exception("Search failed for %s", row.part_number)
             note = f"Search error: {exc!r}"[:300]
             if not self._retry_later(retry, row, RowStatus.FAILED, note):
@@ -1296,6 +1322,8 @@ class Pipeline:
             logger.warning("Bulk search incomplete (%s)", str(exc).splitlines()[0][:300])
             return BULK_TOO_BIG
         except Exception as exc:
+            if llm_key_rejected(exc):
+                raise LlmKeyRejected(str(exc).splitlines()[0][:200]) from exc
             logger.warning("Bulk search failed (%s)", str(exc).splitlines()[0][:300])
             return BULK_FAILED
         self.summary.usage.add(usage)
@@ -1432,8 +1460,10 @@ class Pipeline:
                     adapter.config.get("default_condition")) or missing(vendor, o, "CONDITION"))
                 if priced else "",
                 lead_time=lead_days(o, vendor),
-                # RFQ Delivery: 0 in stock, else the lead time (client, 2026-10-23).
-                delivery="0" if stocked else lead_days(o, vendor),
+                # RFQ Delivery: 0 in stock, else the lead time (client, 2026-10-23);
+                # in stock at a vendor with a fixed shipping time, that time (Incora 7,
+                # client 2026-11-06). A No Quote line gets none (as_rfq_record).
+                delivery=(adapter.delivery_days or "0") if stocked else lead_days(o, vendor),
                 source_url=o.source_url or "", fetched_at=fetched_at,
                 requested_by=row.requester, flag=self._flag(adapter, flag_for(o, row)),
                 # MOQ and stock location, price breaks; alternate_notes adds any

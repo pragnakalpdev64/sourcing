@@ -28,3 +28,4 @@ test_runs/state_snapshot*/local_store*.json
 
 # Loose local run logs (real runs are saved under test_runs/)
 /run_*.log
+/*_onboard.log

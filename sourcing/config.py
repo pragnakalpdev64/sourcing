@@ -36,6 +36,14 @@ def _env_int(name: str, default: int) -> int:
     return int(raw) if raw else default
 
 
+def captcha_solving_allowed() -> bool:
+    """REMOVE-AFTER-CAPTCHA-TRIAL. The client's "never solve a CAPTCHA" rule is
+    paused for a few days of development (allowed 2026-11-05). DEV_ALLOW_CAPTCHA_SOLVING=1
+    lets the browser service solve CAPTCHAs and makes adapters wait for it before
+    handing the challenge to a person. Off by default; never set it on Cloud Run."""
+    return _env_bool("DEV_ALLOW_CAPTCHA_SOLVING")
+
+
 def _env_list(name: str) -> tuple:
     # ";" too: gcloud's --set-env-vars splits on commas (cloudbuild.yaml).
     return tuple(v.lower() for v in re.split(r"[,;\s]+", _env(name)) if v)

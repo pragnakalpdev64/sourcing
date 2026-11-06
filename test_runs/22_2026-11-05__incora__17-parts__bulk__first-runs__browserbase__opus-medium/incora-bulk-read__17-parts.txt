@@ -1,0 +1,58 @@
+--- Incora bulk search results, read by the program from the page's own data: every part and every stock line of the results table (all of its pages), with each stock line's price breaks from its $ pop-up ---
+
+Part block: MS20470AD4-4 | Description: SOLID RIVET,UNIV HD,206 2117AL | Search Qty: 10 | Result: Stock Found
+MS20470AD4-4 line 1: Link: https://shop.incora.com/shop/products/detail/kL4Jd7KMdPLr3TEQucgLKKTBM7ZDLeBVht/tJ9xj6ysrHc5JqntOVbskTaPWnsxxRUY2jqRMSwAgr0gbT137UrzEhNcygvKNTKnGR2I0D4fm1WikAYNuQbi10tJuynWhrWBnSAhGIhOYd42dI7osZLVpVtKI8w6mMeUdGnvunW | Site: Northlake | Manufacturer: Allfast Fastening Systems Inc | Certification Description: Mfg's C of C, Test Report, Process Certs & Separate Raw Material | Revision: 2 | Shelf Life (days): 0 | UOM: EA | Qty Available: 207169 | Price breaks (Qty: Price): 1: 25.0000 USD; 25: 1.0000 USD; 50: 0.5000 USD; 100: 0.2500 USD; 250: 0.1000 USD; 500: 0.0600 USD; 1000: 0.0600 USD; 10000: 0.0500 USD
+MS20470AD4-4 line 2: Link: https://shop.incora.com/shop/products/detail/yaFU9frWgkpSU33urzvYjefBu3NJuu5Gkb/iosY5WDYo2WCfJtdGl9zTjLSC7jIIQyeYS13bMGoJZHyctuQVAcuNaY1mz94H34rIgD8Fkp06UY7G751Ou5LjkcWpKzw8sZLa6WGV2Ew86y4geRmAmoczclsczkxA6UetacxAKw | Site: Northlake | Manufacturer: Allfast Fastening Systems Inc | Certification Description: Mfg's C of C, Test Report, Process Certs & Separate Raw Material | Revision: 3 | Shelf Life (days): 0 | UOM: EA | Qty Available: 326148 | Price breaks (Qty: Price): 1: 25.0000 USD; 25: 1.0000 USD; 50: 0.5000 USD; 100: 0.2500 USD; 250: 0.1000 USD; 500: 0.0600 USD; 1000: 0.0600 USD; 10000: 0.0500 USD
+
+Part block: MS20426AD4-6 | Search Qty: 1 | Result: Stock Not Found
+MS20426AD4-6: no stock lines
+
+Part block: NAS1097AD4-4 | Description: SOLID RIVET,100 SHR,206 2117AL | Search Qty: 1 | Result: Stock Found
+NAS1097AD4-4 line 1: Link: https://shop.incora.com/shop/products/detail/taMTivyvVveUTJcF5oXdbvsQLjWs0tljUr/mIKzLMxeBdcU3gQyV3HbSyX5dct0MYSRBtNyM6RkexKdBmoSAiMHWoPuIpyZeiDFi2TDOYgZBQZURjtLMgoSdpDRPz3gWmPobZfJlKBer49Nkcuav49DlCtCx0mD9HqJJKKPqShzquv | Site: Northlake | Manufacturer: Allfast Fastening Systems Inc | Certification Description: Mfg's C of C, Test Report, Process Certs & Separate Raw Material | Revision: 11 | Shelf Life (days): 0 | UOM: EA | Qty Available: 51002 | Price breaks (Qty: Price): 1: 0.0200 USD
+
+Part block: MS20600AD4-4 | Search Qty: 1 | Result: Stock Not Found
+MS20600AD4-4: no stock lines
+
+Part block: NAS1149C0863R | Search Qty: 15 | Result: Stock Not Found
+NAS1149C0863R: no stock lines
+
+Part block: NAS1352-5LE16P | Search Qty: 1 | Result: Stock Not Found
+NAS1352-5LE16P: no stock lines
+
+Part block: NAS6604-6 | Search Qty: 1 | Result: Stock Not Found
+NAS6604-6: no stock lines
+
+Part block: AN3-5A | Search Qty: 1 | Result: Stock Not Found
+AN3-5A: no stock lines
+
+Part block: AN960-10 | Search Qty: 1 | Result: Stock Not Found
+AN960-10: no stock lines
+
+Part block: AN960-416L | Search Qty: 50 | Result: Stock Not Found
+AN960-416L: no stock lines
+
+Part block: AN310-4 | Description: PLAIN CASTLE HEX NUT,CAD STEEL | Search Qty: 1 | Result: Stock Found
+AN310-4 line 1: Link: https://shop.incora.com/shop/products/detail/oxMnsrlXtD4bjrkcwvuxYWT/LG780ophlFPuHQ9ZNjbcsMpD777M5qqijG3bSZEzqBbKuap7CpNdmtgvEZmGYfnUmt4BI6H10ZWRsfd3aPt8yg216Jo2M5ouGCAtRoBBO3e4ZJQPe6chAPTe77p4tqUK | Site: Northlake | Manufacturer: SPS Technologies (Jenk) | Certification Description: Mfg's C of C, Test Report, Process Certs & Separate Raw Material | Revision: 2 | Shelf Life (days): 0 | UOM: EA | Qty Available: 7566 | Price breaks: none shown (no price)
+
+Part block: AN365-428A | Search Qty: 1 | Result: Stock Not Found
+AN365-428A: no stock lines
+
+Part block: AN525-10R8 | Description: SCREW,WASHER HD,XREC,CAD STEEL | Search Qty: 1 | Result: Stock Found
+AN525-10R8 line 1: Link: https://shop.incora.com/shop/products/detail/II4N5yvwYXvGBSSh9yH680cydVnF/xv5cpnokwQm0CmPc6M7KP8msLVfsPD9T09a4Wr3SHFP0MxN2B5gpfvLWcpAlOBuQC5zPwI77Bv16l7eHBY01VZ2gwOiYemle3ZxxJqcsk7oIV5lw3yCc22rXwp422FotXzs9SO | Site: Northlake | Manufacturer: Crescent Mfg | Certification Description: Mfr's C of C, Test Report, Raw Material Certs & Process Certs, DFARS | Revision: 3 | Shelf Life (days): 0 | UOM: EA | Qty Available: 799 | Price breaks: none shown (no price)
+AN525-10R8 line 2: Link: https://shop.incora.com/shop/products/detail/II4N5yvwYXvGBSSh9yH680cydVnF/OdjIE8JMJ608LGI48fbCanstlSl23uDmsBNDpXLaJ8fom0hCKr9xaTQupPCc6pmoefec7qFyv7rpkWoqlNI2B3WMHF3feqNDEYoolTR7cr52FU4jkeQWDD1ZJguUUjh8l2BvZ9 | Site: Northlake | Manufacturer: Crescent Mfg | Certification Description: Mfg's C of C, Test Report, Process Certs & Separate Raw Material, DFARS | Revision: 3 | Shelf Life (days): 0 | UOM: EA | Qty Available: 113175 | Price breaks: none shown (no price)
+AN525-10R8 line 3: Link: https://shop.incora.com/shop/products/detail/II4N5yvwYXvGBSSh9yH680cydVnF/omQukqlZwslfrfC0dqxnG4zIUwCPopjMKErgc76a9mVdisBoU4l7iVkg7rxILEBnZbvDEFpuy5NSOqAfzLseC8m708zfnMEgnlkkQGQ5S06WHELJCNHbccXmO2S66d07YLSWGe | Site: Northlake | Manufacturer: MAC Fasteners Inc. | Certification Description: Mfr's C of C, Test Report, Raw Material Certs & Process Certs, DFARS | Revision: 3 | Shelf Life (days): 0 | UOM: EA | Qty Available: 228 | Price breaks: none shown (no price)
+
+Part block: MS21042L3 | Description: NUT,HEX,SFLK,CADMIUM/DLB STEEL | Search Qty: 1 | Result: Stock Found
+MS21042L3 line 1: Link: https://shop.incora.com/shop/products/detail/XVBvdFbH0w5esbkI7YhzSTkR4hQt/zP6j87cQaYxTwuaSo4mOy6ztkvr55H0vVFn9kl0DJWsUemWVWvzQ1rTOfZqGRtSAOx3lHievawzxWPd9TqQiGML5HVyRhfwcQUaIYPeHG73WSPtpGQsvSRcGGOei87vv5l | Site: Wichita | Manufacturer: Howmet GFS Inc. - Fullerton | Certification Description: Mfr's C of C, Test Report, Raw Material Certs & Process Certs, DFARS | Revision: 2 | Shelf Life (days): 0 | UOM: EA | Qty Available: 1879 | Price breaks: none shown (no price)
+MS21042L3 line 2: Link: https://shop.incora.com/shop/products/detail/XVBvdFbH0w5esbkI7YhzSTkR4hQt/9wW5nIFXD2Ytq6CptAUyNiSIjTCDDr9kvDfioBE4ZmuiRjcscXeZ38T0sFHmUBiPEk62yhdbwMTchko8grlRjxVN6dUfXDmjJ6vB2Zxg35fmhfHBte7EB2bQQFwqD9NNW7 | Site: Wichita | Manufacturer: Alcoa Fastening fka Fairchild Fasteners | Certification Description: Mfr's C of C, Test Report, Raw Material Certs & Process Certs, DFARS | Revision: 2 | Shelf Life (days): 0 | UOM: EA | Qty Available: 1760 | Price breaks: none shown (no price)
+
+Part block: MS24665-132 | Description: SPLIT COTTER PIN,CADMIUM STEEL | Search Qty: 100 | Result: Stock Found
+MS24665-132 line 1: Link: https://shop.incora.com/shop/products/detail/RgH7bDEeCAmsiNuV01fSTc72lWwPOpjw/ICpPGbvwZ6doBkhHm365uSw6nSGlltNKLzu2rjDwuHv70s1q9AVgvCgNiqisaQKA4cUvpYJ1vnu4x0eutybFZ6RTzdDVBI6dtHbiCMc7xdlOPCqYNE6GhJ8jWxtwZz2CMWirFJY | Site: Northlake | Manufacturer: Western Wire Products Company | Certification Description: Mfr's C of C, Raw Material Certs & Process Certs, DFARS | Revision: 3 | Shelf Life (days): 0 | UOM: EA | Qty Available: 1191 | Price breaks (Qty: Price): 1: 25.0000 USD; 25: 1.0000 USD; 50: 0.5000 USD; 100: 0.2500 USD; 250: 0.1000 USD; 500: 0.0500 USD; 1000: 0.0400 USD
+
+Part block: MS35206-246 | Description: PANHD SCREW,PHILREC,UNC,CAD ST | Search Qty: 1 | Result: Stock Found
+MS35206-246 line 1: Link: https://shop.incora.com/shop/products/detail/HbMit6IV7bzrVthMQs8tj0x3XxUoIfgq/7TEruQdFdHiOD6qFJ57oiwDS4ZZeG2qgi3EB8XHez0WroP6ZhETMNm79masnrwHxCdeXjsJDDJLn8HzsO2qiMIyfFQ0dU5bQ4gVfmtJRGEbGtBAQ8OWvCn6eEdaeD2hwUmPg0PbAP | Site: Northlake | Manufacturer: Crescent Mfg | Certification Description: Mfr's C of C, Test Report, Raw Material Certs & Process Certs | Revision: 4 | Shelf Life (days): 0 | UOM: EA | Qty Available: 182 | Price breaks (Qty: Price): 1: 25.0000 USD; 25: 1.0000 USD; 50: 0.5000 USD; 100: 0.2500 USD; 250: 0.1000 USD; 500: 0.0700 USD; 1000: 0.0700 USD; 10000: 0.0600 USD
+MS35206-246 line 2: Link: https://shop.incora.com/shop/products/detail/hw93eYXBxNj5Vv0Lfce7CtZjPZwfrwGn/CyUi9VSX0sfLrY27FDZSyLwaoAAU7Tuwa4glWTK7PHhqylg2Scjorg9hg4uLwedkx6pcxukhOPZRzxTuNPnwp40IzDqz7demcV9hnYf7JICJtzzKDQbvtGcja8ZlxKh3PDjusxuJTa | Site: Northlake | Manufacturer: Crescent Mfg | Certification Description: Mfg's C of C, Test Report, Process Certs & Separate Raw Material | Revision: 3 | Shelf Life (days): 0 | UOM: EA | Qty Available: 2782 | Price breaks (Qty: Price): 1: 25.0000 USD; 25: 1.0000 USD; 50: 0.5000 USD; 100: 0.2500 USD; 250: 0.1000 USD; 500: 0.0700 USD; 1000: 0.0700 USD; 10000: 0.0600 USD
+MS35206-246 line 3: Link: https://shop.incora.com/shop/products/detail/HbMit6IV7bzrVthMQs8tj0x3XxUoIfgq/47BSYsOgaqDell6vT2Iu6eKQrgg2SAnNPFpJyzDSKD1oBWEM2ha6J7RQ7q0MVrfgHNfTj6Q0tdanuKR34EL21kqig7DREnM4boBaqbWzw7Wwe55UZYlWHYMNyChuOkKQGyncGxcw2Y | Site: Northlake | Manufacturer: Crescent Mfg | Certification Description: Mfg's C of C, Test Report, Process Certs & Separate Raw Material | Revision: 4 | Shelf Life (days): 0 | UOM: EA | Qty Available: 38825 | Price breaks (Qty: Price): 1: 25.0000 USD; 25: 1.0000 USD; 50: 0.5000 USD; 100: 0.2500 USD; 250: 0.1000 USD; 500: 0.0700 USD; 1000: 0.0700 USD; 10000: 0.0600 USD
+
+Part block: MS3367-5-9 | Description: STRAPLK,SLFCLNCH,ELEC,NAT NYLN | Search Qty: 1 | Result: Stock Found
+MS3367-5-9 line 1: Link: https://shop.incora.com/shop/products/detail/KAAsydc5YGnuU1Qhn291pHoafBc9wxX3/CyUi9VSX0sfLrY27FDZSyLwaoAAU7Tuw79q4PKyhJ9e3lgxtu32rizoEUgL7UwBK6pcxukh6hcH7xSNG1Dp40IzDqzmDOnckAm6u1fld3Ii6tzNJprUvSyF0cLZ4YpTHqDjvoALx | Site: Northlake | Manufacturer: HELLERMANNTYTON | Certification Description: Manufacturers C of C | Revision: G | Shelf Life (days): 0 | UOM: EA | Qty Available: 11181 | Price breaks (Qty: Price): 1: 25.0000 USD; 25: 1.0000 USD; 50: 0.5000 USD; 100: 0.2500 USD; 250: 0.1000 USD; 500: 0.0500 USD; 1000: 0.0300 USD; 10000: 0.0200 USD

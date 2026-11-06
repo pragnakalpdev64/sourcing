@@ -14,6 +14,7 @@ from playwright.async_api import async_playwright
 
 # Re-exported: older imports use sourcing.browser.browserbase for these.
 from .base import BrowserHandle, ContextNotFound  # noqa: F401
+from ..config import captcha_solving_allowed
 from .local import LOCAL_CONTEXT_PREFIX
 
 logger = logging.getLogger("sourcing.browser")
@@ -95,7 +96,10 @@ class BrowserbaseClient:
             # BROWSERBASE_RECORD_SESSIONS=1 turns it on for local debugging.
             "record_session": self._record,
             # Client rule: Browserbase never solves a CAPTCHA for us (stealth or not).
-            "solve_captchas": False,
+            # Paused for development only (2026-11-05, captcha_solving_allowed).
+            # Browserbase's free plan has no solver (pricing page, 2026-11-05):
+            # the setting does nothing below the Developer plan.
+            "solve_captchas": captcha_solving_allowed(),
         }
         extra = {}
         if stealth:

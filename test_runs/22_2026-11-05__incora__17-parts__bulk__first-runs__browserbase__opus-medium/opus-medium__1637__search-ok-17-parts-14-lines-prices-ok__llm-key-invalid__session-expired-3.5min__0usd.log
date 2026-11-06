@@ -1,0 +1,650 @@
+2026-11-05 16:37:53,104 INFO sourcing.job: Run local-20261105-110753-2245: mode=REAL, browser=browserbase, store=file (/media/pragnakalpl19/projects1/Backup/sourcing-proto_share_2026-10-15/sourcing-proto/.local_store.json), llm=anthropic/claude-opus-5-5 (effort medium), chat=on, vendor secret overrides=sourcing-vendor-proponent=sourcing-vendor-test
+2026-11-05 16:37:53,104 INFO sourcing.job: Vendor config for this run: {'*': {'bulk_min_parts': 2}}
+2026-11-05 16:37:53,216 WARNING sourcing.browser: Browserbase session recording is ON: recordings show the vendor pages, login screens included. Use for local debugging only.
+2026-11-05 16:37:53,879 INFO sourcing.job: Processing 1 sheet(s): 1V-S8J4bFqw1w_WvrsQjFqR4gNhPwFyd-YS_aF7CVqak
+2026-11-05 16:37:57,075 INFO sourcing.sheets: Requests in 1V-S8J4bFqw1w_WvrsQjFqR4gNhPwFyd-YS_aF7CVqak: 63 data row(s), 17 to process (Status empty/NEW/RUNNING), skipped by Status: DONE=41, NOT_FOUND=3, NOT_SOLD=2, rows without a part number: 0
+2026-11-05 16:37:57,075 INFO sourcing.pipeline: Run local-20261105-110753-2245__aF7CVqak picked up 17 NEW rows
+/media/pragnakalpl19/projects1/Backup/sourcing-proto_share_2026-10-15/sourcing-proto/.venv/lib/python3.11/site-packages/google/api_core/_python_version_support.py:254: FutureWarning: You are using a Python version (3.11.15) which Google will stop supporting in new releases of google.api_core once it reaches its end of life (2027-10-24). Please upgrade to the latest Python version, or at least Python 3.12, to continue receiving updates for google.api_core past that date.
+  warnings.warn(message, FutureWarning)
+/media/pragnakalpl19/projects1/Backup/sourcing-proto_share_2026-10-15/sourcing-proto/.venv/lib/python3.11/site-packages/google/api_core/_python_version_support.py:254: FutureWarning: You are using a Python version (3.11.15) which Google will stop supporting in new releases of google.cloud.secretmanager_v1 once it reaches its end of life (2027-10-24). Please upgrade to the latest Python version, or at least Python 3.12, to continue receiving updates for google.cloud.secretmanager_v1 past that date.
+  warnings.warn(message, FutureWarning)
+2026-11-05 16:38:00,280 INFO sourcing.pipeline: incora / (no requester): using shared login (secret key sourcing-vendor-incora, totp=no) for 17 row(s)
+2026-11-05 16:38:00,291 INFO sourcing.pipeline: [incora___shared] Bulk search: 17 parts (bulk from 2), up to 25 per search
+2026-11-05 16:38:01,623 INFO sourcing.auth: [incora___shared] Created browser Context 55e8327d-8134-458c-86dd-06e6ee0736bd (first login for this account)
+2026-11-05 16:38:04,146 INFO sourcing.browser: Opened Browserbase session 54fde6ac-7adb-4dab-8927-ec831727e2d2 (context=55e8327d-8134-458c-86dd-06e6ee0736bd, keep_alive=False, recording=on, stealth=basic)
+2026-11-05 16:38:04,146 INFO sourcing.browser: Session page: https://www.browserbase.com/sessions/54fde6ac-7adb-4dab-8927-ec831727e2d2
+2026-11-05 16:38:04,499 INFO sourcing.browser: Session live view (while the run lasts): https://www.browserbase.com/devtools-fullscreen/inspector.html?wss=connect.browserbase.com/debug/54fde6ac-7adb-4dab-8927-ec831727e2d2/devtools/page/054B9CC85C2FAF17D92676D22916B2A6?t=REDACTED&debug=true
+2026-11-05 16:38:04,499 INFO sourcing.auth: [incora___shared] Context 55e8327d-8134-458c-86dd-06e6ee0736bd has no active sign-in (never signed in); logging in
+2026-11-05 16:38:04,499 INFO sourcing.auth: [incora___shared] Automatic login attempt 1/2
+2026-11-05 16:38:04,516 INFO sourcing.vendors.generic: Login: Incora as carrie@skylinkintl.com
+2026-11-05 16:38:04,516 INFO sourcing.vendors.incora: Login: opening https://login.incora.com/
+2026-11-05 16:38:35,650 INFO sourcing.vendors.generic: Login: opening https://login.incora.com/ (from secret sourcing-vendor-incora url)
+2026-11-05 16:38:41,084 INFO sourcing.vendors.generic: Login: opening https://shop.incora.com/ (from adapter default)
+2026-11-05 16:39:00,096 INFO sourcing.vendors.generic: Login step 1 at https://login.incora.com/a42f291c-cd14-4967-9b76-39b8737608f1/b2c_1a_signup_signin_oauth_30m/oauth2/v2.0/authorize?response_type=code&client_id=ff03286c-0ac8-4b18-bb10-98e9f780055e&state=SDlZeVhNU1FGcXFsZFpQbkdzMWtSZ1hnZUJrbmNIQ2w4cmx5SjExcXVHdmt0%3B%257B%2522redirectURL%2522%253A%2522%252Fhome%2522%257D&redirect_uri=https%3A%2F%2Fshop.incora.com%2Fauth-redirect&scope=openid%20profile%20email%20offline_access%20https%3A%2F%2Flogin.incora.com%2Ff5c73591-4844-4350-93f0-2749ece220fb%2Fread&code_challenge=KQD9Norc_pz9XVNwHkZLrotLQE0a97RjuwaIIGO57Cw&code_challenge_method=S256&nonce=SDlZeVhNU1FGcXFsZFpQbkdzMWtSZ1hnZUJrbmNIQ2w4cmx5SjExcXVHdmt0&prompt=login: username=input#signInName, input#email password=input#password
+2026-11-05 16:39:06,568 INFO sourcing.vendors.generic: Login: submitting with button#next
+2026-11-05 16:39:09,846 INFO sourcing.vendors.web: Login submit: submitted; waiting up to 90s for the page
+2026-11-05 16:39:13,994 INFO sourcing.vendors.web: Login submit: page ready after 7.4s (https://shop.incora.com/home)
+2026-11-05 16:39:14,561 INFO sourcing.vendors.incora: Login: signed in (Incora token; now at https://shop.incora.com/home)
+2026-11-05 16:39:14,561 INFO sourcing.auth: [incora___shared] Sign-in seen by the login (OAuth token on https://shop.incora.com/home); no separate probe
+2026-11-05 16:39:14,592 INFO sourcing.auth: [incora___shared] Login OK
+2026-11-05 16:39:14,603 INFO sourcing.pipeline: Rows 48,49,50,51,52,53,54,55,56,57,58,59,60,61,62,63,64: bulk searching Incora for 17 parts
+2026-11-05 16:39:15,168 INFO sourcing.vendors.incora: Incora step 2 (search): 17 part(s) on https://shop.incora.com/shop/products/bulk-search
+2026-11-05 16:39:20,920 INFO sourcing.vendors.incora: Incora results table: 1 – 17 of 17 (all read from the page's data)
+2026-11-05 16:39:20,920 INFO sourcing.vendors.incora: Incora step 3 (read): 17 part(s), 8 with stock, 14 stock line(s)
+2026-11-05 16:39:20,921 INFO sourcing.vendors.incora: Incora: stored data also has part fields ['itemShortCode'], stock line fields ['branchCode', 'certificationKey', 'itemCode', 'itemCodeShort', 'itemDescription', 'itemType', 'manufacturerAccountKey', 'pricingUnitOfMeasure', 'shipToAccountKey', 'uniqueIdentifier'] (not read)
+2026-11-05 16:39:28,299 INFO sourcing.vendors.incora: Incora step 4 (prices): 14 stock line(s) in 7.4s, 0 not read
+2026-11-05 16:39:28,305 INFO sourcing.vendors.incora: Saved the text read for bulk to /media/pragnakalpl19/projects1/Backup/sourcing-proto_share_2026-10-15/sourcing-proto/debug_pages/20261105-163928-incora-bulk-read.txt
+2026-11-05 16:39:28,670 WARNING sourcing.pipeline: Bulk search failed (Error code: 401 - {'type': 'error', 'error': {'type': 'authentication_error', 'message': 'invalid x-api-key'}, 'request_id': 'req_011CgjgFAaeNY8jpCmnWDj4H'})
+2026-11-05 16:39:28,670 INFO sourcing.pipeline: [incora___shared] Trying the same 17 parts in bulk again
+2026-11-05 16:39:28,690 INFO sourcing.pipeline: Rows 48,49,50,51,52,53,54,55,56,57,58,59,60,61,62,63,64: bulk searching Incora for 17 parts
+2026-11-05 16:39:29,253 INFO sourcing.vendors.incora: Incora step 2 (search): 17 part(s) on https://shop.incora.com/shop/products/bulk-search
+2026-11-05 16:39:34,790 INFO sourcing.vendors.incora: Incora results table: 1 – 17 of 17 (all read from the page's data)
+2026-11-05 16:39:34,790 INFO sourcing.vendors.incora: Incora step 3 (read): 17 part(s), 8 with stock, 14 stock line(s)
+2026-11-05 16:39:34,790 INFO sourcing.vendors.incora: Incora: stored data also has part fields ['itemShortCode'], stock line fields ['branchCode', 'certificationKey', 'itemCode', 'itemCodeShort', 'itemDescription', 'itemType', 'manufacturerAccountKey', 'pricingUnitOfMeasure', 'shipToAccountKey', 'uniqueIdentifier'] (not read)
+2026-11-05 16:39:42,294 INFO sourcing.vendors.incora: Incora step 4 (prices): 14 stock line(s) in 7.5s, 0 not read
+2026-11-05 16:39:42,297 INFO sourcing.vendors.incora: Saved the text read for bulk to /media/pragnakalpl19/projects1/Backup/sourcing-proto_share_2026-10-15/sourcing-proto/debug_pages/20261105-163942-incora-bulk-read.txt
+2026-11-05 16:39:42,639 WARNING sourcing.pipeline: Bulk search failed (Error code: 401 - {'type': 'error', 'error': {'type': 'authentication_error', 'message': 'invalid x-api-key'}, 'request_id': 'req_011CgjgGCLLbzvxBuAoNZmTV'})
+2026-11-05 16:39:42,639 WARNING sourcing.pipeline: [incora___shared] Bulk search failed twice in a row; searching the rest one by one
+2026-11-05 16:39:42,660 INFO sourcing.pipeline: Row 48: searching Incora for MS20470AD4-4
+2026-11-05 16:39:43,225 INFO sourcing.vendors.incora: Incora step 2 (search): 1 part(s) on https://shop.incora.com/shop/products/bulk-search
+2026-11-05 16:39:48,595 INFO sourcing.vendors.incora: Incora results table: 1 – 1 of 1 (all read from the page's data)
+2026-11-05 16:39:48,595 INFO sourcing.vendors.incora: Incora step 3 (read): 1 part(s), 1 with stock, 2 stock line(s)
+2026-11-05 16:39:48,595 INFO sourcing.vendors.incora: Incora: stored data also has part fields ['itemShortCode'], stock line fields ['branchCode', 'certificationKey', 'itemCode', 'itemCodeShort', 'itemDescription', 'itemType', 'manufacturerAccountKey', 'pricingUnitOfMeasure', 'shipToAccountKey', 'uniqueIdentifier'] (not read)
+2026-11-05 16:39:50,692 INFO sourcing.vendors.incora: Incora step 4 (prices): 2 stock line(s) in 2.1s, 0 not read
+2026-11-05 16:39:50,692 INFO sourcing.vendors.incora: Saved the text read for bulk to /media/pragnakalpl19/projects1/Backup/sourcing-proto_share_2026-10-15/sourcing-proto/debug_pages/20261105-163950-incora-bulk-read.txt
+2026-11-05 16:39:51,056 ERROR sourcing.pipeline: Search failed for MS20470AD4-4
+Traceback (most recent call last):
+  File "/media/pragnakalpl19/projects1/Backup/sourcing-proto_share_2026-10-15/sourcing-proto/sourcing/pipeline.py", line 1246, in _process_row
+    outcome: SearchOutcome = await asyncio.wait_for(adapter.search(handle.page, row), limit)
+                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/pragnakalpl19/.local/share/uv/python/cpython-3.11.15-linux-x86_64-gnu/lib/python3.11/asyncio/tasks.py", line 489, in wait_for
+    return fut.result()
+           ^^^^^^^^^^^^
+  File "/media/pragnakalpl19/projects1/Backup/sourcing-proto_share_2026-10-15/sourcing-proto/sourcing/vendors/incora.py", line 441, in search
+    outcomes, usage = await self._search_many(page, [row])
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/media/pragnakalpl19/projects1/Backup/sourcing-proto_share_2026-10-15/sourcing-proto/sourcing/vendors/incora.py", line 482, in _search_many
+    found = await self._read(text, rows, usage)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/media/pragnakalpl19/projects1/Backup/sourcing-proto_share_2026-10-15/sourcing-proto/sourcing/vendors/incora.py", line 513, in _read
+    answers = await asyncio.gather(*(self.extractor.extract_offers_bulk(
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/media/pragnakalpl19/projects1/Backup/sourcing-proto_share_2026-10-15/sourcing-proto/sourcing/extract.py", line 648, in extract_offers_bulk
+    data, usage = await self._client.json_call(
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/media/pragnakalpl19/projects1/Backup/sourcing-proto_share_2026-10-15/sourcing-proto/sourcing/llm/anthropic_client.py", line 40, in json_call
+    response = await self._client.beta.messages.create(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/media/pragnakalpl19/projects1/Backup/sourcing-proto_share_2026-10-15/sourcing-proto/.venv/lib/python3.11/site-packages/anthropic/resources/beta/messages/messages.py", line 3274, in create
+    return await self._post(
+           ^^^^^^^^^^^^^^^^^
+  File "/media/pragnakalpl19/projects1/Backup/sourcing-proto_share_2026-10-15/sourcing-proto/.venv/lib/python3.11/site-packages/anthropic/_base_client.py", line 2443, in post
+    return await self.request(cast_to, opts, stream=stream, stream_cls=stream_cls)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/media/pragnakalpl19/projects1/Backup/sourcing-proto_share_2026-10-15/sourcing-proto/.venv/lib/python3.11/site-packages/anthropic/_base_client.py", line 2003, in request
+    return await self._request(cast_to, options, stream=stream, stream_cls=stream_cls)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/media/pragnakalpl19/projects1/Backup/sourcing-proto_share_2026-10-15/sourcing-proto/.venv/lib/python3.11/site-packages/anthropic/_base_client.py", line 2106, in _request
+    raise self._make_status_error_from_response(response) from None
+anthropic.AuthenticationError: Error code: 401 - {'type': 'error', 'error': {'type': 'authentication_error', 'message': 'invalid x-api-key'}, 'request_id': 'req_011CgjgGpGKmr3XP9TjNboGL'}
+2026-11-05 16:39:51,060 INFO sourcing.pipeline: Row 48: Search error: AuthenticationError("Error code: 401 - {'type': 'error', 'error': {'type': 'authentication_error', 'message': 'invalid x-api-key'}, 'request_id': 'req_011CgjgGpGKmr3XP9TjNboGL'}"); searching it again before logout
+2026-11-05 16:39:51,072 INFO sourcing.pipeline: Row 49: searching Incora for MS20426AD4-6
+2026-11-05 16:39:51,633 INFO sourcing.vendors.incora: Incora step 2 (search): 1 part(s) on https://shop.incora.com/shop/products/bulk-search
+2026-11-05 16:39:57,045 INFO sourcing.vendors.incora: Incora results table: 1 – 1 of 1 (all read from the page's data)
+2026-11-05 16:39:57,045 INFO sourcing.vendors.incora: Incora step 3 (read): 1 part(s), 0 with stock, 0 stock line(s)
+2026-11-05 16:39:57,048 INFO sourcing.vendors.incora: Saved the text read for bulk to /media/pragnakalpl19/projects1/Backup/sourcing-proto_share_2026-10-15/sourcing-proto/debug_pages/20261105-163957-incora-bulk-read.txt
+2026-11-05 16:39:57,048 INFO sourcing.vendors.incora: Incora bulk search: offers for 0 of 1 part(s)
+2026-11-05 16:40:00,143 INFO sourcing.vendors.incora: Incora sign-in check at https://shop.incora.com/home: signed in
+2026-11-05 16:40:00,144 INFO sourcing.pipeline: Row 49: no results, 0 offer(s), 6.0s, LLM 0 call(s) $0.0000
+2026-11-05 16:40:01,122 INFO sourcing.pipeline: Row 49 MS20426AD4-6 (Incora): -> NOT_FOUND
+2026-11-05 16:40:01,144 INFO sourcing.pipeline: Row 50: searching Incora for NAS1097AD4-4
+2026-11-05 16:40:01,708 INFO sourcing.vendors.incora: Incora step 2 (search): 1 part(s) on https://shop.incora.com/shop/products/bulk-search
+2026-11-05 16:40:07,279 INFO sourcing.vendors.incora: Incora results table: 1 – 1 of 1 (all read from the page's data)
+2026-11-05 16:40:07,279 INFO sourcing.vendors.incora: Incora step 3 (read): 1 part(s), 1 with stock, 1 stock line(s)
+2026-11-05 16:40:07,280 INFO sourcing.vendors.incora: Incora: stored data also has part fields ['itemShortCode'], stock line fields ['branchCode', 'certificationKey', 'itemCode', 'itemCodeShort', 'itemDescription', 'itemType', 'manufacturerAccountKey', 'pricingUnitOfMeasure', 'shipToAccountKey', 'uniqueIdentifier'] (not read)
+2026-11-05 16:40:08,862 INFO sourcing.vendors.incora: Incora step 4 (prices): 1 stock line(s) in 1.6s, 0 not read
+2026-11-05 16:40:08,863 INFO sourcing.vendors.incora: Saved the text read for bulk to /media/pragnakalpl19/projects1/Backup/sourcing-proto_share_2026-10-15/sourcing-proto/debug_pages/20261105-164008-incora-bulk-read.txt
+2026-11-05 16:40:09,176 ERROR sourcing.pipeline: Search failed for NAS1097AD4-4
+Traceback (most recent call last):
+  File "/media/pragnakalpl19/projects1/Backup/sourcing-proto_share_2026-10-15/sourcing-proto/sourcing/pipeline.py", line 1246, in _process_row
+    outcome: SearchOutcome = await asyncio.wait_for(adapter.search(handle.page, row), limit)
+                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/pragnakalpl19/.local/share/uv/python/cpython-3.11.15-linux-x86_64-gnu/lib/python3.11/asyncio/tasks.py", line 489, in wait_for
+    return fut.result()
+           ^^^^^^^^^^^^
+  File "/media/pragnakalpl19/projects1/Backup/sourcing-proto_share_2026-10-15/sourcing-proto/sourcing/vendors/incora.py", line 441, in search
+    outcomes, usage = await self._search_many(page, [row])
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/media/pragnakalpl19/projects1/Backup/sourcing-proto_share_2026-10-15/sourcing-proto/sourcing/vendors/incora.py", line 482, in _search_many
+    found = await self._read(text, rows, usage)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/media/pragnakalpl19/projects1/Backup/sourcing-proto_share_2026-10-15/sourcing-proto/sourcing/vendors/incora.py", line 513, in _read
+    answers = await asyncio.gather(*(self.extractor.extract_offers_bulk(
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/media/pragnakalpl19/projects1/Backup/sourcing-proto_share_2026-10-15/sourcing-proto/sourcing/extract.py", line 648, in extract_offers_bulk
+    data, usage = await self._client.json_call(
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/media/pragnakalpl19/projects1/Backup/sourcing-proto_share_2026-10-15/sourcing-proto/sourcing/llm/anthropic_client.py", line 40, in json_call
+    response = await self._client.beta.messages.create(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/media/pragnakalpl19/projects1/Backup/sourcing-proto_share_2026-10-15/sourcing-proto/.venv/lib/python3.11/site-packages/anthropic/resources/beta/messages/messages.py", line 3274, in create
+    return await self._post(
+           ^^^^^^^^^^^^^^^^^
+  File "/media/pragnakalpl19/projects1/Backup/sourcing-proto_share_2026-10-15/sourcing-proto/.venv/lib/python3.11/site-packages/anthropic/_base_client.py", line 2443, in post
+    return await self.request(cast_to, opts, stream=stream, stream_cls=stream_cls)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/media/pragnakalpl19/projects1/Backup/sourcing-proto_share_2026-10-15/sourcing-proto/.venv/lib/python3.11/site-packages/anthropic/_base_client.py", line 2003, in request
+    return await self._request(cast_to, options, stream=stream, stream_cls=stream_cls)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/media/pragnakalpl19/projects1/Backup/sourcing-proto_share_2026-10-15/sourcing-proto/.venv/lib/python3.11/site-packages/anthropic/_base_client.py", line 2106, in _request
+    raise self._make_status_error_from_response(response) from None
+anthropic.AuthenticationError: Error code: 401 - {'type': 'error', 'error': {'type': 'authentication_error', 'message': 'invalid x-api-key'}, 'request_id': 'req_011CgjgJ9toN2YmPS82T2zKK'}
+2026-11-05 16:40:09,177 INFO sourcing.pipeline: Row 50: Search error: AuthenticationError("Error code: 401 - {'type': 'error', 'error': {'type': 'authentication_error', 'message': 'invalid x-api-key'}, 'request_id': 'req_011CgjgJ9toN2YmPS82T2zKK'}"); searching it again before logout
+2026-11-05 16:40:09,198 INFO sourcing.pipeline: Row 51: searching Incora for MS20600AD4-4
+2026-11-05 16:40:09,760 INFO sourcing.vendors.incora: Incora step 2 (search): 1 part(s) on https://shop.incora.com/shop/products/bulk-search
+2026-11-05 16:40:15,292 INFO sourcing.vendors.incora: Incora results table: 1 – 1 of 1 (all read from the page's data)
+2026-11-05 16:40:15,292 INFO sourcing.vendors.incora: Incora step 3 (read): 1 part(s), 0 with stock, 0 stock line(s)
+2026-11-05 16:40:15,293 INFO sourcing.vendors.incora: Saved the text read for bulk to /media/pragnakalpl19/projects1/Backup/sourcing-proto_share_2026-10-15/sourcing-proto/debug_pages/20261105-164015-incora-bulk-read.txt
+2026-11-05 16:40:15,293 INFO sourcing.vendors.incora: Incora bulk search: offers for 0 of 1 part(s)
+2026-11-05 16:40:18,805 INFO sourcing.vendors.incora: Incora sign-in check at https://shop.incora.com/home: signed in
+2026-11-05 16:40:18,805 INFO sourcing.pipeline: Row 51: no results, 0 offer(s), 6.1s, LLM 0 call(s) $0.0000
+2026-11-05 16:40:19,445 INFO sourcing.pipeline: Row 51 MS20600AD4-4 (Incora): -> NOT_FOUND
+2026-11-05 16:40:19,475 INFO sourcing.pipeline: Row 52: searching Incora for NAS1149C0863R
+2026-11-05 16:40:20,039 INFO sourcing.vendors.incora: Incora step 2 (search): 1 part(s) on https://shop.incora.com/shop/products/bulk-search
+2026-11-05 16:40:25,052 INFO sourcing.vendors.incora: Incora results table: 1 – 1 of 1 (all read from the page's data)
+2026-11-05 16:40:25,052 INFO sourcing.vendors.incora: Incora step 3 (read): 1 part(s), 0 with stock, 0 stock line(s)
+2026-11-05 16:40:25,052 INFO sourcing.vendors.incora: Saved the text read for bulk to /media/pragnakalpl19/projects1/Backup/sourcing-proto_share_2026-10-15/sourcing-proto/debug_pages/20261105-164025-incora-bulk-read.txt
+2026-11-05 16:40:25,052 INFO sourcing.vendors.incora: Incora bulk search: offers for 0 of 1 part(s)
+2026-11-05 16:40:28,584 INFO sourcing.vendors.incora: Incora sign-in check at https://shop.incora.com/home: signed in
+2026-11-05 16:40:28,584 INFO sourcing.pipeline: Row 52: no results, 0 offer(s), 5.6s, LLM 0 call(s) $0.0000
+2026-11-05 16:40:29,081 INFO sourcing.pipeline: Row 52 NAS1149C0863R (Incora): -> NOT_FOUND
+2026-11-05 16:40:29,107 INFO sourcing.pipeline: Row 53: searching Incora for NAS1352-5LE16P
+2026-11-05 16:40:29,669 INFO sourcing.vendors.incora: Incora step 2 (search): 1 part(s) on https://shop.incora.com/shop/products/bulk-search
+2026-11-05 16:40:34,773 INFO sourcing.vendors.incora: Incora results table: 1 – 1 of 1 (all read from the page's data)
+2026-11-05 16:40:34,774 INFO sourcing.vendors.incora: Incora step 3 (read): 1 part(s), 0 with stock, 0 stock line(s)
+2026-11-05 16:40:34,774 INFO sourcing.vendors.incora: Saved the text read for bulk to /media/pragnakalpl19/projects1/Backup/sourcing-proto_share_2026-10-15/sourcing-proto/debug_pages/20261105-164034-incora-bulk-read.txt
+2026-11-05 16:40:34,775 INFO sourcing.vendors.incora: Incora bulk search: offers for 0 of 1 part(s)
+2026-11-05 16:40:37,934 INFO sourcing.vendors.incora: Incora sign-in check at https://shop.incora.com/home: signed in
+2026-11-05 16:40:37,935 INFO sourcing.pipeline: Row 53: no results, 0 offer(s), 5.7s, LLM 0 call(s) $0.0000
+2026-11-05 16:40:38,737 INFO sourcing.pipeline: Row 53 NAS1352-5LE16P (Incora): -> NOT_FOUND
+2026-11-05 16:40:38,761 INFO sourcing.pipeline: Row 54: searching Incora for NAS6604-6
+2026-11-05 16:40:39,322 INFO sourcing.vendors.incora: Incora step 2 (search): 1 part(s) on https://shop.incora.com/shop/products/bulk-search
+2026-11-05 16:40:44,798 INFO sourcing.vendors.incora: Incora results table: 1 – 1 of 1 (all read from the page's data)
+2026-11-05 16:40:44,798 INFO sourcing.vendors.incora: Incora step 3 (read): 1 part(s), 0 with stock, 0 stock line(s)
+2026-11-05 16:40:44,799 INFO sourcing.vendors.incora: Saved the text read for bulk to /media/pragnakalpl19/projects1/Backup/sourcing-proto_share_2026-10-15/sourcing-proto/debug_pages/20261105-164044-incora-bulk-read.txt
+2026-11-05 16:40:44,799 INFO sourcing.vendors.incora: Incora bulk search: offers for 0 of 1 part(s)
+2026-11-05 16:40:48,030 INFO sourcing.vendors.incora: Incora sign-in check at https://shop.incora.com/home: signed in
+2026-11-05 16:40:48,030 INFO sourcing.pipeline: Row 54: no results, 0 offer(s), 6.0s, LLM 0 call(s) $0.0000
+2026-11-05 16:40:48,504 INFO sourcing.pipeline: Row 54 NAS6604-6 (Incora): -> NOT_FOUND
+2026-11-05 16:40:48,538 INFO sourcing.pipeline: Row 55: searching Incora for AN3-5A
+2026-11-05 16:40:49,116 INFO sourcing.vendors.incora: Incora step 2 (search): 1 part(s) on https://shop.incora.com/shop/products/bulk-search
+2026-11-05 16:40:54,163 INFO sourcing.vendors.incora: Incora results table: 1 – 1 of 1 (all read from the page's data)
+2026-11-05 16:40:54,163 INFO sourcing.vendors.incora: Incora step 3 (read): 1 part(s), 0 with stock, 0 stock line(s)
+2026-11-05 16:40:54,164 INFO sourcing.vendors.incora: Saved the text read for bulk to /media/pragnakalpl19/projects1/Backup/sourcing-proto_share_2026-10-15/sourcing-proto/debug_pages/20261105-164054-incora-bulk-read.txt
+2026-11-05 16:40:54,164 INFO sourcing.vendors.incora: Incora bulk search: offers for 0 of 1 part(s)
+2026-11-05 16:40:57,408 INFO sourcing.vendors.incora: Incora sign-in check at https://shop.incora.com/home: signed in
+2026-11-05 16:40:57,409 INFO sourcing.pipeline: Row 55: no results, 0 offer(s), 5.6s, LLM 0 call(s) $0.0000
+2026-11-05 16:40:57,983 INFO sourcing.pipeline: Row 55 AN3-5A (Incora): -> NOT_FOUND
+2026-11-05 16:40:58,018 INFO sourcing.pipeline: Row 56: searching Incora for AN960-10
+2026-11-05 16:40:58,579 INFO sourcing.vendors.incora: Incora step 2 (search): 1 part(s) on https://shop.incora.com/shop/products/bulk-search
+2026-11-05 16:41:03,731 INFO sourcing.vendors.incora: Incora results table: 1 – 1 of 1 (all read from the page's data)
+2026-11-05 16:41:03,731 INFO sourcing.vendors.incora: Incora step 3 (read): 1 part(s), 0 with stock, 0 stock line(s)
+2026-11-05 16:41:03,732 INFO sourcing.vendors.incora: Saved the text read for bulk to /media/pragnakalpl19/projects1/Backup/sourcing-proto_share_2026-10-15/sourcing-proto/debug_pages/20261105-164103-incora-bulk-read.txt
+2026-11-05 16:41:03,732 INFO sourcing.vendors.incora: Incora bulk search: offers for 0 of 1 part(s)
+2026-11-05 16:41:07,010 INFO sourcing.vendors.incora: Incora sign-in check at https://shop.incora.com/home: signed in
+2026-11-05 16:41:07,010 INFO sourcing.pipeline: Row 56: no results, 0 offer(s), 5.7s, LLM 0 call(s) $0.0000
+2026-11-05 16:41:08,113 INFO sourcing.pipeline: Row 56 AN960-10 (Incora): -> NOT_FOUND
+2026-11-05 16:41:08,142 INFO sourcing.pipeline: Row 57: searching Incora for AN960-416L
+2026-11-05 16:41:08,706 INFO sourcing.vendors.incora: Incora step 2 (search): 1 part(s) on https://shop.incora.com/shop/products/bulk-search
+2026-11-05 16:41:13,986 INFO sourcing.vendors.incora: Incora results table: 1 – 1 of 1 (all read from the page's data)
+2026-11-05 16:41:13,986 INFO sourcing.vendors.incora: Incora step 3 (read): 1 part(s), 0 with stock, 0 stock line(s)
+2026-11-05 16:41:13,986 INFO sourcing.vendors.incora: Saved the text read for bulk to /media/pragnakalpl19/projects1/Backup/sourcing-proto_share_2026-10-15/sourcing-proto/debug_pages/20261105-164113-incora-bulk-read.txt
+2026-11-05 16:41:13,987 INFO sourcing.vendors.incora: Incora bulk search: offers for 0 of 1 part(s)
+2026-11-05 16:41:17,585 INFO sourcing.vendors.incora: Incora sign-in check at https://shop.incora.com/home: signed in
+2026-11-05 16:41:17,585 INFO sourcing.pipeline: Row 57: no results, 0 offer(s), 5.8s, LLM 0 call(s) $0.0000
+2026-11-05 16:41:18,030 INFO sourcing.pipeline: Row 57 AN960-416L (Incora): -> NOT_FOUND
+2026-11-05 16:41:18,058 INFO sourcing.pipeline: Row 58: searching Incora for AN310-4
+2026-11-05 16:41:18,620 INFO sourcing.vendors.incora: Incora step 2 (search): 1 part(s) on https://shop.incora.com/shop/products/bulk-search
+2026-11-05 16:41:24,346 INFO sourcing.vendors.incora: Incora results table: 1 – 1 of 1 (all read from the page's data)
+2026-11-05 16:41:24,346 INFO sourcing.vendors.incora: Incora step 3 (read): 1 part(s), 1 with stock, 1 stock line(s)
+2026-11-05 16:41:24,346 INFO sourcing.vendors.incora: Incora: stored data also has part fields ['itemShortCode'], stock line fields ['branchCode', 'certificationKey', 'itemCode', 'itemCodeShort', 'itemDescription', 'itemType', 'manufacturerAccountKey', 'pricingUnitOfMeasure', 'shipToAccountKey', 'uniqueIdentifier'] (not read)
+2026-11-05 16:41:26,030 INFO sourcing.vendors.incora: Incora step 4 (prices): 1 stock line(s) in 1.7s, 0 not read
+2026-11-05 16:41:26,031 INFO sourcing.vendors.incora: Saved the text read for bulk to /media/pragnakalpl19/projects1/Backup/sourcing-proto_share_2026-10-15/sourcing-proto/debug_pages/20261105-164126-incora-bulk-read.txt
+2026-11-05 16:41:26,336 ERROR sourcing.pipeline: Search failed for AN310-4
+Traceback (most recent call last):
+  File "/media/pragnakalpl19/projects1/Backup/sourcing-proto_share_2026-10-15/sourcing-proto/sourcing/pipeline.py", line 1246, in _process_row
+    outcome: SearchOutcome = await asyncio.wait_for(adapter.search(handle.page, row), limit)
+                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/pragnakalpl19/.local/share/uv/python/cpython-3.11.15-linux-x86_64-gnu/lib/python3.11/asyncio/tasks.py", line 489, in wait_for
+    return fut.result()
+           ^^^^^^^^^^^^
+  File "/media/pragnakalpl19/projects1/Backup/sourcing-proto_share_2026-10-15/sourcing-proto/sourcing/vendors/incora.py", line 441, in search
+    outcomes, usage = await self._search_many(page, [row])
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/media/pragnakalpl19/projects1/Backup/sourcing-proto_share_2026-10-15/sourcing-proto/sourcing/vendors/incora.py", line 482, in _search_many
+    found = await self._read(text, rows, usage)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/media/pragnakalpl19/projects1/Backup/sourcing-proto_share_2026-10-15/sourcing-proto/sourcing/vendors/incora.py", line 513, in _read
+    answers = await asyncio.gather(*(self.extractor.extract_offers_bulk(
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/media/pragnakalpl19/projects1/Backup/sourcing-proto_share_2026-10-15/sourcing-proto/sourcing/extract.py", line 648, in extract_offers_bulk
+    data, usage = await self._client.json_call(
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/media/pragnakalpl19/projects1/Backup/sourcing-proto_share_2026-10-15/sourcing-proto/sourcing/llm/anthropic_client.py", line 40, in json_call
+    response = await self._client.beta.messages.create(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/media/pragnakalpl19/projects1/Backup/sourcing-proto_share_2026-10-15/sourcing-proto/.venv/lib/python3.11/site-packages/anthropic/resources/beta/messages/messages.py", line 3274, in create
+    return await self._post(
+           ^^^^^^^^^^^^^^^^^
+  File "/media/pragnakalpl19/projects1/Backup/sourcing-proto_share_2026-10-15/sourcing-proto/.venv/lib/python3.11/site-packages/anthropic/_base_client.py", line 2443, in post
+    return await self.request(cast_to, opts, stream=stream, stream_cls=stream_cls)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/media/pragnakalpl19/projects1/Backup/sourcing-proto_share_2026-10-15/sourcing-proto/.venv/lib/python3.11/site-packages/anthropic/_base_client.py", line 2003, in request
+    return await self._request(cast_to, options, stream=stream, stream_cls=stream_cls)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/media/pragnakalpl19/projects1/Backup/sourcing-proto_share_2026-10-15/sourcing-proto/.venv/lib/python3.11/site-packages/anthropic/_base_client.py", line 2106, in _request
+    raise self._make_status_error_from_response(response) from None
+anthropic.AuthenticationError: Error code: 401 - {'type': 'error', 'error': {'type': 'authentication_error', 'message': 'invalid x-api-key'}, 'request_id': 'req_011CgjgPqp37e41mDkLNhfg5'}
+2026-11-05 16:41:26,336 INFO sourcing.pipeline: Row 58: Search error: AuthenticationError("Error code: 401 - {'type': 'error', 'error': {'type': 'authentication_error', 'message': 'invalid x-api-key'}, 'request_id': 'req_011CgjgPqp37e41mDkLNhfg5'}"); searching it again before logout
+2026-11-05 16:41:26,347 INFO sourcing.pipeline: Row 59: searching Incora for AN365-428A
+2026-11-05 16:41:26,909 INFO sourcing.vendors.incora: Incora step 2 (search): 1 part(s) on https://shop.incora.com/shop/products/bulk-search
+2026-11-05 16:41:32,345 INFO sourcing.vendors.incora: Incora results table: 1 – 1 of 1 (all read from the page's data)
+2026-11-05 16:41:32,345 INFO sourcing.vendors.incora: Incora step 3 (read): 1 part(s), 0 with stock, 0 stock line(s)
+2026-11-05 16:41:32,346 INFO sourcing.vendors.incora: Saved the text read for bulk to /media/pragnakalpl19/projects1/Backup/sourcing-proto_share_2026-10-15/sourcing-proto/debug_pages/20261105-164132-incora-bulk-read.txt
+2026-11-05 16:41:32,346 INFO sourcing.vendors.incora: Incora bulk search: offers for 0 of 1 part(s)
+2026-11-05 16:41:35,697 INFO sourcing.vendors.incora: Incora sign-in check at https://shop.incora.com/home: signed in
+2026-11-05 16:41:35,697 INFO sourcing.pipeline: Row 59: no results, 0 offer(s), 6.0s, LLM 0 call(s) $0.0000
+2026-11-05 16:41:36,299 INFO sourcing.pipeline: Row 59 AN365-428A (Incora): -> NOT_FOUND
+2026-11-05 16:41:36,323 INFO sourcing.pipeline: Row 60: searching Incora for AN525-10R8
+2026-11-05 16:41:36,885 INFO sourcing.vendors.incora: Incora step 2 (search): 1 part(s) on https://shop.incora.com/shop/products/bulk-search
+2026-11-05 16:41:41,308 INFO sourcing.vendors.incora: Incora results table: 1 – 1 of 1 (all read from the page's data)
+2026-11-05 16:41:41,308 INFO sourcing.vendors.incora: Incora step 3 (read): 1 part(s), 1 with stock, 3 stock line(s)
+2026-11-05 16:41:41,308 INFO sourcing.vendors.incora: Incora: stored data also has part fields ['itemShortCode'], stock line fields ['branchCode', 'certificationKey', 'itemCode', 'itemCodeShort', 'itemDescription', 'itemType', 'manufacturerAccountKey', 'pricingUnitOfMeasure', 'shipToAccountKey', 'uniqueIdentifier'] (not read)
+2026-11-05 16:41:44,754 INFO sourcing.vendors.incora: Incora step 4 (prices): 3 stock line(s) in 3.4s, 0 not read
+2026-11-05 16:41:44,755 INFO sourcing.vendors.incora: Saved the text read for bulk to /media/pragnakalpl19/projects1/Backup/sourcing-proto_share_2026-10-15/sourcing-proto/debug_pages/20261105-164144-incora-bulk-read.txt
+2026-11-05 16:41:45,072 ERROR sourcing.pipeline: Search failed for AN525-10R8
+Traceback (most recent call last):
+  File "/media/pragnakalpl19/projects1/Backup/sourcing-proto_share_2026-10-15/sourcing-proto/sourcing/pipeline.py", line 1246, in _process_row
+    outcome: SearchOutcome = await asyncio.wait_for(adapter.search(handle.page, row), limit)
+                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/pragnakalpl19/.local/share/uv/python/cpython-3.11.15-linux-x86_64-gnu/lib/python3.11/asyncio/tasks.py", line 489, in wait_for
+    return fut.result()
+           ^^^^^^^^^^^^
+  File "/media/pragnakalpl19/projects1/Backup/sourcing-proto_share_2026-10-15/sourcing-proto/sourcing/vendors/incora.py", line 441, in search
+    outcomes, usage = await self._search_many(page, [row])
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/media/pragnakalpl19/projects1/Backup/sourcing-proto_share_2026-10-15/sourcing-proto/sourcing/vendors/incora.py", line 482, in _search_many
+    found = await self._read(text, rows, usage)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/media/pragnakalpl19/projects1/Backup/sourcing-proto_share_2026-10-15/sourcing-proto/sourcing/vendors/incora.py", line 513, in _read
+    answers = await asyncio.gather(*(self.extractor.extract_offers_bulk(
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/media/pragnakalpl19/projects1/Backup/sourcing-proto_share_2026-10-15/sourcing-proto/sourcing/extract.py", line 648, in extract_offers_bulk
+    data, usage = await self._client.json_call(
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/media/pragnakalpl19/projects1/Backup/sourcing-proto_share_2026-10-15/sourcing-proto/sourcing/llm/anthropic_client.py", line 40, in json_call
+    response = await self._client.beta.messages.create(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/media/pragnakalpl19/projects1/Backup/sourcing-proto_share_2026-10-15/sourcing-proto/.venv/lib/python3.11/site-packages/anthropic/resources/beta/messages/messages.py", line 3274, in create
+    return await self._post(
+           ^^^^^^^^^^^^^^^^^
+  File "/media/pragnakalpl19/projects1/Backup/sourcing-proto_share_2026-10-15/sourcing-proto/.venv/lib/python3.11/site-packages/anthropic/_base_client.py", line 2443, in post
+    return await self.request(cast_to, opts, stream=stream, stream_cls=stream_cls)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/media/pragnakalpl19/projects1/Backup/sourcing-proto_share_2026-10-15/sourcing-proto/.venv/lib/python3.11/site-packages/anthropic/_base_client.py", line 2003, in request
+    return await self._request(cast_to, options, stream=stream, stream_cls=stream_cls)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/media/pragnakalpl19/projects1/Backup/sourcing-proto_share_2026-10-15/sourcing-proto/.venv/lib/python3.11/site-packages/anthropic/_base_client.py", line 2106, in _request
+    raise self._make_status_error_from_response(response) from None
+anthropic.AuthenticationError: Error code: 401 - {'type': 'error', 'error': {'type': 'authentication_error', 'message': 'invalid x-api-key'}, 'request_id': 'req_011CgjgRDubo4CdMk38yfTMU'}
+2026-11-05 16:41:45,074 INFO sourcing.pipeline: Row 60: Search error: AuthenticationError("Error code: 401 - {'type': 'error', 'error': {'type': 'authentication_error', 'message': 'invalid x-api-key'}, 'request_id': 'req_011CgjgRDubo4CdMk38yfTMU'}"); searching it again before logout
+2026-11-05 16:41:45,098 INFO sourcing.pipeline: Row 61: searching Incora for MS21042L3
+2026-11-05 16:41:45,660 INFO sourcing.vendors.incora: Incora step 2 (search): 1 part(s) on https://shop.incora.com/shop/products/bulk-search
+2026-11-05 16:41:50,448 INFO sourcing.vendors.incora: Incora results table: 1 – 1 of 1 (all read from the page's data)
+2026-11-05 16:41:50,448 INFO sourcing.vendors.incora: Incora step 3 (read): 1 part(s), 1 with stock, 2 stock line(s)
+2026-11-05 16:41:50,448 INFO sourcing.vendors.incora: Incora: stored data also has part fields ['itemShortCode'], stock line fields ['branchCode', 'certificationKey', 'itemCode', 'itemCodeShort', 'itemDescription', 'itemType', 'manufacturerAccountKey', 'pricingUnitOfMeasure', 'shipToAccountKey', 'uniqueIdentifier'] (not read)
+2026-11-05 16:41:52,902 INFO sourcing.vendors.incora: Incora step 4 (prices): 2 stock line(s) in 2.5s, 0 not read
+2026-11-05 16:41:52,905 INFO sourcing.vendors.incora: Saved the text read for bulk to /media/pragnakalpl19/projects1/Backup/sourcing-proto_share_2026-10-15/sourcing-proto/debug_pages/20261105-164152-incora-bulk-read.txt
+2026-11-05 16:41:53,231 ERROR sourcing.pipeline: Search failed for MS21042L3
+Traceback (most recent call last):
+  File "/media/pragnakalpl19/projects1/Backup/sourcing-proto_share_2026-10-15/sourcing-proto/sourcing/pipeline.py", line 1246, in _process_row
+    outcome: SearchOutcome = await asyncio.wait_for(adapter.search(handle.page, row), limit)
+                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/pragnakalpl19/.local/share/uv/python/cpython-3.11.15-linux-x86_64-gnu/lib/python3.11/asyncio/tasks.py", line 489, in wait_for
+    return fut.result()
+           ^^^^^^^^^^^^
+  File "/media/pragnakalpl19/projects1/Backup/sourcing-proto_share_2026-10-15/sourcing-proto/sourcing/vendors/incora.py", line 441, in search
+    outcomes, usage = await self._search_many(page, [row])
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/media/pragnakalpl19/projects1/Backup/sourcing-proto_share_2026-10-15/sourcing-proto/sourcing/vendors/incora.py", line 482, in _search_many
+    found = await self._read(text, rows, usage)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/media/pragnakalpl19/projects1/Backup/sourcing-proto_share_2026-10-15/sourcing-proto/sourcing/vendors/incora.py", line 513, in _read
+    answers = await asyncio.gather(*(self.extractor.extract_offers_bulk(
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/media/pragnakalpl19/projects1/Backup/sourcing-proto_share_2026-10-15/sourcing-proto/sourcing/extract.py", line 648, in extract_offers_bulk
+    data, usage = await self._client.json_call(
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/media/pragnakalpl19/projects1/Backup/sourcing-proto_share_2026-10-15/sourcing-proto/sourcing/llm/anthropic_client.py", line 40, in json_call
+    response = await self._client.beta.messages.create(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/media/pragnakalpl19/projects1/Backup/sourcing-proto_share_2026-10-15/sourcing-proto/.venv/lib/python3.11/site-packages/anthropic/resources/beta/messages/messages.py", line 3274, in create
+    return await self._post(
+           ^^^^^^^^^^^^^^^^^
+  File "/media/pragnakalpl19/projects1/Backup/sourcing-proto_share_2026-10-15/sourcing-proto/.venv/lib/python3.11/site-packages/anthropic/_base_client.py", line 2443, in post
+    return await self.request(cast_to, opts, stream=stream, stream_cls=stream_cls)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/media/pragnakalpl19/projects1/Backup/sourcing-proto_share_2026-10-15/sourcing-proto/.venv/lib/python3.11/site-packages/anthropic/_base_client.py", line 2003, in request
+    return await self._request(cast_to, options, stream=stream, stream_cls=stream_cls)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/media/pragnakalpl19/projects1/Backup/sourcing-proto_share_2026-10-15/sourcing-proto/.venv/lib/python3.11/site-packages/anthropic/_base_client.py", line 2106, in _request
+    raise self._make_status_error_from_response(response) from None
+anthropic.AuthenticationError: Error code: 401 - {'type': 'error', 'error': {'type': 'authentication_error', 'message': 'invalid x-api-key'}, 'request_id': 'req_011CgjgRpn63JJ4jnnckaKj7'}
+2026-11-05 16:41:53,233 INFO sourcing.pipeline: Row 61: Search error: AuthenticationError("Error code: 401 - {'type': 'error', 'error': {'type': 'authentication_error', 'message': 'invalid x-api-key'}, 'request_id': 'req_011CgjgRpn63JJ4jnnckaKj7'}"); searching it again before logout
+2026-11-05 16:41:53,252 INFO sourcing.pipeline: Row 62: searching Incora for MS24665-132
+2026-11-05 16:41:53,815 INFO sourcing.vendors.incora: Incora step 2 (search): 1 part(s) on https://shop.incora.com/shop/products/bulk-search
+2026-11-05 16:41:58,447 INFO sourcing.vendors.incora: Incora results table: 1 – 1 of 1 (all read from the page's data)
+2026-11-05 16:41:58,448 INFO sourcing.vendors.incora: Incora step 3 (read): 1 part(s), 1 with stock, 1 stock line(s)
+2026-11-05 16:41:58,448 INFO sourcing.vendors.incora: Incora: stored data also has part fields ['itemShortCode'], stock line fields ['branchCode', 'certificationKey', 'itemCode', 'itemCodeShort', 'itemDescription', 'itemType', 'manufacturerAccountKey', 'pricingUnitOfMeasure', 'shipToAccountKey', 'uniqueIdentifier'] (not read)
+2026-11-05 16:42:00,438 INFO sourcing.vendors.incora: Incora step 4 (prices): 1 stock line(s) in 2.0s, 0 not read
+2026-11-05 16:42:00,439 INFO sourcing.vendors.incora: Saved the text read for bulk to /media/pragnakalpl19/projects1/Backup/sourcing-proto_share_2026-10-15/sourcing-proto/debug_pages/20261105-164200-incora-bulk-read.txt
+2026-11-05 16:42:00,766 ERROR sourcing.pipeline: Search failed for MS24665-132
+Traceback (most recent call last):
+  File "/media/pragnakalpl19/projects1/Backup/sourcing-proto_share_2026-10-15/sourcing-proto/sourcing/pipeline.py", line 1246, in _process_row
+    outcome: SearchOutcome = await asyncio.wait_for(adapter.search(handle.page, row), limit)
+                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/pragnakalpl19/.local/share/uv/python/cpython-3.11.15-linux-x86_64-gnu/lib/python3.11/asyncio/tasks.py", line 489, in wait_for
+    return fut.result()
+           ^^^^^^^^^^^^
+  File "/media/pragnakalpl19/projects1/Backup/sourcing-proto_share_2026-10-15/sourcing-proto/sourcing/vendors/incora.py", line 441, in search
+    outcomes, usage = await self._search_many(page, [row])
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/media/pragnakalpl19/projects1/Backup/sourcing-proto_share_2026-10-15/sourcing-proto/sourcing/vendors/incora.py", line 482, in _search_many
+    found = await self._read(text, rows, usage)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/media/pragnakalpl19/projects1/Backup/sourcing-proto_share_2026-10-15/sourcing-proto/sourcing/vendors/incora.py", line 513, in _read
+    answers = await asyncio.gather(*(self.extractor.extract_offers_bulk(
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/media/pragnakalpl19/projects1/Backup/sourcing-proto_share_2026-10-15/sourcing-proto/sourcing/extract.py", line 648, in extract_offers_bulk
+    data, usage = await self._client.json_call(
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/media/pragnakalpl19/projects1/Backup/sourcing-proto_share_2026-10-15/sourcing-proto/sourcing/llm/anthropic_client.py", line 40, in json_call
+    response = await self._client.beta.messages.create(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/media/pragnakalpl19/projects1/Backup/sourcing-proto_share_2026-10-15/sourcing-proto/.venv/lib/python3.11/site-packages/anthropic/resources/beta/messages/messages.py", line 3274, in create
+    return await self._post(
+           ^^^^^^^^^^^^^^^^^
+  File "/media/pragnakalpl19/projects1/Backup/sourcing-proto_share_2026-10-15/sourcing-proto/.venv/lib/python3.11/site-packages/anthropic/_base_client.py", line 2443, in post
+    return await self.request(cast_to, opts, stream=stream, stream_cls=stream_cls)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/media/pragnakalpl19/projects1/Backup/sourcing-proto_share_2026-10-15/sourcing-proto/.venv/lib/python3.11/site-packages/anthropic/_base_client.py", line 2003, in request
+    return await self._request(cast_to, options, stream=stream, stream_cls=stream_cls)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/media/pragnakalpl19/projects1/Backup/sourcing-proto_share_2026-10-15/sourcing-proto/.venv/lib/python3.11/site-packages/anthropic/_base_client.py", line 2106, in _request
+    raise self._make_status_error_from_response(response) from None
+anthropic.AuthenticationError: Error code: 401 - {'type': 'error', 'error': {'type': 'authentication_error', 'message': 'invalid x-api-key'}, 'request_id': 'req_011CgjgSNy6D7H4M5VgQdWNi'}
+2026-11-05 16:42:00,768 INFO sourcing.pipeline: Row 62: Search error: AuthenticationError("Error code: 401 - {'type': 'error', 'error': {'type': 'authentication_error', 'message': 'invalid x-api-key'}, 'request_id': 'req_011CgjgSNy6D7H4M5VgQdWNi'}"); searching it again before logout
+2026-11-05 16:42:00,787 INFO sourcing.pipeline: Row 63: searching Incora for MS35206-246
+2026-11-05 16:42:01,349 INFO sourcing.vendors.incora: Incora step 2 (search): 1 part(s) on https://shop.incora.com/shop/products/bulk-search
+2026-11-05 16:42:06,049 INFO sourcing.vendors.incora: Incora results table: 1 – 1 of 1 (all read from the page's data)
+2026-11-05 16:42:06,049 INFO sourcing.vendors.incora: Incora step 3 (read): 1 part(s), 1 with stock, 3 stock line(s)
+2026-11-05 16:42:06,049 INFO sourcing.vendors.incora: Incora: stored data also has part fields ['itemShortCode'], stock line fields ['branchCode', 'certificationKey', 'itemCode', 'itemCodeShort', 'itemDescription', 'itemType', 'manufacturerAccountKey', 'pricingUnitOfMeasure', 'shipToAccountKey', 'uniqueIdentifier'] (not read)
+2026-11-05 16:42:07,823 INFO sourcing.vendors.incora: Incora step 4 (prices): 3 stock line(s) in 1.8s, 0 not read
+2026-11-05 16:42:07,824 INFO sourcing.vendors.incora: Saved the text read for bulk to /media/pragnakalpl19/projects1/Backup/sourcing-proto_share_2026-10-15/sourcing-proto/debug_pages/20261105-164207-incora-bulk-read.txt
+2026-11-05 16:42:08,126 ERROR sourcing.pipeline: Search failed for MS35206-246
+Traceback (most recent call last):
+  File "/media/pragnakalpl19/projects1/Backup/sourcing-proto_share_2026-10-15/sourcing-proto/sourcing/pipeline.py", line 1246, in _process_row
+    outcome: SearchOutcome = await asyncio.wait_for(adapter.search(handle.page, row), limit)
+                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/pragnakalpl19/.local/share/uv/python/cpython-3.11.15-linux-x86_64-gnu/lib/python3.11/asyncio/tasks.py", line 489, in wait_for
+    return fut.result()
+           ^^^^^^^^^^^^
+  File "/media/pragnakalpl19/projects1/Backup/sourcing-proto_share_2026-10-15/sourcing-proto/sourcing/vendors/incora.py", line 441, in search
+    outcomes, usage = await self._search_many(page, [row])
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/media/pragnakalpl19/projects1/Backup/sourcing-proto_share_2026-10-15/sourcing-proto/sourcing/vendors/incora.py", line 482, in _search_many
+    found = await self._read(text, rows, usage)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/media/pragnakalpl19/projects1/Backup/sourcing-proto_share_2026-10-15/sourcing-proto/sourcing/vendors/incora.py", line 513, in _read
+    answers = await asyncio.gather(*(self.extractor.extract_offers_bulk(
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/media/pragnakalpl19/projects1/Backup/sourcing-proto_share_2026-10-15/sourcing-proto/sourcing/extract.py", line 648, in extract_offers_bulk
+    data, usage = await self._client.json_call(
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/media/pragnakalpl19/projects1/Backup/sourcing-proto_share_2026-10-15/sourcing-proto/sourcing/llm/anthropic_client.py", line 40, in json_call
+    response = await self._client.beta.messages.create(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/media/pragnakalpl19/projects1/Backup/sourcing-proto_share_2026-10-15/sourcing-proto/.venv/lib/python3.11/site-packages/anthropic/resources/beta/messages/messages.py", line 3274, in create
+    return await self._post(
+           ^^^^^^^^^^^^^^^^^
+  File "/media/pragnakalpl19/projects1/Backup/sourcing-proto_share_2026-10-15/sourcing-proto/.venv/lib/python3.11/site-packages/anthropic/_base_client.py", line 2443, in post
+    return await self.request(cast_to, opts, stream=stream, stream_cls=stream_cls)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/media/pragnakalpl19/projects1/Backup/sourcing-proto_share_2026-10-15/sourcing-proto/.venv/lib/python3.11/site-packages/anthropic/_base_client.py", line 2003, in request
+    return await self._request(cast_to, options, stream=stream, stream_cls=stream_cls)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/media/pragnakalpl19/projects1/Backup/sourcing-proto_share_2026-10-15/sourcing-proto/.venv/lib/python3.11/site-packages/anthropic/_base_client.py", line 2106, in _request
+    raise self._make_status_error_from_response(response) from None
+anthropic.AuthenticationError: Error code: 401 - {'type': 'error', 'error': {'type': 'authentication_error', 'message': 'invalid x-api-key'}, 'request_id': 'req_011CgjgSvW9TrJeN2gkWWzcC'}
+2026-11-05 16:42:08,126 INFO sourcing.pipeline: Row 63: Search error: AuthenticationError("Error code: 401 - {'type': 'error', 'error': {'type': 'authentication_error', 'message': 'invalid x-api-key'}, 'request_id': 'req_011CgjgSvW9TrJeN2gkWWzcC'}"); searching it again before logout
+2026-11-05 16:42:08,137 INFO sourcing.pipeline: Row 64: searching Incora for MS3367-5-9
+2026-11-05 16:42:08,700 INFO sourcing.vendors.incora: Incora step 2 (search): 1 part(s) on https://shop.incora.com/shop/products/bulk-search
+2026-11-05 16:42:14,272 INFO sourcing.vendors.incora: Incora results table: 1 – 1 of 1 (all read from the page's data)
+2026-11-05 16:42:14,272 INFO sourcing.vendors.incora: Incora step 3 (read): 1 part(s), 1 with stock, 1 stock line(s)
+2026-11-05 16:42:14,272 INFO sourcing.vendors.incora: Incora: stored data also has part fields ['itemShortCode'], stock line fields ['branchCode', 'certificationKey', 'itemCode', 'itemCodeShort', 'itemDescription', 'itemType', 'manufacturerAccountKey', 'pricingUnitOfMeasure', 'shipToAccountKey', 'uniqueIdentifier'] (not read)
+2026-11-05 16:42:15,863 INFO sourcing.vendors.incora: Incora step 4 (prices): 1 stock line(s) in 1.6s, 0 not read
+2026-11-05 16:42:15,863 INFO sourcing.vendors.incora: Saved the text read for bulk to /media/pragnakalpl19/projects1/Backup/sourcing-proto_share_2026-10-15/sourcing-proto/debug_pages/20261105-164215-incora-bulk-read.txt
+2026-11-05 16:42:16,164 ERROR sourcing.pipeline: Search failed for MS3367-5-9
+Traceback (most recent call last):
+  File "/media/pragnakalpl19/projects1/Backup/sourcing-proto_share_2026-10-15/sourcing-proto/sourcing/pipeline.py", line 1246, in _process_row
+    outcome: SearchOutcome = await asyncio.wait_for(adapter.search(handle.page, row), limit)
+                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/pragnakalpl19/.local/share/uv/python/cpython-3.11.15-linux-x86_64-gnu/lib/python3.11/asyncio/tasks.py", line 489, in wait_for
+    return fut.result()
+           ^^^^^^^^^^^^
+  File "/media/pragnakalpl19/projects1/Backup/sourcing-proto_share_2026-10-15/sourcing-proto/sourcing/vendors/incora.py", line 441, in search
+    outcomes, usage = await self._search_many(page, [row])
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/media/pragnakalpl19/projects1/Backup/sourcing-proto_share_2026-10-15/sourcing-proto/sourcing/vendors/incora.py", line 482, in _search_many
+    found = await self._read(text, rows, usage)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/media/pragnakalpl19/projects1/Backup/sourcing-proto_share_2026-10-15/sourcing-proto/sourcing/vendors/incora.py", line 513, in _read
+    answers = await asyncio.gather(*(self.extractor.extract_offers_bulk(
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/media/pragnakalpl19/projects1/Backup/sourcing-proto_share_2026-10-15/sourcing-proto/sourcing/extract.py", line 648, in extract_offers_bulk
+    data, usage = await self._client.json_call(
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/media/pragnakalpl19/projects1/Backup/sourcing-proto_share_2026-10-15/sourcing-proto/sourcing/llm/anthropic_client.py", line 40, in json_call
+    response = await self._client.beta.messages.create(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/media/pragnakalpl19/projects1/Backup/sourcing-proto_share_2026-10-15/sourcing-proto/.venv/lib/python3.11/site-packages/anthropic/resources/beta/messages/messages.py", line 3274, in create
+    return await self._post(
+           ^^^^^^^^^^^^^^^^^
+  File "/media/pragnakalpl19/projects1/Backup/sourcing-proto_share_2026-10-15/sourcing-proto/.venv/lib/python3.11/site-packages/anthropic/_base_client.py", line 2443, in post
+    return await self.request(cast_to, opts, stream=stream, stream_cls=stream_cls)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/media/pragnakalpl19/projects1/Backup/sourcing-proto_share_2026-10-15/sourcing-proto/.venv/lib/python3.11/site-packages/anthropic/_base_client.py", line 2003, in request
+    return await self._request(cast_to, options, stream=stream, stream_cls=stream_cls)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/media/pragnakalpl19/projects1/Backup/sourcing-proto_share_2026-10-15/sourcing-proto/.venv/lib/python3.11/site-packages/anthropic/_base_client.py", line 2106, in _request
+    raise self._make_status_error_from_response(response) from None
+anthropic.AuthenticationError: Error code: 401 - {'type': 'error', 'error': {'type': 'authentication_error', 'message': 'invalid x-api-key'}, 'request_id': 'req_011CgjgTWsNHJ4Z9ZEShPRzj'}
+2026-11-05 16:42:16,165 INFO sourcing.pipeline: Row 64: Search error: AuthenticationError("Error code: 401 - {'type': 'error', 'error': {'type': 'authentication_error', 'message': 'invalid x-api-key'}, 'request_id': 'req_011CgjgTWsNHJ4Z9ZEShPRzj'}"); searching it again before logout
+2026-11-05 16:42:16,165 INFO sourcing.pipeline: [incora___shared] Searching 8 part(s) again one by one before logout (not found in bulk, empty page or search error)
+2026-11-05 16:42:16,185 INFO sourcing.pipeline: Row 48: searching Incora for MS20470AD4-4
+2026-11-05 16:42:16,748 INFO sourcing.vendors.incora: Incora step 2 (search): 1 part(s) on https://shop.incora.com/shop/products/bulk-search
+2026-11-05 16:42:21,236 INFO sourcing.vendors.incora: Incora results table: 1 – 1 of 1 (all read from the page's data)
+2026-11-05 16:42:21,237 INFO sourcing.vendors.incora: Incora step 3 (read): 1 part(s), 1 with stock, 2 stock line(s)
+2026-11-05 16:42:21,237 INFO sourcing.vendors.incora: Incora: stored data also has part fields ['itemShortCode'], stock line fields ['branchCode', 'certificationKey', 'itemCode', 'itemCodeShort', 'itemDescription', 'itemType', 'manufacturerAccountKey', 'pricingUnitOfMeasure', 'shipToAccountKey', 'uniqueIdentifier'] (not read)
+2026-11-05 16:42:23,186 INFO sourcing.vendors.incora: Incora step 4 (prices): 2 stock line(s) in 1.9s, 0 not read
+2026-11-05 16:42:23,186 INFO sourcing.vendors.incora: Saved the text read for bulk to /media/pragnakalpl19/projects1/Backup/sourcing-proto_share_2026-10-15/sourcing-proto/debug_pages/20261105-164223-incora-bulk-read.txt
+2026-11-05 16:42:23,510 ERROR sourcing.pipeline: Search failed for MS20470AD4-4
+Traceback (most recent call last):
+  File "/media/pragnakalpl19/projects1/Backup/sourcing-proto_share_2026-10-15/sourcing-proto/sourcing/pipeline.py", line 1246, in _process_row
+    outcome: SearchOutcome = await asyncio.wait_for(adapter.search(handle.page, row), limit)
+                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/pragnakalpl19/.local/share/uv/python/cpython-3.11.15-linux-x86_64-gnu/lib/python3.11/asyncio/tasks.py", line 489, in wait_for
+    return fut.result()
+           ^^^^^^^^^^^^
+  File "/media/pragnakalpl19/projects1/Backup/sourcing-proto_share_2026-10-15/sourcing-proto/sourcing/vendors/incora.py", line 441, in search
+    outcomes, usage = await self._search_many(page, [row])
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/media/pragnakalpl19/projects1/Backup/sourcing-proto_share_2026-10-15/sourcing-proto/sourcing/vendors/incora.py", line 482, in _search_many
+    found = await self._read(text, rows, usage)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/media/pragnakalpl19/projects1/Backup/sourcing-proto_share_2026-10-15/sourcing-proto/sourcing/vendors/incora.py", line 513, in _read
+    answers = await asyncio.gather(*(self.extractor.extract_offers_bulk(
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/media/pragnakalpl19/projects1/Backup/sourcing-proto_share_2026-10-15/sourcing-proto/sourcing/extract.py", line 648, in extract_offers_bulk
+    data, usage = await self._client.json_call(
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/media/pragnakalpl19/projects1/Backup/sourcing-proto_share_2026-10-15/sourcing-proto/sourcing/llm/anthropic_client.py", line 40, in json_call
+    response = await self._client.beta.messages.create(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/media/pragnakalpl19/projects1/Backup/sourcing-proto_share_2026-10-15/sourcing-proto/.venv/lib/python3.11/site-packages/anthropic/resources/beta/messages/messages.py", line 3274, in create
+    return await self._post(
+           ^^^^^^^^^^^^^^^^^
+  File "/media/pragnakalpl19/projects1/Backup/sourcing-proto_share_2026-10-15/sourcing-proto/.venv/lib/python3.11/site-packages/anthropic/_base_client.py", line 2443, in post
+    return await self.request(cast_to, opts, stream=stream, stream_cls=stream_cls)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/media/pragnakalpl19/projects1/Backup/sourcing-proto_share_2026-10-15/sourcing-proto/.venv/lib/python3.11/site-packages/anthropic/_base_client.py", line 2003, in request
+    return await self._request(cast_to, options, stream=stream, stream_cls=stream_cls)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/media/pragnakalpl19/projects1/Backup/sourcing-proto_share_2026-10-15/sourcing-proto/.venv/lib/python3.11/site-packages/anthropic/_base_client.py", line 2106, in _request
+    raise self._make_status_error_from_response(response) from None
+anthropic.AuthenticationError: Error code: 401 - {'type': 'error', 'error': {'type': 'authentication_error', 'message': 'invalid x-api-key'}, 'request_id': 'req_011CgjgU4CHK4m2aWKvMrVuA'}
+2026-11-05 16:42:24,453 INFO sourcing.pipeline: Row 48 MS20470AD4-4 (Incora): -> FAILED | Search error: AuthenticationError("Error code: 401 - {'type': 'error', 'error': {'type': 'authentication_error', 'message': 'invalid x-api-key'}, 'request_id': 'req_011CgjgU4CHK4m2aWKvMrVuA'}")
+2026-11-05 16:42:24,478 INFO sourcing.pipeline: Row 50: searching Incora for NAS1097AD4-4
+2026-11-05 16:42:25,040 INFO sourcing.vendors.incora: Incora step 2 (search): 1 part(s) on https://shop.incora.com/shop/products/bulk-search
+2026-11-05 16:42:29,763 INFO sourcing.vendors.incora: Incora results table: 1 – 1 of 1 (all read from the page's data)
+2026-11-05 16:42:29,763 INFO sourcing.vendors.incora: Incora step 3 (read): 1 part(s), 1 with stock, 1 stock line(s)
+2026-11-05 16:42:29,764 INFO sourcing.vendors.incora: Incora: stored data also has part fields ['itemShortCode'], stock line fields ['branchCode', 'certificationKey', 'itemCode', 'itemCodeShort', 'itemDescription', 'itemType', 'manufacturerAccountKey', 'pricingUnitOfMeasure', 'shipToAccountKey', 'uniqueIdentifier'] (not read)
+2026-11-05 16:42:31,344 INFO sourcing.vendors.incora: Incora step 4 (prices): 1 stock line(s) in 1.6s, 0 not read
+2026-11-05 16:42:31,345 INFO sourcing.vendors.incora: Saved the text read for bulk to /media/pragnakalpl19/projects1/Backup/sourcing-proto_share_2026-10-15/sourcing-proto/debug_pages/20261105-164231-incora-bulk-read.txt
+2026-11-05 16:42:31,673 ERROR sourcing.pipeline: Search failed for NAS1097AD4-4
+Traceback (most recent call last):
+  File "/media/pragnakalpl19/projects1/Backup/sourcing-proto_share_2026-10-15/sourcing-proto/sourcing/pipeline.py", line 1246, in _process_row
+    outcome: SearchOutcome = await asyncio.wait_for(adapter.search(handle.page, row), limit)
+                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/pragnakalpl19/.local/share/uv/python/cpython-3.11.15-linux-x86_64-gnu/lib/python3.11/asyncio/tasks.py", line 489, in wait_for
+    return fut.result()
+           ^^^^^^^^^^^^
+  File "/media/pragnakalpl19/projects1/Backup/sourcing-proto_share_2026-10-15/sourcing-proto/sourcing/vendors/incora.py", line 441, in search
+    outcomes, usage = await self._search_many(page, [row])
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/media/pragnakalpl19/projects1/Backup/sourcing-proto_share_2026-10-15/sourcing-proto/sourcing/vendors/incora.py", line 482, in _search_many
+    found = await self._read(text, rows, usage)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/media/pragnakalpl19/projects1/Backup/sourcing-proto_share_2026-10-15/sourcing-proto/sourcing/vendors/incora.py", line 513, in _read
+    answers = await asyncio.gather(*(self.extractor.extract_offers_bulk(
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/media/pragnakalpl19/projects1/Backup/sourcing-proto_share_2026-10-15/sourcing-proto/sourcing/extract.py", line 648, in extract_offers_bulk
+    data, usage = await self._client.json_call(
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/media/pragnakalpl19/projects1/Backup/sourcing-proto_share_2026-10-15/sourcing-proto/sourcing/llm/anthropic_client.py", line 40, in json_call
+    response = await self._client.beta.messages.create(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/media/pragnakalpl19/projects1/Backup/sourcing-proto_share_2026-10-15/sourcing-proto/.venv/lib/python3.11/site-packages/anthropic/resources/beta/messages/messages.py", line 3274, in create
+    return await self._post(
+           ^^^^^^^^^^^^^^^^^
+  File "/media/pragnakalpl19/projects1/Backup/sourcing-proto_share_2026-10-15/sourcing-proto/.venv/lib/python3.11/site-packages/anthropic/_base_client.py", line 2443, in post
+    return await self.request(cast_to, opts, stream=stream, stream_cls=stream_cls)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/media/pragnakalpl19/projects1/Backup/sourcing-proto_share_2026-10-15/sourcing-proto/.venv/lib/python3.11/site-packages/anthropic/_base_client.py", line 2003, in request
+    return await self._request(cast_to, options, stream=stream, stream_cls=stream_cls)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/media/pragnakalpl19/projects1/Backup/sourcing-proto_share_2026-10-15/sourcing-proto/.venv/lib/python3.11/site-packages/anthropic/_base_client.py", line 2106, in _request
+    raise self._make_status_error_from_response(response) from None
+anthropic.AuthenticationError: Error code: 401 - {'type': 'error', 'error': {'type': 'authentication_error', 'message': 'invalid x-api-key'}, 'request_id': 'req_011CgjgUf9EGZc7NZ7SgvHxi'}
+2026-11-05 16:42:32,810 INFO sourcing.pipeline: Row 50 NAS1097AD4-4 (Incora): -> FAILED | Search error: AuthenticationError("Error code: 401 - {'type': 'error', 'error': {'type': 'authentication_error', 'message': 'invalid x-api-key'}, 'request_id': 'req_011CgjgUf9EGZc7NZ7SgvHxi'}")
+2026-11-05 16:42:32,838 INFO sourcing.pipeline: Row 58: searching Incora for AN310-4
+2026-11-05 16:42:33,402 INFO sourcing.vendors.incora: Incora step 2 (search): 1 part(s) on https://shop.incora.com/shop/products/bulk-search
+2026-11-05 16:42:38,214 INFO sourcing.vendors.incora: Incora results table: 1 – 1 of 1 (all read from the page's data)
+2026-11-05 16:42:38,214 INFO sourcing.vendors.incora: Incora step 3 (read): 1 part(s), 1 with stock, 1 stock line(s)
+2026-11-05 16:42:38,214 INFO sourcing.vendors.incora: Incora: stored data also has part fields ['itemShortCode'], stock line fields ['branchCode', 'certificationKey', 'itemCode', 'itemCodeShort', 'itemDescription', 'itemType', 'manufacturerAccountKey', 'pricingUnitOfMeasure', 'shipToAccountKey', 'uniqueIdentifier'] (not read)
+2026-11-05 16:42:40,227 INFO sourcing.vendors.incora: Incora step 4 (prices): 1 stock line(s) in 2.0s, 0 not read
+2026-11-05 16:42:40,228 INFO sourcing.vendors.incora: Saved the text read for bulk to /media/pragnakalpl19/projects1/Backup/sourcing-proto_share_2026-10-15/sourcing-proto/debug_pages/20261105-164240-incora-bulk-read.txt
+2026-11-05 16:42:40,572 ERROR sourcing.pipeline: Search failed for AN310-4
+Traceback (most recent call last):
+  File "/media/pragnakalpl19/projects1/Backup/sourcing-proto_share_2026-10-15/sourcing-proto/sourcing/pipeline.py", line 1246, in _process_row
+    outcome: SearchOutcome = await asyncio.wait_for(adapter.search(handle.page, row), limit)
+                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/pragnakalpl19/.local/share/uv/python/cpython-3.11.15-linux-x86_64-gnu/lib/python3.11/asyncio/tasks.py", line 489, in wait_for
+    return fut.result()
+           ^^^^^^^^^^^^
+  File "/media/pragnakalpl19/projects1/Backup/sourcing-proto_share_2026-10-15/sourcing-proto/sourcing/vendors/incora.py", line 441, in search
+    outcomes, usage = await self._search_many(page, [row])
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/media/pragnakalpl19/projects1/Backup/sourcing-proto_share_2026-10-15/sourcing-proto/sourcing/vendors/incora.py", line 482, in _search_many
+    found = await self._read(text, rows, usage)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/media/pragnakalpl19/projects1/Backup/sourcing-proto_share_2026-10-15/sourcing-proto/sourcing/vendors/incora.py", line 513, in _read
+    answers = await asyncio.gather(*(self.extractor.extract_offers_bulk(
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/media/pragnakalpl19/projects1/Backup/sourcing-proto_share_2026-10-15/sourcing-proto/sourcing/extract.py", line 648, in extract_offers_bulk
+    data, usage = await self._client.json_call(
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/media/pragnakalpl19/projects1/Backup/sourcing-proto_share_2026-10-15/sourcing-proto/sourcing/llm/anthropic_client.py", line 40, in json_call
+    response = await self._client.beta.messages.create(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/media/pragnakalpl19/projects1/Backup/sourcing-proto_share_2026-10-15/sourcing-proto/.venv/lib/python3.11/site-packages/anthropic/resources/beta/messages/messages.py", line 3274, in create
+    return await self._post(
+           ^^^^^^^^^^^^^^^^^
+  File "/media/pragnakalpl19/projects1/Backup/sourcing-proto_share_2026-10-15/sourcing-proto/.venv/lib/python3.11/site-packages/anthropic/_base_client.py", line 2443, in post
+    return await self.request(cast_to, opts, stream=stream, stream_cls=stream_cls)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/media/pragnakalpl19/projects1/Backup/sourcing-proto_share_2026-10-15/sourcing-proto/.venv/lib/python3.11/site-packages/anthropic/_base_client.py", line 2003, in request
+    return await self._request(cast_to, options, stream=stream, stream_cls=stream_cls)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/media/pragnakalpl19/projects1/Backup/sourcing-proto_share_2026-10-15/sourcing-proto/.venv/lib/python3.11/site-packages/anthropic/_base_client.py", line 2106, in _request
+    raise self._make_status_error_from_response(response) from None
+anthropic.AuthenticationError: Error code: 401 - {'type': 'error', 'error': {'type': 'authentication_error', 'message': 'invalid x-api-key'}, 'request_id': 'req_011CgjgVK5Wf2cDauYkuhJfR'}
+2026-11-05 16:42:41,188 INFO sourcing.pipeline: Row 58 AN310-4 (Incora): -> FAILED | Search error: AuthenticationError("Error code: 401 - {'type': 'error', 'error': {'type': 'authentication_error', 'message': 'invalid x-api-key'}, 'request_id': 'req_011CgjgVK5Wf2cDauYkuhJfR'}")
+2026-11-05 16:42:41,212 INFO sourcing.pipeline: Row 60: searching Incora for AN525-10R8
+2026-11-05 16:42:41,773 INFO sourcing.vendors.incora: Incora step 2 (search): 1 part(s) on https://shop.incora.com/shop/products/bulk-search
+2026-11-05 16:42:46,355 INFO sourcing.vendors.incora: Incora results table: 1 – 1 of 1 (all read from the page's data)
+2026-11-05 16:42:46,355 INFO sourcing.vendors.incora: Incora step 3 (read): 1 part(s), 1 with stock, 3 stock line(s)
+2026-11-05 16:42:46,355 INFO sourcing.vendors.incora: Incora: stored data also has part fields ['itemShortCode'], stock line fields ['branchCode', 'certificationKey', 'itemCode', 'itemCodeShort', 'itemDescription', 'itemType', 'manufacturerAccountKey', 'pricingUnitOfMeasure', 'shipToAccountKey', 'uniqueIdentifier'] (not read)
+2026-11-05 16:42:48,663 INFO sourcing.vendors.incora: Incora step 4 (prices): 3 stock line(s) in 2.3s, 0 not read
+2026-11-05 16:42:48,665 INFO sourcing.vendors.incora: Saved the text read for bulk to /media/pragnakalpl19/projects1/Backup/sourcing-proto_share_2026-10-15/sourcing-proto/debug_pages/20261105-164248-incora-bulk-read.txt
+2026-11-05 16:42:49,001 ERROR sourcing.pipeline: Search failed for AN525-10R8
+Traceback (most recent call last):
+  File "/media/pragnakalpl19/projects1/Backup/sourcing-proto_share_2026-10-15/sourcing-proto/sourcing/pipeline.py", line 1246, in _process_row
+    outcome: SearchOutcome = await asyncio.wait_for(adapter.search(handle.page, row), limit)
+                             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/pragnakalpl19/.local/share/uv/python/cpython-3.11.15-linux-x86_64-gnu/lib/python3.11/asyncio/tasks.py", line 489, in wait_for
+    return fut.result()
+           ^^^^^^^^^^^^
+  File "/media/pragnakalpl19/projects1/Backup/sourcing-proto_share_2026-10-15/sourcing-proto/sourcing/vendors/incora.py", line 441, in search
+    outcomes, usage = await self._search_many(page, [row])
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/media/pragnakalpl19/projects1/Backup/sourcing-proto_share_2026-10-15/sourcing-proto/sourcing/vendors/incora.py", line 482, in _search_many
+    found = await self._read(text, rows, usage)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/media/pragnakalpl19/projects1/Backup/sourcing-proto_share_2026-10-15/sourcing-proto/sourcing/vendors/incora.py", line 513, in _read
+    answers = await asyncio.gather(*(self.extractor.extract_offers_bulk(
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/media/pragnakalpl19/projects1/Backup/sourcing-proto_share_2026-10-15/sourcing-proto/sourcing/extract.py", line 648, in extract_offers_bulk
+    data, usage = await self._client.json_call(
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/media/pragnakalpl19/projects1/Backup/sourcing-proto_share_2026-10-15/sourcing-proto/sourcing/llm/anthropic_client.py", line 40, in json_call
+    response = await self._client.beta.messages.create(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/media/pragnakalpl19/projects1/Backup/sourcing-proto_share_2026-10-15/sourcing-proto/.venv/lib/python3.11/site-packages/anthropic/resources/beta/messages/messages.py", line 3274, in create
+    return await self._post(
+           ^^^^^^^^^^^^^^^^^
+  File "/media/pragnakalpl19/projects1/Backup/sourcing-proto_share_2026-10-15/sourcing-proto/.venv/lib/python3.11/site-packages/anthropic/_base_client.py", line 2443, in post
+    return await self.request(cast_to, opts, stream=stream, stream_cls=stream_cls)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/media/pragnakalpl19/projects1/Backup/sourcing-proto_share_2026-10-15/sourcing-proto/.venv/lib/python3.11/site-packages/anthropic/_base_client.py", line 2003, in request
+    return await self._request(cast_to, options, stream=stream, stream_cls=stream_cls)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/media/pragnakalpl19/projects1/Backup/sourcing-proto_share_2026-10-15/sourcing-proto/.venv/lib/python3.11/site-packages/anthropic/_base_client.py", line 2106, in _request
+    raise self._make_status_error_from_response(response) from None
+anthropic.AuthenticationError: Error code: 401 - {'type': 'error', 'error': {'type': 'authentication_error', 'message': 'invalid x-api-key'}, 'request_id': 'req_011CgjgVw7hYbKYCmPvCpo6h'}
+2026-11-05 16:42:50,060 INFO sourcing.pipeline: Row 60 AN525-10R8 (Incora): -> FAILED | Search error: AuthenticationError("Error code: 401 - {'type': 'error', 'error': {'type': 'authentication_error', 'message': 'invalid x-api-key'}, 'request_id': 'req_011CgjgVw7hYbKYCmPvCpo6h'}")
+2026-11-05 16:42:50,083 INFO sourcing.pipeline: Row 61: searching Incora for MS21042L3
+2026-11-05 16:42:54,151 INFO sourcing.pipeline: [incora___shared] Session expired (Incora: not signed in (at https://login.incora.com/a42f291c-cd14-4967-9b76-39b8737608f1/b2c_1a_signup_signin_oauth_30m/oauth2/v2.0/authorize?response_type=code&client_id=ff03286c-0ac8-4b18-bb10-98e9f780055e&state=ajM2VlV0TmVjQ0I3ZGt2YTl2V0kwc0FmQ1NHelZKTzh1aWQzYWY1NVBKb3B1%3B%257B%2522redirectURL%2522%253A%2522%252Fhome%2522%257D&redirect_uri=https%3A%2F%2Fshop.incora.com%2Fauth-redirect&scope=openid%20profile%20email%20offline_access%20https%3A%2F%2Flogin.incora.com%2Ff5c73591-4844-4350-93f0-2749ece220fb%2Fread&code_challenge=gfTxHan0NDIq4zvlMtKxtanKGR9LyR2aQ_9QcOXjq8k&code_challenge_method=S256&nonce=ajM2VlV0TmVjQ0I3ZGt2YTl2V0kwc0FmQ1NHelZKTzh1aWQzYWY1NVBKb3B1&prompt=login)); re-login once and retry
+2026-11-05 16:42:54,152 INFO sourcing.auth: [incora___shared] Automatic login attempt 2/2
+2026-11-05 16:42:54,162 INFO sourcing.vendors.generic: Login: Incora as carrie@skylinkintl.com
+2026-11-05 16:42:54,162 INFO sourcing.vendors.incora: Login: opening https://login.incora.com/

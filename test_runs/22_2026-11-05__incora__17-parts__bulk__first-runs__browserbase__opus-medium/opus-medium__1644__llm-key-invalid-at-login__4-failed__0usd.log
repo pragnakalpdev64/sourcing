@@ -1,0 +1,82 @@
+2026-11-05 16:44:11,873 INFO sourcing.job: Run local-20261105-111411-0e58: mode=REAL, browser=browserbase, store=file (/media/pragnakalpl19/projects1/Backup/sourcing-proto_share_2026-10-15/sourcing-proto/.local_store.json), llm=anthropic/claude-opus-5-5 (effort medium), chat=on, vendor secret overrides=sourcing-vendor-proponent=sourcing-vendor-test
+2026-11-05 16:44:11,873 INFO sourcing.job: Vendor config for this run: {'*': {'bulk_min_parts': 2}}
+2026-11-05 16:44:11,987 WARNING sourcing.browser: Browserbase session recording is ON: recordings show the vendor pages, login screens included. Use for local debugging only.
+2026-11-05 16:44:12,637 INFO sourcing.job: Processing 1 sheet(s): 1V-S8J4bFqw1w_WvrsQjFqR4gNhPwFyd-YS_aF7CVqak
+2026-11-05 16:44:16,073 INFO sourcing.sheets: Requests in 1V-S8J4bFqw1w_WvrsQjFqR4gNhPwFyd-YS_aF7CVqak: 63 data row(s), 4 to process (Status empty/NEW/RUNNING), skipped by Status: DONE=41, FAILED=4, NOT_FOUND=12, NOT_SOLD=2, rows without a part number: 0
+2026-11-05 16:44:16,074 INFO sourcing.pipeline: Run local-20261105-111411-0e58__aF7CVqak picked up 4 NEW rows
+/media/pragnakalpl19/projects1/Backup/sourcing-proto_share_2026-10-15/sourcing-proto/.venv/lib/python3.11/site-packages/google/api_core/_python_version_support.py:254: FutureWarning: You are using a Python version (3.11.15) which Google will stop supporting in new releases of google.api_core once it reaches its end of life (2027-10-24). Please upgrade to the latest Python version, or at least Python 3.12, to continue receiving updates for google.api_core past that date.
+  warnings.warn(message, FutureWarning)
+/media/pragnakalpl19/projects1/Backup/sourcing-proto_share_2026-10-15/sourcing-proto/.venv/lib/python3.11/site-packages/google/api_core/_python_version_support.py:254: FutureWarning: You are using a Python version (3.11.15) which Google will stop supporting in new releases of google.cloud.secretmanager_v1 once it reaches its end of life (2027-10-24). Please upgrade to the latest Python version, or at least Python 3.12, to continue receiving updates for google.cloud.secretmanager_v1 past that date.
+  warnings.warn(message, FutureWarning)
+2026-11-05 16:44:18,162 INFO sourcing.pipeline: incora / (no requester): using shared login (secret key sourcing-vendor-incora, totp=no) for 4 row(s)
+2026-11-05 16:44:18,175 INFO sourcing.pipeline: [incora___shared] Bulk search: 4 parts (bulk from 2), up to 25 per search
+2026-11-05 16:44:18,176 INFO sourcing.auth: [incora___shared] Reusing saved browser Context 55e8327d-8134-458c-86dd-06e6ee0736bd (state=ACTIVE)
+2026-11-05 16:44:21,637 INFO sourcing.browser: Opened Browserbase session 02b4d6ea-728d-45a3-8f7d-6a4c5b722dba (context=55e8327d-8134-458c-86dd-06e6ee0736bd, keep_alive=False, recording=on, stealth=basic)
+2026-11-05 16:44:21,637 INFO sourcing.browser: Session page: https://www.browserbase.com/sessions/02b4d6ea-728d-45a3-8f7d-6a4c5b722dba
+2026-11-05 16:44:21,988 INFO sourcing.browser: Session live view (while the run lasts): https://www.browserbase.com/devtools-fullscreen/inspector.html?wss=connect.browserbase.com/debug/02b4d6ea-728d-45a3-8f7d-6a4c5b722dba/devtools/page/643EFBF6BF406CCB38613FBD0E88B4BD?t=REDACTED&debug=true
+2026-11-05 16:44:30,161 INFO sourcing.vendors.incora: Incora sign-in check at https://login.incora.com/a42f291c-cd14-4967-9b76-39b8737608f1/b2c_1a_signup_signin_oauth_30m/oauth2/v2.0/authorize?response_type=code&client_id=ff03286c-0ac8-4b18-bb10-98e9f780055e&state=UU92Tzhpfi5Md25waWt1bTdfcWFIY2tGbXgtSDBleGh-bW93WWs0eFVDTEhx%3B%257B%2522redirectURL%2522%253A%2522%252Fhome%2522%257D&redirect_uri=https%3A%2F%2Fshop.incora.com%2Fauth-redirect&scope=openid%20profile%20email%20offline_access%20https%3A%2F%2Flogin.incora.com%2Ff5c73591-4844-4350-93f0-2749ece220fb%2Fread&code_challenge=zdn5OTBqzOaMIl8rwySabw5GanGmqxQTwY8q5rfVN60&code_challenge_method=S256&nonce=UU92Tzhpfi5Md25waWt1bTdfcWFIY2tGbXgtSDBleGh-bW93WWs0eFVDTEhx&prompt=login: signed out
+2026-11-05 16:44:30,161 INFO sourcing.auth: [incora___shared] Saved Context is no longer signed in (last login 5m ago); logging in
+2026-11-05 16:44:30,161 INFO sourcing.auth: [incora___shared] Automatic login attempt 1/2
+2026-11-05 16:44:30,176 INFO sourcing.vendors.generic: Login: Incora as carrie@skylinkintl.com
+2026-11-05 16:44:30,176 INFO sourcing.vendors.incora: Login: opening https://login.incora.com/a42f291c-cd14-4967-9b76-39b8737608f1/b2c_1a_signup_signin_oauth_30m/oauth2/v2.0/authorize?response_type=code&client_id=ff03286c-0ac8-4b18-bb10-98e9f780055e&state=SDlZeVhNU1FGcXFsZFpQbkdzMWtSZ1hnZUJrbmNIQ2w4cmx5SjExcXVHdmt0%3B%257B%2522redirectURL%2522%253A%2522%252Fhome%2522%257D&redirect_uri=https%3A%2F%2Fshop.incora.com%2Fauth-redirect&scope=openid%20profile%20email%20offline_access%20https%3A%2F%2Flogin.incora.com%2Ff5c73591-4844-4350-93f0-2749ece220fb%2Fread&code_challenge=KQD9Norc_pz9XVNwHkZLrotLQE0a97RjuwaIIGO57Cw&code_challenge_method=S256&nonce=SDlZeVhNU1FGcXFsZFpQbkdzMWtSZ1hnZUJrbmNIQ2w4cmx5SjExcXVHdmt0&prompt=login
+2026-11-05 16:44:44,334 INFO sourcing.vendors.generic: Login step 1 at https://login.incora.com/a42f291c-cd14-4967-9b76-39b8737608f1/b2c_1a_signup_signin_oauth_30m/oauth2/v2.0/authorize?response_type=code&client_id=ff03286c-0ac8-4b18-bb10-98e9f780055e&state=SDlZeVhNU1FGcXFsZFpQbkdzMWtSZ1hnZUJrbmNIQ2w4cmx5SjExcXVHdmt0%3B%257B%2522redirectURL%2522%253A%2522%252Fhome%2522%257D&redirect_uri=https%3A%2F%2Fshop.incora.com%2Fauth-redirect&scope=openid%20profile%20email%20offline_access%20https%3A%2F%2Flogin.incora.com%2Ff5c73591-4844-4350-93f0-2749ece220fb%2Fread&code_challenge=KQD9Norc_pz9XVNwHkZLrotLQE0a97RjuwaIIGO57Cw&code_challenge_method=S256&nonce=SDlZeVhNU1FGcXFsZFpQbkdzMWtSZ1hnZUJrbmNIQ2w4cmx5SjExcXVHdmt0&prompt=login: username=input#signInName, input#email password=input#password
+2026-11-05 16:44:50,844 INFO sourcing.vendors.generic: Login: submitting with button#next
+2026-11-05 16:44:53,633 INFO sourcing.vendors.web: Login submit: submitted; waiting up to 90s for the page
+2026-11-05 16:44:57,427 INFO sourcing.vendors.web: Login submit: page ready after 6.6s (https://login.incora.com/a42f291c-cd14-4967-9b76-39b8737608f1/b2c_1a_signup_signin_oauth_30m/oauth2/v2.0/authorize?response_type=code&client_id=ff03286c-0ac8-4b18-bb10-98e9f780055e&state=REg3SGtqejlISG5OWERveklHVDhIZWd6VXZkRktEQnRFS0ZnY05hNVROTkYw%3B%257B%257D&redirect_uri=https%3A%2F%2Fshop.incora.com%2Fauth-redirect&scope=openid%20profile%20email%20offline_access%20https%3A%2F%2Flogin.incora.com%2Ff5c73591-4844-4350-93f0-2749ece220fb%2Fread&code_challenge=mFPe36B3oQnkPWLjSIFIsBEjF5tl92XFfZyu6dLJgyw&code_challenge_method=S256&nonce=REg3SGtqejlISG5OWERveklHVDhIZWd6VXZkRktEQnRFS0ZnY05hNVROTkYw&prompt=login)
+2026-11-05 16:45:34,765 INFO sourcing.vendors.incora: Logout: tokens removed (there was no id token); B2C end-session
+2026-11-05 16:45:40,943 INFO sourcing.vendors.incora: Incora sign-in check at https://login.incora.com/a42f291c-cd14-4967-9b76-39b8737608f1/b2c_1a_signup_signin_oauth_30m/oauth2/v2.0/authorize?response_type=code&client_id=ff03286c-0ac8-4b18-bb10-98e9f780055e&state=UnhhNVlfUDFWdXRZTy1tcUxwZ2NfYn5RbmxBTWxpVUd1fnlIR0ZhU1l6Y2Rt%3B%257B%2522redirectURL%2522%253A%2522%252Fhome%2522%257D&redirect_uri=https%3A%2F%2Fshop.incora.com%2Fauth-redirect&scope=openid%20profile%20email%20offline_access%20https%3A%2F%2Flogin.incora.com%2Ff5c73591-4844-4350-93f0-2749ece220fb%2Fread&code_challenge=Xihcw0J1Si9NGgzmvuXshR3xSiGWjR_XsFPdOrpspMc&code_challenge_method=S256&nonce=UnhhNVlfUDFWdXRZTy1tcUxwZ2NfYn5RbmxBTWxpVUd1fnlIR0ZhU1l6Y2Rt&prompt=login: signed out
+2026-11-05 16:45:40,943 INFO sourcing.vendors.incora: Logout: signed out
+2026-11-05 16:45:40,969 INFO sourcing.auth: [incora___shared] Logout after the failed login: signed out
+2026-11-05 16:45:42,183 ERROR sourcing.pipeline: [incora___shared] Unexpected error
+Traceback (most recent call last):
+  File "/media/pragnakalpl19/projects1/Backup/sourcing-proto_share_2026-10-15/sourcing-proto/sourcing/pipeline.py", line 1018, in _process_account
+    handle = await self.auth.open_authenticated(adapter, cred, people)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/media/pragnakalpl19/projects1/Backup/sourcing-proto_share_2026-10-15/sourcing-proto/sourcing/auth/manager.py", line 133, in open_authenticated
+    await self.login(handle, adapter, cred, people)  # step 1
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/media/pragnakalpl19/projects1/Backup/sourcing-proto_share_2026-10-15/sourcing-proto/sourcing/auth/manager.py", line 202, in login
+    await self._attempt(adapter, handle, cred, aid, people)
+  File "/media/pragnakalpl19/projects1/Backup/sourcing-proto_share_2026-10-15/sourcing-proto/sourcing/auth/manager.py", line 276, in _attempt
+    await login_with_handoff(
+  File "/media/pragnakalpl19/projects1/Backup/sourcing-proto_share_2026-10-15/sourcing-proto/sourcing/auth/hitl.py", line 414, in login_with_handoff
+    await adapter.login(page, cred)
+  File "/media/pragnakalpl19/projects1/Backup/sourcing-proto_share_2026-10-15/sourcing-proto/sourcing/vendors/generic.py", line 518, in login
+    await self._login(page, cred)
+  File "/media/pragnakalpl19/projects1/Backup/sourcing-proto_share_2026-10-15/sourcing-proto/sourcing/vendors/generic.py", line 727, in _login
+    await self._after_submit(page, cred, totp_tried=False)
+  File "/media/pragnakalpl19/projects1/Backup/sourcing-proto_share_2026-10-15/sourcing-proto/sourcing/vendors/incora.py", line 373, in _after_submit
+    await super()._after_submit(page, cred, totp_tried=totp_tried, code_given=code_given)
+  File "/media/pragnakalpl19/projects1/Backup/sourcing-proto_share_2026-10-15/sourcing-proto/sourcing/vendors/generic.py", line 824, in _after_submit
+    state = await self._ask(lambda: self.extractor.classify_login_page(text, page.url))
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/media/pragnakalpl19/projects1/Backup/sourcing-proto_share_2026-10-15/sourcing-proto/sourcing/vendors/generic.py", line 201, in _ask
+    result, usage = await call()
+                    ^^^^^^^^^^^^
+  File "/media/pragnakalpl19/projects1/Backup/sourcing-proto_share_2026-10-15/sourcing-proto/sourcing/extract.py", line 786, in classify_login_page
+    data, usage = await self._client.json_call(
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/media/pragnakalpl19/projects1/Backup/sourcing-proto_share_2026-10-15/sourcing-proto/sourcing/llm/anthropic_client.py", line 40, in json_call
+    response = await self._client.beta.messages.create(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/media/pragnakalpl19/projects1/Backup/sourcing-proto_share_2026-10-15/sourcing-proto/.venv/lib/python3.11/site-packages/anthropic/resources/beta/messages/messages.py", line 3274, in create
+    return await self._post(
+           ^^^^^^^^^^^^^^^^^
+  File "/media/pragnakalpl19/projects1/Backup/sourcing-proto_share_2026-10-15/sourcing-proto/.venv/lib/python3.11/site-packages/anthropic/_base_client.py", line 2443, in post
+    return await self.request(cast_to, opts, stream=stream, stream_cls=stream_cls)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/media/pragnakalpl19/projects1/Backup/sourcing-proto_share_2026-10-15/sourcing-proto/.venv/lib/python3.11/site-packages/anthropic/_base_client.py", line 2003, in request
+    return await self._request(cast_to, options, stream=stream, stream_cls=stream_cls)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/media/pragnakalpl19/projects1/Backup/sourcing-proto_share_2026-10-15/sourcing-proto/.venv/lib/python3.11/site-packages/anthropic/_base_client.py", line 2106, in _request
+    raise self._make_status_error_from_response(response) from None
+anthropic.AuthenticationError: Error code: 401 - {'type': 'error', 'error': {'type': 'authentication_error', 'message': 'invalid x-api-key'}, 'request_id': 'req_011Cgjgi4diNTXscVwJDMCKe'}
+2026-11-05 16:45:43,271 INFO sourcing.pipeline: Row 61 MS21042L3 (Incora): -> FAILED | Unexpected error: AuthenticationError("Error code: 401 - {'type': 'error', 'error': {'type': 'authentication_error', 'message': 'invalid x-api-key'}, 'request_id': 'req_011Cgjgi4diNTXscVwJDMCKe'}")
+2026-11-05 16:45:43,293 INFO sourcing.pipeline: Row 62 MS24665-132 (Incora): -> FAILED | Unexpected error: AuthenticationError("Error code: 401 - {'type': 'error', 'error': {'type': 'authentication_error', 'message': 'invalid x-api-key'}, 'request_id': 'req_011Cgjgi4diNTXscVwJDMCKe'}")
+2026-11-05 16:45:43,306 INFO sourcing.pipeline: Row 63 MS35206-246 (Incora): -> FAILED | Unexpected error: AuthenticationError("Error code: 401 - {'type': 'error', 'error': {'type': 'authentication_error', 'message': 'invalid x-api-key'}, 'request_id': 'req_011Cgjgi4diNTXscVwJDMCKe'}")
+2026-11-05 16:45:43,321 INFO sourcing.pipeline: Row 64 MS3367-5-9 (Incora): -> FAILED | Unexpected error: AuthenticationError("Error code: 401 - {'type': 'error', 'error': {'type': 'authentication_error', 'message': 'invalid x-api-key'}, 'request_id': 'req_011Cgjgi4diNTXscVwJDMCKe'}")
+2026-11-05 16:45:43,338 INFO sourcing.pipeline: [incora___shared] Not saved (no sign-in / search confirmed them): password_input, username_input
+2026-11-05 16:45:43,947 INFO sourcing.sheets: Requests in 1V-S8J4bFqw1w_WvrsQjFqR4gNhPwFyd-YS_aF7CVqak: 63 data row(s), 0 to process (Status empty/NEW), skipped by Status: DONE=41, FAILED=8, NOT_FOUND=12, NOT_SOLD=2, rows without a part number: 0
+2026-11-05 16:45:43,977 INFO sourcing.pipeline: Vendor incora had no limits; saved the defaults (unconfirmed)
+2026-11-05 16:45:44,679 INFO sourcing.pipeline: Run summary: {'run_id': 'local-20261105-111411-0e58__aF7CVqak', 'rows_total': 4, 'counts': {'FAILED': 4}, 'llm': {'calls': 0, 'input_tokens': 0, 'output_tokens': 0, 'cache_read_tokens': 0, 'cost_usd': 0.0}, 'seconds': 89.6}
+2026-11-05 16:45:45,017 WARNING sourcing.notify: Chat webhook failed: HTTPStatusError("Client error '429 Too Many Requests' for url 'https://chat.googleapis.com/v1/spaces/AAQAasQ2lH0/messages?key=REDACTED&token=REDACTED'\nFor more information check: https://developer.mozilla.org/en-US/docs/Web/HTTP/Status/429")

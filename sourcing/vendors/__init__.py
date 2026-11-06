@@ -6,10 +6,12 @@ from __future__ import annotations
 from typing import Optional
 
 from .aar import AarAdapter
+from .aircraft_spruce import AircraftSpruceAdapter
 from .aviall import AviallAdapter
 from .base import VendorAdapter
 from .dasi import DasiAdapter
 from .generic import GenericAdapter
+from .incora import IncoraAdapter
 from .monroe import MonroeAdapter
 from .proponent import ProponentAdapter
 from .wencor import WencorAdapter
@@ -24,6 +26,8 @@ ADAPTER_TYPES: dict[str, type[VendorAdapter]] = {
     "wencor": WencorAdapter,
     "aar": AarAdapter,
     "monroe": MonroeAdapter,
+    "aircraft_spruce": AircraftSpruceAdapter,
+    "incora": IncoraAdapter,
 }
 
 # Vendors that work without a record (built before the registry), by the
@@ -40,6 +44,15 @@ ADAPTERS: dict[str, type[VendorAdapter]] = {
     "monroe": MonroeAdapter,
     "monroeaerospace": MonroeAdapter,
     "monroe_aerospace": MonroeAdapter,
+    "aircraft_spruce": AircraftSpruceAdapter,
+    "aircraftspruce": AircraftSpruceAdapter,
+    "aircraft_spruce_specialty": AircraftSpruceAdapter,
+    "aircraft_spruce_specialty_co": AircraftSpruceAdapter,
+    "spruce": AircraftSpruceAdapter,
+    "incora": IncoraAdapter,
+    "shop_incora": IncoraAdapter,
+    "wesco": IncoraAdapter,
+    "wesco_aircraft": IncoraAdapter,
 }
 
 
