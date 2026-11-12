@@ -76,6 +76,10 @@ def evaluate(current: dict, history: list[dict]) -> list[str]:
 
     `current` and each item of `history` are counter dicts (METRIC_FIELDS);
     `history` is the vendor's prior runs, this run excluded."""
+    # Runs too small to judge don't set "usual" either (2026-11-06: three 1-2 part
+    # test runs, all found, made Incora's usual not-found 0% instead of 53%, and a
+    # normal 9-part run was reported as a possible page change).
+    history = [h for h in history if h.get("parts", 0) >= MIN_PARTS]
     if current.get("parts", 0) < MIN_PARTS or len(history) < MIN_HISTORY:
         return []
 

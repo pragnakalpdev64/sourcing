@@ -1,7 +1,9 @@
 """Cloud Run service `sourcing-api`.
 
-  POST /trigger              Cloud Scheduler sweep -> register the caller's
-                              sheet (if it sent one) -> start the worker job
+  POST /trigger              the sheet's Apps Script (apps_script/) or the Cloud
+                              Scheduler sweep -> register the caller's sheet (if
+                              it sent one) -> start the worker job (or have the
+                              running one read the sheet again)
   GET  /hitl/code?t=...      2FA code form (link sent in Chat, auth/hitl.py)
   POST /hitl/code            the person's code -> store -> the waiting worker
   POST /chat/events          Chat app events: the code card's "Send code"
@@ -19,6 +21,10 @@ import hmac
 import html
 import logging
 import os
+import shlex
+import subprocess
+import sys
+import threading
 import uuid
 from urllib.parse import parse_qs
 
@@ -26,7 +32,8 @@ from fastapi import FastAPI, Header, HTTPException, Request
 from fastapi.responses import HTMLResponse
 
 from sourcing.config import get_settings, quiet_http_logs
-from sourcing.store import TRIGGER_LOCK, WORKER_LOCK, make_store
+from sourcing.store import (RERUN_FLAG, RERUN_HOLDER, RERUN_SECONDS, TRIGGER_LOCK,
+                            WORKER_LOCK, make_store)
 
 logger = logging.getLogger("sourcing.api")
 logging.basicConfig(level=logging.INFO)
@@ -80,6 +87,49 @@ def _start_job() -> str:
     return operation.metadata.name if operation.metadata else name
 
 
+# Local mode (TRIGGER_RUN_LOCAL=1): the worker is a child process of this API.
+# The file store keeps no locks between processes, so this process tracks its
+# own child and runs it once more when rows came in meanwhile.
+_local = {"proc": None, "again": False, "sheet_id": None}
+_local_lock = threading.Lock()
+
+
+def _start_local_job(sheet_id: str | None) -> str:
+    s = get_settings()
+    cmd = [sys.executable, "-m", "service.job_main", *shlex.split(s.trigger_local_args)]
+    if sheet_id:
+        cmd += ["--sheet", sheet_id]
+    root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    proc = subprocess.Popen(cmd, cwd=root)  # its log goes to this terminal
+    _local.update(proc=proc, again=False, sheet_id=sheet_id)
+    threading.Thread(target=_after_local_job, args=(proc,), daemon=True).start()
+    logger.info("Started local worker (pid %d): %s", proc.pid, " ".join(cmd))
+    return f"local-{proc.pid}"
+
+
+def _after_local_job(proc) -> None:
+    code = proc.wait()
+    with _local_lock:
+        if _local["proc"] is not proc:
+            return
+        logger.info("Local worker (pid %d) ended with %s", proc.pid, code)
+        _local["proc"] = None
+        if _local["again"]:
+            logger.info("Rows were added during the run: starting the worker again")
+            _start_local_job(_local["sheet_id"])
+
+
+def _trigger_local(sheet_id: str | None, registered: bool) -> dict:
+    with _local_lock:
+        proc = _local["proc"]
+        if proc is not None and proc.poll() is None:
+            _local["again"] = True
+            return {"started": False, "registered": registered, "rerun": True,
+                    "reason": "worker already running; it runs again when done"}
+        return {"started": True, "registered": registered,
+                "execution": _start_local_job(sheet_id)}
+
+
 @app.get("/healthz")
 def healthz() -> dict:
     return {"ok": True}
@@ -98,6 +148,11 @@ async def trigger(request: Request, x_trigger_secret: str = Header(default="")) 
         body = {}
     sheet_id = (body or {}).get("sheet_id")
 
+    if get_settings().trigger_run_local:
+        # Not registered: the local worker searches only this sheet (--sheet), and
+        # this process's copy of the file store would overwrite the worker's saves.
+        return _trigger_local(sheet_id, False)
+
     st = store()
     registered = False
     if sheet_id:
@@ -110,11 +165,16 @@ async def trigger(request: Request, x_trigger_secret: str = Header(default="")) 
         logger.info("Registered sheet %s", sheet_id)
 
     if st.is_locked(WORKER_LOCK):
-        # A run already in flight built its sheet list at startup, so a sheet
-        # registering just now won't be picked up until the next trigger/sweep.
-        return {"started": False, "registered": registered, "reason": "worker already running"}
+        # The running worker read its rows (and sheet list) when it started: it
+        # reads the sheets once more before it ends (job_main, RERUN_FLAG).
+        st.acquire_lock(RERUN_FLAG, RERUN_HOLDER, RERUN_SECONDS)
+        return {"started": False, "registered": registered, "rerun": True,
+                "reason": "worker already running"}
     if not st.acquire_lock(TRIGGER_LOCK, uuid.uuid4().hex, TRIGGER_DEBOUNCE_SECONDS):
-        return {"started": False, "registered": registered, "reason": "debounced (a run was just started)"}
+        # A job started seconds ago may already be past reading the sheet.
+        st.acquire_lock(RERUN_FLAG, RERUN_HOLDER, RERUN_SECONDS)
+        return {"started": False, "registered": registered, "rerun": True,
+                "reason": "debounced (a run was just started)"}
 
     execution = _start_job()
     logger.info("Started worker execution %s", execution)

@@ -145,6 +145,35 @@ async def test_rule_4_incoming_delivery_is_the_soonest_date():
     assert rfq["Delivery"] == _days_to(date(2099, 12, 6), row)
 
 
+# Team, 2026-11-06: less on hand than asked, the rest due in -> the quantity asked,
+# Delivery = days to the date it is complete (on hand + deliveries up to that day).
+SHORT_DUE = Offer(part_number="P1", price="825.06", currency="USD", qty_available="5",
+                  condition="FN", lead_time="In stock (203 days if out of stock)",
+                  price_breaks=[("1", "9", "825.06"), ("10", "", "800.00")],
+                  warehouses=("Warehouse: Netherlands\nQty on hand: 5\n"
+                              f"Next day in: {FAR}\nQty due in: 1\n"
+                              "Next day in: Dec 7, 2099\nQty due in: 6\n"
+                              "Next day in: Dec 7, 2099\nQty due in: 4"))
+
+
+@pytest.mark.asyncio
+async def test_rule_4_short_stock_delivery_is_the_date_the_asked_quantity_is_complete():
+    row, rfq = await _line(SHORT_DUE, qty="12")   # 5 + 1 (Dec 6) = 6; + 10 (Dec 7) = 16
+    assert rfq["Delivery"] == _days_to(date(2099, 12, 7), row)
+    assert rfq["Qty Quoted"] == rfq["Quantity Requested"] == "12"
+    assert rfq["Unit Price"] == "800.00"                  # priced for the 12 quoted
+    row, rfq = await _line(SHORT_DUE, qty="6")    # complete on the first date
+    assert rfq["Delivery"] == _days_to(date(2099, 12, 6), row) and rfq["Qty Quoted"] == "6"
+
+
+@pytest.mark.asyncio
+async def test_rule_4_short_stock_never_completed_or_enough_on_hand_as_before():
+    _, rfq = await _line(SHORT_DUE, qty="50")     # 5 + 11 never reach 50: the stock, now
+    assert rfq["Delivery"] == "0" and rfq["Qty Quoted"] == "5"
+    _, rfq = await _line(SHORT_DUE, qty="3")      # on hand covers it
+    assert rfq["Delivery"] == "0" and rfq["Qty Quoted"] == "5"
+
+
 @pytest.mark.asyncio
 async def test_rule_4_nothing_incoming_uses_the_lead_time_and_says_fob():
     # 406Q80-1 (client, 2026-10-27).

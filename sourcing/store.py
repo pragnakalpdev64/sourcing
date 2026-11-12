@@ -18,6 +18,13 @@ from typing import Any, Optional
 
 WORKER_LOCK = "worker"    # held by the running Cloud Run Job
 TRIGGER_LOCK = "trigger"  # short debounce for /trigger
+# Set by /trigger when rows came in while a worker was running (or just started):
+# that worker read its rows at the start, so it reads the sheet once more before
+# it ends instead of leaving them for the next sweep. Kept as a lock so Firestore
+# and the memory store need nothing new.
+RERUN_FLAG = "rerun"
+RERUN_HOLDER = "requested"
+RERUN_SECONDS = 3600
 
 
 def _lease_is_free(doc: Optional[dict], holder: str, now: float,

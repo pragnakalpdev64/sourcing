@@ -31,8 +31,13 @@ registry. Commands and flags: [COMMANDS.md](../COMMANDS.md).
 
 ## 1. Trigger (`service/api.py`)
 
-- `POST /trigger` needs header `X-Trigger-Secret`. The Scheduler sweep sends no body. There is no
-  Apps Script in the sheet, so new rows wait for the next sweep.
+- `POST /trigger` needs header `X-Trigger-Secret`. The Scheduler sweep sends no body. The sheet's
+  Apps Script (`apps_script/Code.gs`, 2026-11-06) sends `{sheet_id, label, requests_tab}` once the
+  Requests tab has had no edits for 90s.
+- A call while a worker runs (or seconds after one started) sets `RERUN_FLAG`: the worker clears it
+  when a pass starts and, if it was set again meanwhile, reads the sheets once more (at most 5 passes).
+- `TRIGGER_RUN_LOCAL=1` (local testing through ngrok only): the worker runs as a child process of
+  the API with `TRIGGER_LOCAL_ARGS` and `--sheet <caller>`; the sheet isn't registered.
 - Sheets join through `scripts/manage_sheets.py add <id>` (store `sheets` collection), no
   redeploy. A caller that sends `{sheet_id, label}` to `/trigger` registers that sheet too.
 - If a worker is already running (`WORKER_LOCK`) or a run was started seconds ago (`TRIGGER_LOCK`
@@ -318,9 +323,10 @@ Timeouts: 300s per single search, 600s per bulk batch; 60s per page action (Proc
      10)` below the vendor's minimum (not "QUOTED": Qty Quoted is the stock, or out of stock what's due in / the quantity asked);
      `MOQ 50` for a stated MOQ that's met; every warehouse with stock after `STK`, joined with
      ` / ` (a warehouse showing 0 is left out; `OUT OF STOCK` when all show 0, 2026-10-23). Below it one sub-point per warehouse with its stock (`◦ BREA, CA:
-     7915 ON HAND`), plus incoming stock only for a line not in stock (`, NEXT IN MAY 20, 2027:
-     200`; deliveries on the same date are one entry, added up, 2026-10-26): no restock lead
-     time for in-stock lines. Out of stock with nothing due in and a lead time, the client's own
+     7915 ON HAND`), plus its incoming stock, in stock or not (`, NEXT IN MAY 20, 2027:
+     200`; deliveries on the same date are one entry, added up, 2026-10-26; in-stock lines again
+     since 2026-11-06, 416F25-4). An in-stock line never gets the restock lead time ("53 days if
+     out of stock"). Out of stock with nothing due in and a lead time, the client's own
      line instead (2026-10-27, 406Q80-1): `• 336 DAY LEAD TIME, FOB: NETHERLANDS` (every
      warehouse after FOB, joined with ` / `), the MOQ point below it. Order limits stay in the
      Warehouses column.

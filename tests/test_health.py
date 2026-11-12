@@ -105,3 +105,14 @@ def test_store_keeps_capped_history_newest_last():
     runs = store.get_vendor_health("proponent")
     assert [r["run_id"] for r in runs] == ["r2", "r3", "r4"]
     assert store.get_vendor_health("unknown") == []
+
+
+def test_tiny_runs_do_not_set_the_usual_rate():
+    # 2026-11-06, Incora: two 17-part runs at 53% not found, then three 1-2 part test
+    # runs all found; a 9-part run at 78% is not a page change.
+    history = [metrics(parts=17, not_found=9), metrics(parts=17, not_found=9),
+               metrics(parts=17, not_found=9),
+               metrics(parts=1), metrics(parts=1), metrics(parts=2)]
+    assert health.evaluate(metrics(parts=9, not_found=7), history) == []
+    # too few big runs left to judge: no warning either way
+    assert health.evaluate(metrics(parts=9, not_found=9), history[1:]) == []

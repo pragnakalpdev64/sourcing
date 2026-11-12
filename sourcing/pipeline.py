@@ -28,7 +28,7 @@ from .credentials.base import (
 )
 from .models import (
     POINTER_PRICE, AccountState, LlmUsage, Offer, RequestRow, ResultRow, RowStatus, SearchOutcome,
-    account_id, lead_time_days, rfq_delivery, rfq_quote, soonest_due_in, uom_code,
+    account_id, complete_by, lead_time_days, rfq_delivery, rfq_quote, soonest_due_in, uom_code,
 )
 from .limits import DEFAULT_LIMITS, LimitReached, VendorLimiter
 from .sinks.sheet import QUOTA_RETRIES, QUOTA_WAIT, RETRY_DELAYS, over_quota
@@ -351,6 +351,10 @@ def price_qty(offer: Offer, qty_needed: Optional[str]) -> float:
     Not Qty Quoted, which is the whole stock (models.rfq_quote)."""
     need = priced_qty(offer, qty_needed) or _number(qty_needed) or 1
     stock = _stock(offer.qty_available)
+    # Less on hand than asked, the rest due in: quoted for the quantity asked
+    # (models.complete_by, team 2026-11-06), so priced for it too.
+    if complete_by(stock, need, offer.warehouses or ""):
+        return need
     return min(need, stock) if stock is not None else need
 
 
@@ -467,9 +471,12 @@ def stock_note(offer: Offer, qty_needed: Optional[str], *, priced: bool, stocked
     """First point: the MOQ and where the stock is, as the client writes it
     ("MOQ 22 FOR THIS PRICE BREAK, STK BREA, CA"; every warehouse with stock,
     joined with " / "; "OUT OF STOCK" when every warehouse shows 0), then one
-    sub-point per warehouse with its quantity on hand. Incoming
-    stock only for a line that isn't in stock; for an in-stock line the client
-    wants no restock lead time in the comments (2026-10-23). Out of stock with
+    sub-point per warehouse with its quantity on hand and its incoming stock,
+    one entry per date (same date added up), in stock or not: the old Results
+    comment listed them for every line, and the team still wants them
+    (2026-11-06, 416F25-4: 5 on hand, Nov 25 10, Nov 27 1 + 6 -> two entries).
+    What an in-stock line leaves out is the restock lead time ("53 days if out
+    of stock", client 2026-10-23); that is never written here. Out of stock with
     nothing due in, the client's own line instead (2026-10-27, 406Q80-1):
     "336 DAY LEAD TIME, FOB: NETHERLANDS", the MOQ below it. Order limits stay
     in the Warehouses column."""
@@ -491,8 +498,7 @@ def stock_note(offer: Offer, qty_needed: Optional[str], *, priced: bool, stocked
     lines = [f"{POINT}{head}".upper()]
     for name, qty, incoming in stock:
         parts = [f"{qty} ON HAND"] if qty else []
-        if not stocked:
-            parts += [f"NEXT IN {d}{': ' + q if q else ''}" for d, q in _by_date(incoming)]
+        parts += [f"NEXT IN {d}{': ' + q if q else ''}" for d, q in _by_date(incoming)]
         if parts:
             lines.append(f"{SUB_POINT}{name}: {', '.join(parts)}".upper())
     return "\n".join(lines)
@@ -1333,8 +1339,13 @@ class Pipeline:
             raise SessionExpired("Auth probe failed after a bulk search with missing parts")
         share = usage.cost_usd / len(batch)
         seconds = round(time.time() - started, 1)
-        logger.info("Bulk search: %d found, %d not found, %.1fs, LLM %d call(s) $%.4f",
-                    len(batch) - len(missing), len(missing), seconds, usage.calls, usage.cost_usd)
+        # "Answered" includes the vendor's own "not found" (Incora's × Stock Not Found);
+        # "no answer" is a part the results page didn't mention at all.
+        logger.info("Bulk search: %d of %d part(s) answered by the page (%d with offers), "
+                    "%d with no answer, %.1fs, LLM %d call(s) $%.4f",
+                    len(batch) - len(missing), len(batch),
+                    sum(1 for o in outcomes.values() if getattr(o, "offers", None)),
+                    len(missing), seconds, usage.calls, usage.cost_usd)
         # Every part's lines and status collected, then saved in one go: 3 sheet
         # writes for the batch (Results, RFQ tab, statuses).
         self._batch_results, self._batch_statuses = [], []
@@ -1390,7 +1401,7 @@ class Pipeline:
             logger.info("Row %d offer: pn=%s price=%s %s qty=%s cond=%s lead=%s%s", row.sheet_row,
                         offer.part_number, offer.price, offer.currency or "",
                         offer.qty_available, offer.condition, offer.lead_time,
-                        f" | removed: {offer.review}" if offer.review else "")
+                        f" | flags: {offer.review}" if offer.review else "")
         if outcome.not_sold:
             await self._record_not_sold(adapter, row, outcome, timing)
             return

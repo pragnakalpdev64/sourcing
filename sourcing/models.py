@@ -275,6 +275,8 @@ def rfq_quote(row: "ResultRow") -> dict[str, str]:
     (2026-10-27, substitute 426EN9-8: the page shows none for it). Otherwise it is "Outright" (the deal type; our vendors
     only sell outright) and Qty Quoted is:
     - in stock: the site's whole stock (client, 2026-10-23);
+    - less on hand than asked, and the deliveries shown complete it: the
+      quantity asked, Delivery = days to that date (team, 2026-11-06);
     - out of stock with stock due in: what comes in on the soonest date, all
       deliveries that day added up (2026-10-27: 4140073-1, 75 on Dec 7, 2026
       and 200 on Jul 26, 2027 -> 75; 418-09104, 1 + 3 + 3 on one date -> 7);
@@ -299,9 +301,13 @@ def rfq_quote(row: "ResultRow") -> dict[str, str]:
         return {"Condition Quoted": row.condition if known else "-",
                 "Qty Quoted": _qty_str(due), "Type Quoted": "No Quote", "Unit Price": "0"}
     asked = _number(row.qty_needed) or 1          # Qty Needed empty = 1
-    need = max(asked, _number(row.min_order_qty) or _number(row.moq) or 0)
+    need = quote_need(row)
     if stock == 0:
         qty = due or asked
+    elif complete_by(stock, need, row.warehouses):
+        # Less on hand than asked, the rest due in: the quantity asked, by the
+        # date it is complete (rfq_delivery) (team, 2026-11-06).
+        qty = need
     else:
         qty = stock if stock is not None else need
     unit = row.quote_price if _number(row.quote_price) is not None else row.price
@@ -388,6 +394,40 @@ def soonest_due_in(warehouses: str) -> tuple[Optional[date], Optional[float]]:
     return first, sum(q for d, q in dated if d == first)
 
 
+def quote_need(row: "ResultRow") -> float:
+    """The quantity a line is quoted for: the customer's (empty = 1), or the
+    vendor's minimum when less is asked."""
+    asked = _number(row.qty_needed) or 1
+    return max(asked, _number(row.min_order_qty) or _number(row.moq) or 0)
+
+
+def complete_by(stock: Optional[float], need: float, warehouses: str) -> Optional[date]:
+    """Some stock on hand but less than `need`: the first due date on which the
+    stock plus everything due in up to that day (all warehouses, same dates
+    added up) reaches `need` (team, 2026-11-06: 12 asked, 5 on hand, 10 due
+    Nov 25 -> Nov 25). None when the stock covers it, nothing is on hand, or the
+    deliveries shown never do (the line is then quoted as before: its stock, now)."""
+    if not stock or stock <= 0 or stock >= need:
+        return None
+    per_day: dict[date, float] = {}
+    for when, qty in due_in(warehouses):
+        if when:
+            per_day[when] = per_day.get(when, 0) + qty
+    total = stock
+    for when in sorted(per_day):
+        total += per_day[when]
+        if total >= need:
+            return when
+    return None
+
+
+def _quoted_on(row: "ResultRow") -> Optional[date]:
+    try:
+        return date.fromisoformat(row.fetched_at[:10])
+    except ValueError:
+        return None
+
+
 # "3-5 weeks" -> 35: the larger end of a range, times 7 for weeks and 30 for months.
 _LEAD = re.compile(r"(\d+)(?:\s*(?:-|to)\s*(\d+))?\s*(business\s+)?(day|week|month)s?\b",
                    re.IGNORECASE)
@@ -411,15 +451,18 @@ def rfq_delivery(row: "ResultRow") -> str:
     with stock due in, the days from the quote date to the soonest delivery
     (client, 2026-10-27: 4140073-1 quoted Oct 26, 75 due Dec 7 -> 42); else the
     line's lead time (2026-10-23). A soonest date already past, or no quote
-    date, falls back to the lead time."""
+    date, falls back to the lead time. Less on hand than asked, the rest due
+    in: the days to the date the quantity asked is complete (complete_by; team,
+    2026-11-06), at least the vendor's own in-stock time (Incora's 7)."""
+    quoted = _quoted_on(row)
     if _out_of_stock(row):
         first, _ = soonest_due_in(row.warehouses)
-        try:
-            quoted = date.fromisoformat(row.fetched_at[:10])
-        except ValueError:
-            quoted = None
         if first and quoted and first >= quoted:
             return str((first - quoted).days)
+    else:
+        when = complete_by(_number(row.qty_available), quote_need(row), row.warehouses)
+        if when and quoted and when >= quoted:
+            return str(max((when - quoted).days, int(_number(row.delivery) or 0)))
     lead = (row.delivery or row.lead_time or "").strip()
     if not lead:
         stock = _number(row.qty_available)

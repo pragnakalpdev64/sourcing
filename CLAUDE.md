@@ -41,7 +41,7 @@ layout; the `Results` tab too only with `--results`, 2026-10-29).
 | 0 GCP setup | `infra/setup_gcp.sh` + `scripts/check_access.py` ready, not run in the client project |
 | 1 Skeleton on Cloud Run | Done in code (Dockerfile, cloudbuild.yaml, `--dummy`); not deployed |
 | 2 Proponent search | **Done and tested on the real portal** (see `test_runs/`): login, direct-URL search, jqGrid reading, extraction, verification, Results writing, per-row cost |
-| 3 Automatic trigger | `/trigger` + Cloud Scheduler sweep (no Apps Script in the sheet); not deployed |
+| 3 Automatic trigger | `/trigger` + Cloud Scheduler sweep; not deployed. **Apps Script back (2026-11-06)**: `apps_script/Code.gs` calls `/trigger` after 90s without edits, fills Requested By; rows added during a run → the worker reads the sheet again (`RERUN_FLAG`, at most 5 passes); `TRIGGER_RUN_LOCAL=1` runs the worker on this machine for testing through ngrok. Tested with mocks and a local dummy run, not yet from a real sheet |
 | 4 Session robustness | Partly: expiry detection, re-login once, NOT_FOUND only after auth probe, leases, login cap. Missing: morning warm-up, session-lifetime measurement |
 | 5 Human 2FA handoff | TOTP typed automatically. **Chat handoff built (2026-10-22, generic adapter, `auth/hitl.py`)**: Live View link in Chat, the person logs in, run carries on (Browserbase, or local DevTools with `--live-view`); fallback code form `/hitl/code`; Chat-app card (`/chat/events`) waits for the client's Chat app. Tested on Notion 2026-10-22: Browserbase Live View OK, local live view OK, code form OK; Notion's logout (in a menu) not found. `/hitl/view` (sign-in check in front of the link) not built. **Logout handoff (2026-11-02)**: logout not confirmed after 2 tries → requesters get the Live View link to log out by hand (an open session blocks the team's sign-in elsewhere); checked in a second tab; tested with mocks only |
 | 6 Credential update form | **Built 2026-10-23, tested with fakes only**: `/credentials` behind Google OAuth sign-in → pick vendor → pick a login you may change (own / shared as editor / admin) → new Secret Manager version; Chat link after a wrong password; `scripts/manage_logins.py`. Needs the client's OAuth client + admin list (`docs/CREDENTIAL_UPDATE_UI_PLAN.md`). 2026-10-28: admins add a login (`/credentials/new`, secret created with the admin's own Google access) and choose a shared login's editors (`/credentials/editors`); creating tested locally on the real Secret Manager 2026-10-28 (as the developer's gcloud login), Google consent step not yet |
@@ -83,7 +83,8 @@ sourcing/            the library
   sheets.py            Google Sheets / local .xlsx backends
   store.py             Firestore / file / memory store
   sinks/, notify/      Results writer, Google Chat
-service/api.py       FastAPI: /trigger, 2FA code form (+ 501 stubs)
+service/api.py       FastAPI: /trigger (+ run-again flag, TRIGGER_RUN_LOCAL), 2FA code form (+ 501 stubs)
+apps_script/         the sheet's Apps Script (Code.gs: row added -> /trigger) + setup/ngrok steps
 service/web_auth.py, credentials_ui.py   Google sign-in + vendor login update page (/credentials)
 service/job_main.py  worker entrypoint
 infra/, cloudbuild.yaml, Dockerfile   deploy
@@ -106,8 +107,9 @@ Full command and flag reference: `COMMANDS.md`.
 ```
 
 - Local runs: `STORE_BACKEND=file`, `SHEET_ID=<file>.xlsx` or a Google Sheet id (gcloud login
-  with the Sheets scope). `--dummy` needs no keys. LLM model/effort only from `.env`. No Apps Script in the sheet (removed
-  2026-10-14): new rows are found by the Scheduler sweep, sheets join via `manage_sheets.py add`.
+  with the Sheets scope). `--dummy` needs no keys. LLM model/effort only from `.env`. Apps Script in the sheet (removed
+  2026-10-14, back 2026-11-06: `apps_script/README.md`, local test through ngrok) calls `/trigger`; the Scheduler sweep
+  stays as backstop; sheets join via `manage_sheets.py add` or the script's first call.
 - A local run searches only `SHEET_ID`; the registry (`manage_sheets.py`) is used only with
   `--all-sheets`, which the Cloud Run job passes. Bulk search by default, `--one-by-one` for per part.
 - Real runs so far used `VENDOR_SECRET_OVERRIDES=sourcing-vendor-proponent=sourcing-vendor-test`.

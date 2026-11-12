@@ -45,7 +45,7 @@ import re
 import time
 from pathlib import Path
 from typing import Optional
-from urllib.parse import parse_qsl, urlencode, urlsplit, urlunsplit
+from urllib.parse import parse_qsl, quote, urlencode, urlsplit, urlunsplit
 
 from playwright.async_api import TimeoutError as PlaywrightTimeoutError
 
@@ -98,6 +98,9 @@ DETAILS_WAIT_SECONDS = 45
 # warehouse dropdown is changed, and the most dropdown changes per page.
 WAREHOUSE_SWITCH_SECONDS = 8
 WAREHOUSE_SWITCHES_MAX = 60
+# Longest wait for one click on the warehouse dropdown. Run 2026-11-06 15:06: each
+# click waited the whole 60s action timeout (x6, ~7 of the run's 9 minutes).
+WAREHOUSE_CLICK_MS = 8_000
 # Procart's empty results grid (vendor config no_results_text overrides). Seen
 # 2026-10-14 for an in-stock part that showed its results 70 minutes later.
 NO_RESULTS_TEXT = "No data found"
@@ -353,28 +356,164 @@ _HIDE_SUGGESTIONS_JS = """
 # in page order. A result row shows the numbers of the selected warehouse only
 # (4066-0014, 2026-10-27: Brea, CA 17 shown, Singapore's 5 only after picking
 # it; the row's quantity, 22, is both together).
-_MARK_WAREHOUSE_SELECTS_JS = """
-() => {
-  const out = [];
-  let i = 0;
-  for (const s of document.querySelectorAll('select')) {
-    const opts = Array.from(s.options);
-    if (opts.length < 2 || !opts.every(o => /^warehouse:/i.test(o.text.trim()))) continue;
-    if (s.closest('[data-sourcing-drop]')) continue;
-    s.setAttribute('data-sourcing-whs', String(i));
-    out.push({index: i, done: s.hasAttribute('data-sourcing-whs-done'), selected: s.value,
-              options: opts.map(o => ({value: o.value, text: o.text.trim()}))});
-    i++;
-  }
-  return out;
+#
+# Picking a warehouse redraws the dropdown: the page puts a new <select> in, without
+# our mark (run 2026-11-06 15:06: the pick went through, the second pass found
+# Singapore selected, but the marked select was gone, so every read of "its row"
+# came back empty and all 16 picks were counted as failed). So dropdown i is found
+# again, by its place on the page, every time it is used (_FIND_WAREHOUSE_SELECT).
+_FIND_WAREHOUSE_SELECT = """
+  const whsAll = () => Array.from(document.querySelectorAll('select')).filter(s => {
+    const o = Array.from(s.options);
+    return o.length >= 2 && o.every(x => /^warehouse:/i.test(x.text.trim()))
+           && !s.closest('[data-sourcing-drop]');
+  });
+  const whs = (i) => {
+    const s = whsAll()[i];
+    document.querySelectorAll(`[data-sourcing-whs="${i}"]`).forEach(e => {
+      if (e !== s) e.removeAttribute('data-sourcing-whs'); });
+    if (s) s.setAttribute('data-sourcing-whs', String(i));
+    return s || null;
+  };
+"""
+
+# Done: our rows are already below its row (the done mark is lost when it's redrawn).
+_MARK_WAREHOUSE_SELECTS_JS = "() => {" + _FIND_WAREHOUSE_SELECT + """
+  return whsAll().map((s, i) => {
+    whs(i);
+    const row = s.closest('tr');
+    const next = row && row.nextElementSibling;
+    return {index: i, selected: s.value,
+            done: s.hasAttribute('data-sourcing-whs-done')
+                  || !!(next && next.hasAttribute('data-sourcing-wh-extra')),
+            options: Array.from(s.options).map(o => ({value: o.value, text: o.text.trim()}))};
+  });
 }
 """
 
+# Every warehouse of a result without touching its dropdown: the page fills each
+# result's warehouse table from this address (its own script, debug_pages/
+# 20261104-175506-bulk.html: subgrid url "/Handlers/PartSearchHandler.ashx?PartNo="
+# + cust_part; fields DisplayName, Item_site, WhsQty, Due_date, TotQty). Read-only,
+# the same GET the page sends when a row opens; fetched inside the signed-in page.
+# The dropdown is clicked only for a warehouse this data doesn't give.
+WAREHOUSE_DATA_URL = ("/Handlers/PartSearchHandler.ashx?PartNo={part}"
+                      "&_search=false&rows=100&page=1&sidx=&sord=asc")
+_FETCH_TEXT_JS = """
+async (url) => {
+  const r = await fetch(url, {credentials: 'same-origin', headers: {
+    'Accept': 'application/json, text/javascript, */*; q=0.01',
+    'X-Requested-With': 'XMLHttpRequest'}});
+  return {status: r.status, type: r.headers.get('content-type') || '',
+          text: (await r.text()).slice(0, 300000)};
+}
+"""
+_WH_NAME_KEYS = ("DisplayName", "WarehouseName", "Warehouse_name", "Warehouse", "warehouseName")
+_WH_ONHAND_KEYS = ("WhsQty", "QtyOnHand", "Qty_on_hand", "OnHand")
+
+
+def _wh_name(rec: dict) -> str:
+    for k in _WH_NAME_KEYS:
+        v = rec.get(k)
+        if isinstance(v, str) and v.strip():
+            return re.sub(r"<[^>]+>", "", v).strip()
+    return ""
+
+
+# The same rows as cell lists (jqGrid's default reply, {"rows": [{"id", "cell": [...]}]}),
+# in the warehouse table's column order (its colModel: "", "h", DisplayName, "", "",
+# "", Due_date, TotQty, WhsQty, ...); the page's formatter reads rowObject[6] then.
+_WH_CELL_FIELDS = {2: "DisplayName", 6: "Due_date", 7: "TotQty", 8: "WhsQty"}
+
+
+def _wh_record(x) -> Optional[dict]:
+    """One warehouse row as named fields, whichever form the reply uses."""
+    cells = x.get("cell") if isinstance(x, dict) and isinstance(x.get("cell"), list) else (
+        x if isinstance(x, list) else None)
+    if cells is not None:
+        if len(cells) <= 8 or not isinstance(cells[2], str):
+            return None
+        rec = {name: cells[k] for k, name in _WH_CELL_FIELDS.items()}
+        rec["DisplayName"] = re.sub(r"<[^>]+>", "", rec["DisplayName"] or "")
+        return rec if _wh_name(rec) else None
+    return x if isinstance(x, dict) and _wh_name(x) else None
+
+
+def _warehouse_records(data) -> list[dict]:
+    """The first list of warehouse-like records anywhere in the handler's JSON
+    (ASP.NET may wrap it in "d", sometimes as a JSON string)."""
+    if isinstance(data, str):
+        t = data.strip()
+        if not t[:1] in ("[", "{"):
+            return []
+        try:
+            data = json.loads(t)
+        except ValueError:
+            return []
+    if isinstance(data, list):
+        recs = [r for r in (_wh_record(x) for x in data) if r]
+        if recs:
+            return recs
+        items = data
+    elif isinstance(data, dict):
+        items = list(data.values())
+    else:
+        return []
+    for x in items:
+        found = _warehouse_records(x)
+        if found:
+            return found
+    return []
+
+
+def _wh_list(value) -> list[str]:
+    """A field that is a list, or one string with <br> between entries."""
+    if value is None:
+        return []
+    if isinstance(value, list):
+        return ["" if v is None else str(v).strip() for v in value]
+    return [x.strip() for x in re.split(r"<br\s*/?>|\n", str(value))]
+
+
+def _wh_number(value) -> str:
+    """'17.0000' -> '17', '1,234' -> '1234' (the page shows whole numbers)."""
+    t = str(value if value is not None else "").replace(",", "").strip()
+    try:
+        f = float(t)
+    except ValueError:
+        return t
+    return str(int(f)) if f == int(f) else t
+
+
+def _wh_date(value: str) -> str:
+    """'11/26/2026' (or with a time) -> 'Nov 26, 2026', as the page writes it
+    (its formatDueDate); anything else as given."""
+    m = re.match(r"^\s*(\d{1,2})/(\d{1,2})/(\d{4})", value or "")
+    if not m:
+        return (value or "").strip()
+    months = "Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec".split()
+    mo, day, year = int(m.group(1)), int(m.group(2)), m.group(3)
+    return f"{months[mo - 1]} {day}, {year}" if 1 <= mo <= 12 else value.strip()
+
+
+def _warehouse_values(rec: dict) -> list[str]:
+    """[date next in, qty due in, qty on hand] the way the warehouse row shows
+    them: one line per due date, its quantity beside it."""
+    dates = _wh_list(rec.get("Due_date"))
+    qtys = _wh_list(rec.get("TotQty"))
+    pairs = [(_wh_date(d), _wh_number(qtys[k]) if k < len(qtys) else "")
+             for k, d in enumerate(dates) if d]
+    onhand = next((rec[k] for k in _WH_ONHAND_KEYS if rec.get(k) not in (None, "")), "")
+    return ["\n".join(d for d, _ in pairs), "\n".join(q for _, q in pairs), _wh_number(onhand)]
+
+
+# Mark dropdown i again before a locator or the page assist looks for it.
+_MARK_ONE_WAREHOUSE_JS = "(i) => {" + _FIND_WAREHOUSE_SELECT + " return !!whs(i); }"
+
 # Pick a warehouse the way the page's own dropdown does: set the hidden select
 # and fire its change event (React tracks the value, hence the native setter).
-_SWITCH_WAREHOUSE_JS = """
-([i, value]) => {
-  const s = document.querySelector(`[data-sourcing-whs="${i}"]`);
+_SWITCH_WAREHOUSE_JS = "([i, value]) => {" + _FIND_WAREHOUSE_SELECT + """
+  const s = whs(i);
   if (!s) return false;
   Object.getOwnPropertyDescriptor(HTMLSelectElement.prototype, 'value').set.call(s, value);
   s.dispatchEvent(new Event('input', {bubbles: true}));
@@ -396,9 +535,8 @@ WAREHOUSE_OPTION = "[role='option'][data-value='{value}']"
 
 # The part a marked warehouse dropdown belongs to: the result row above the
 # dropdown's detail row (its customer-part cell).
-_WAREHOUSE_PART_JS = """
-(i) => {
-  const s = document.querySelector(`[data-sourcing-whs="${i}"]`);
+_WAREHOUSE_PART_JS = "(i) => {" + _FIND_WAREHOUSE_SELECT + """
+  const s = whs(i);
   const block = s && s.closest('td[colspan]');
   const tr = block && block.closest('tr');
   const prev = tr && tr.previousElementSibling;
@@ -410,9 +548,8 @@ _WAREHOUSE_PART_JS = """
 # The marked dropdown's warehouse row: Date Next In, Qty Due In and Qty On Hand
 # (found by their headings), how many cells it has, and the warehouse named by
 # the result's "Details for Warehouse: ..." when its details are open.
-_READ_WAREHOUSE_ROW_JS = """
-(i) => {
-  const s = document.querySelector(`[data-sourcing-whs="${i}"]`);
+_READ_WAREHOUSE_ROW_JS = "(i) => {" + _FIND_WAREHOUSE_SELECT + """
+  const s = whs(i);
   const row = s && s.closest('tr');
   if (!row) return null;
   const cells = Array.from(row.children).filter(c => c.tagName === 'TD');
@@ -431,9 +568,8 @@ _READ_WAREHOUSE_ROW_JS = """
 # Add the other warehouses' numbers below the marked dropdown's row, one row
 # each as the page lays them out ("Warehouse: Singapore", dates, due in, on
 # hand), and mark the dropdown done so a second pass leaves it alone.
-_ADD_WAREHOUSE_ROWS_JS = """
-([i, rows, cols, width]) => {
-  const s = document.querySelector(`[data-sourcing-whs="${i}"]`);
+_ADD_WAREHOUSE_ROWS_JS = "([i, rows, cols, width]) => {" + _FIND_WAREHOUSE_SELECT + """
+  const s = whs(i);
   const row = s && s.closest('tr');
   if (!row) return 0;
   s.setAttribute('data-sourcing-whs-done', '1');
@@ -1835,6 +1971,9 @@ class ProponentAdapter(VendorAdapter):
             return
         switches = added = 0
         missed = []
+        # Rows are added once every dropdown is done: a pick redraws its part of the
+        # page, which could take rows added earlier with it.
+        pending: list[tuple[int, list, list, int]] = []
         for s in selects:
             i = s["index"]
             part = ""
@@ -1845,14 +1984,19 @@ class ProponentAdapter(VendorAdapter):
                 if not shown:
                     continue
                 others = [o for o in s["options"] if o["value"] != s["selected"]]
-                if switches + len(others) > WAREHOUSE_SWITCHES_MAX:
+                first = next((o["text"] for o in s["options"] if o["value"] == s["selected"]), "")
+                data = await self._warehouse_data(page, part, s, shown) or {}
+                rows = [{"name": o["text"], "values": data[o["value"]]}
+                        for o in others if o["value"] in data]
+                to_click = [o for o in others if o["value"] not in data]
+                if switches + len(to_click) > WAREHOUSE_SWITCHES_MAX:
                     logger.warning("Results: more than %d warehouse changes; the rest show the "
                                    "selected warehouse only", WAREHOUSE_SWITCHES_MAX)
-                    self._gap(part, [o["text"] for o in others])
+                    self._gap(part, [o["text"] for o in to_click])
+                    if rows:
+                        pending.append((i, rows, shown["cols"], shown["width"]))
                     break
-                first = next((o["text"] for o in s["options"] if o["value"] == s["selected"]), "")
-                rows = []
-                for o in others:
+                for o in to_click:
                     switches += 1
                     name = re.sub(r"^warehouse:\s*", "", o["text"], flags=re.IGNORECASE)
                     now = await self._pick_warehouse(
@@ -1865,24 +2009,82 @@ class ProponentAdapter(VendorAdapter):
                     else:
                         missed.append(o["text"])
                         self._gap(part, [o["text"]])
-                if others and not await self._pick_warehouse(
+                if to_click and not await self._pick_warehouse(
                         page, i, s["selected"], lambda r: r["values"] == shown["values"],
                         label=first, part=part):
                     logger.warning("Results: warehouse dropdown %d didn't return to its first "
                                    "warehouse; its other warehouses left out", i)
                     self._gap(part, [o["text"] for o in others])
                     continue
-                added += await _evaluate(page, _ADD_WAREHOUSE_ROWS_JS,
-                                         [i, rows, shown["cols"], shown["width"]]) or 0
+                pending.append((i, rows, shown["cols"], shown["width"]))
             except BulkResultsIncomplete:
                 raise
             except Exception as exc:
                 logger.info("Results: warehouse dropdown %d not read (%s)", i,
                             str(exc).splitlines()[0][:200])
                 self._gap(part, [o["text"] for o in others])
+        for i, rows, cols, width in pending:
+            try:
+                added += await _evaluate(page, _ADD_WAREHOUSE_ROWS_JS, [i, rows, cols, width]) or 0
+            except Exception as exc:
+                logger.info("Results: warehouse dropdown %d: rows not added (%s)", i,
+                            str(exc).splitlines()[0][:200])
         if added or missed:
             logger.info("Results: read %d other warehouse(s)%s", added,
                         f"; no numbers shown for: {', '.join(missed)}" if missed else "")
+
+    async def _warehouse_data(self, page, part: str, select: dict, shown: dict) -> Optional[dict]:
+        """{dropdown option value: [next in, due in, on hand]} for the warehouses of
+        `part`, from WAREHOUSE_DATA_URL. Trusted only when its entry for the
+        selected warehouse has the on-hand number the page shows; else None (the
+        dropdown is clicked instead). Never fatal."""
+        if not part:
+            return None
+        url = WAREHOUSE_DATA_URL.format(part=quote(part, safe=""))
+        try:
+            got = await _evaluate(page, _FETCH_TEXT_JS, url) or {}
+        except Exception as exc:
+            logger.info("Results: warehouse data for %s not fetched (%s)", part,
+                        str(exc).splitlines()[0][:200])
+            return None
+        text = got.get("text") or ""
+        if os.environ.get("DEBUG_DUMP_PAGES", "").strip() in ("1", "true", "yes"):
+            try:
+                DUMP_DIR.mkdir(exist_ok=True)
+                name = re.sub(r"[^A-Za-z0-9-]+", "_", part)
+                (DUMP_DIR / f"{time.strftime('%Y%m%d-%H%M%S')}-warehouses-{name}.txt").write_text(
+                    f"GET {url}\nstatus {got.get('status')} {got.get('type')}\n\n{text}",
+                    encoding="utf-8")
+            except Exception as exc:
+                logger.warning("Could not save the warehouse data: %r", exc)
+        records = _warehouse_records(text) if got.get("status") == 200 else []
+        if not records:
+            logger.info("Results: warehouse data for %s: nothing usable (HTTP %s, %s, %d chars); "
+                        "using the dropdown", part, got.get("status"), got.get("type"), len(text))
+            return None
+
+        def key(name: str) -> str:
+            return re.sub(r"^warehouse:\s*", "", name or "", flags=re.IGNORECASE).strip().lower()
+
+        out: dict[str, list[str]] = {}
+        for o in select["options"]:
+            rec = next((r for r in records if str(r.get("Item_site") or "").strip() == o["value"]),
+                       None) or next((r for r in records if key(_wh_name(r)) == key(o["text"])), None)
+            if rec is not None:
+                out[o["value"]] = _warehouse_values(rec)
+        here = out.get(select["selected"])
+        page_onhand = _wh_number((shown.get("values") or ["", "", ""])[2])
+        if not here or here[2] != page_onhand:
+            logger.info("Results: warehouse data for %s doesn't match the page (selected warehouse "
+                        "on hand: data %s, page %s); using the dropdown", part,
+                        here[2] if here else "missing", page_onhand or "empty")
+            return None
+        logger.info("Results: warehouses of %s from the page's data: %s", part, "; ".join(
+            f"{re.sub('^warehouse: *', '', o['text'], flags=re.IGNORECASE)} "
+            f"{out[o['value']][2] or 0} on hand"
+            + (" (= page)" if o["value"] == select["selected"] else "")
+            for o in select["options"] if o["value"] in out))
+        return out
 
     def _gap(self, part: str, warehouses: list[str]) -> None:
         """Warehouses of `part` whose numbers weren't read."""
@@ -1900,6 +2102,12 @@ class ProponentAdapter(VendorAdapter):
         for offer in offers:
             names = getattr(self, "_warehouse_gaps", {}).get(
                 (offer.part_number or "").strip().upper())
+            # A warehouse the line has numbers for was read, whatever a failed pick
+            # left behind (2026-11-06: "NOT READ: SINGAPORE, NETHERLANDS" on a line
+            # showing Netherlands' 113).
+            read = {m.strip().lower() for m in re.findall(
+                r"warehouse:\s*([^\n]+)", offer.warehouses or "", flags=re.IGNORECASE)}
+            names = [n for n in names or [] if n.strip().lower() not in read]
             if not names:
                 continue
             flags = [f for f in (offer.review or "").split(",") if f]
@@ -1924,7 +2132,7 @@ class ProponentAdapter(VendorAdapter):
         async def check() -> bool:
             row = await _evaluate(page, _READ_WAREHOUSE_ROW_JS, i)
             return bool(row and shows(row))
-        if label and await self.assist.act(
+        if label and await _evaluate(page, _MARK_ONE_WAREHOUSE_JS, i) and await self.assist.act(
                 page, key="proponent_warehouse_pick",
                 goal=(f"show the numbers of '{label}' in the warehouse drop-down of this row"
                       + (f" (part {part})" if part else "")
@@ -1948,19 +2156,29 @@ class ProponentAdapter(VendorAdapter):
     async def _click_warehouse(self, page, i: int, value: str) -> bool:
         """The custom dropdown (WAREHOUSE_CONTROL): click it open, click the
         warehouse. False when the page has no such control (the old layout)."""
-        control = page.locator(WAREHOUSE_CONTROL.format(i=i)).first
+        step = "start"
         try:
+            if not await _evaluate(page, _MARK_ONE_WAREHOUSE_JS, i):
+                return False
+            control = page.locator(WAREHOUSE_CONTROL.format(i=i)).first
             if not await control.count():
                 return False
             option = control.locator(WAREHOUSE_OPTION.format(value=value)).first
             if not await option.count():
                 return False
-            await control.locator(WAREHOUSE_OPENER).first.click(timeout=self.action_timeout_ms)
-            await option.click(timeout=self.action_timeout_ms)
+            # no_wait_after: a pick may reload part of the page; Playwright would
+            # wait for that as a navigation.
+            step = "opener"
+            await control.locator(WAREHOUSE_OPENER).first.click(timeout=WAREHOUSE_CLICK_MS,
+                                                                no_wait_after=True)
+            step = "option"
+            await option.click(timeout=WAREHOUSE_CLICK_MS, no_wait_after=True)
             return True
         except Exception as exc:
-            logger.info("Results: warehouse dropdown %d: pick by click failed (%s)", i,
-                        str(exc).splitlines()[0][:200])
+            # The lines after the first say why Playwright waited (hidden, covered...).
+            why = " | ".join(x.strip() for x in str(exc).splitlines()[:4] if x.strip())
+            logger.info("Results: warehouse dropdown %d: pick by click failed at the %s (%s)",
+                        i, step, why[:400])
             return False
 
     async def _mark_next_page_button(self, page) -> Optional[str]:

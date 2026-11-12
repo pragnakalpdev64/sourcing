@@ -285,6 +285,14 @@ curl -X POST localhost:8080/trigger -H "X-Trigger-Secret: $TRIGGER_SECRET"   # w
 `/trigger` starts the worker job on Cloud Run, so a local run of it needs GCP access. Use it to
 check routing and the secret; for a full local run use `service.job_main` (§2).
 
+Testing the sheet's Apps Script before deploying (`apps_script/README.md`): `/trigger` starts the
+worker on this machine, on the sheet that called (`--sheet`), and once more if rows came in meanwhile.
+
+```bash
+TRIGGER_RUN_LOCAL=1 TRIGGER_LOCAL_ARGS="--dummy" .venv/bin/uvicorn service.api:app --port 8080
+ngrok http 8080        # its https address + /trigger goes in the script's TRIGGER_URL
+```
+
 **Vendor login update page** (`/credentials`, docs/CREDENTIAL_UPDATE_UI_PLAN.md). Saving writes a
 real new version to Secret Manager (the secret `VENDOR_SECRET_OVERRIDES` points at), so test with
 the test secret.

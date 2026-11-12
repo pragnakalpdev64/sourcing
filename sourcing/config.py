@@ -109,6 +109,11 @@ class Settings:
     # Notifications / service
     chat_webhook_url: str
     trigger_secret: str
+    # Local testing of the sheet's Apps Script (through ngrok): /trigger starts
+    # `python -m service.job_main` on this machine instead of the Cloud Run job,
+    # with TRIGGER_LOCAL_ARGS added (e.g. "--dummy"). Never set on Cloud Run.
+    trigger_run_local: bool
+    trigger_local_args: str
     # Where the API runs (Cloud Run URL, or http://localhost:8080 locally). Set =
     # a 2FA code the worker can't make is asked from the requester over Chat
     # with a link to the API's code form (sourcing/auth/hitl.py).
@@ -165,6 +170,8 @@ class Settings:
             gemini_api_key=_env("GEMINI_API_KEY"),
             chat_webhook_url=_env("CHAT_WEBHOOK_URL"),
             trigger_secret=_env("TRIGGER_SECRET"),
+            trigger_run_local=_env_bool("TRIGGER_RUN_LOCAL"),
+            trigger_local_args=_env("TRIGGER_LOCAL_ARGS"),
             public_base_url=_env("PUBLIC_BASE_URL"),
             chat_app_space=_env("CHAT_APP_SPACE"),
             chat_app_audience=_env("CHAT_APP_AUDIENCE"),

@@ -31,7 +31,7 @@ from sourcing.sinks.sheet import SheetSink
 
 # Runs with fewer parts than this are searched one by one (one part doesn't need bulk).
 BULK_MIN_PARTS = 2
-from sourcing.store import WORKER_LOCK, Store, make_store
+from sourcing.store import RERUN_FLAG, RERUN_HOLDER, WORKER_LOCK, Store, make_store
 
 logger = logging.getLogger("sourcing.job")
 
@@ -156,53 +156,71 @@ async def run_one_sheet(shared: Deps, sheet: dict, run_id: str) -> dict:
     return {"sheet_id": sheet_id, **summary}
 
 
+# A sheet that keeps getting rows can't keep one job running for ever.
+MAX_PASSES = 5
+
+
 async def run(dummy: bool, vendor_overrides: Optional[dict[str, dict]] = None,
               all_sheets: bool = False) -> int:
     settings = get_settings()
     store = make_store(settings.store_backend, settings.gcp_project, settings.store_file)
-    run_id = new_run_id()
-
-    if not store.acquire_lock(WORKER_LOCK, run_id, settings.job_lock_seconds):
-        logger.info("Another worker run holds the lock; exiting")
-        return 0
-
-    try:
-        default = {"sheet_id": settings.sheet_id, "requests_tab": settings.requests_tab,
-                   "results_tab": settings.results_tab}
-        if all_sheets:
-            # Cloud Run: SHEET_ID plus every sheet added with scripts/manage_sheets.py
-            if settings.sheet_id:
-                store.register_sheet(settings.sheet_id, {
-                    **default, "label": "default (SHEET_ID env var)"})
-            sheets = store.list_enabled_sheets()
-        else:
-            sheets = [default] if settings.sheet_id else []
-        if not sheets:
-            logger.warning("No sheet to process: set SHEET_ID in .env or pass --sheet%s",
-                           "" if not all_sheets else
-                           ", or add one with scripts/manage_sheets.py add")
+    for n in range(MAX_PASSES):
+        run_id = new_run_id()
+        if not store.acquire_lock(WORKER_LOCK, run_id, settings.job_lock_seconds):
+            logger.info("Another worker run holds the lock; exiting")
             return 0
-
-        logger.info("Run %s: mode=%s, browser=%s, store=%s%s, llm=%s/%s (effort %s), chat=%s, "
-                    "vendor secret overrides=%s", run_id, "DUMMY" if dummy else "REAL",
-                    "none" if dummy else settings.browser_backend, settings.store_backend,
-                    f" ({settings.store_file})" if settings.store_backend == "file" else "",
-                    settings.llm_provider, settings.llm_model, settings.llm_effort,
-                    "on" if settings.chat_webhook_url else "off",
-                    settings.vendor_secret_overrides or "none")
-        if vendor_overrides:
-            logger.info("Vendor config for this run: %s", vendor_overrides)
-        shared = build_shared_deps(settings, store, dummy=dummy,
-                                   vendor_overrides=vendor_overrides)
-        logger.info("Processing %d sheet(s): %s", len(sheets),
-                    ", ".join(s["sheet_id"] for s in sheets))
-        results = await asyncio.gather(*(run_one_sheet(shared, s, run_id) for s in sheets))
-        failed = [r["sheet_id"] for r in results if r.get("error")]
-        if failed:
-            logger.warning("Sheets that failed to run: %s", failed)
-    finally:
-        store.release_lock(WORKER_LOCK, run_id)
+        # This pass reads the sheet now: a request made before it is covered.
+        store.release_lock(RERUN_FLAG, RERUN_HOLDER)
+        try:
+            await _one_pass(settings, store, run_id, dummy, vendor_overrides, all_sheets)
+        finally:
+            store.release_lock(WORKER_LOCK, run_id)
+        # Rows added while this pass ran (Apps Script -> /trigger): read again.
+        # The lock is free by now, so a /trigger in between starts its own job.
+        if not store.is_locked(RERUN_FLAG):
+            break
+        logger.info("Rows were added during the run: reading the sheet again (pass %d)", n + 2)
+    else:
+        logger.warning("Stopped after %d passes; rows still waiting go with the next trigger "
+                       "or sweep", MAX_PASSES)
     return 0
+
+
+async def _one_pass(settings: Settings, store: Store, run_id: str, dummy: bool,
+                    vendor_overrides: Optional[dict[str, dict]], all_sheets: bool) -> None:
+    default = {"sheet_id": settings.sheet_id, "requests_tab": settings.requests_tab,
+               "results_tab": settings.results_tab}
+    if all_sheets:
+        # Cloud Run: SHEET_ID plus every sheet added with scripts/manage_sheets.py
+        if settings.sheet_id:
+            store.register_sheet(settings.sheet_id, {
+                **default, "label": "default (SHEET_ID env var)"})
+        sheets = store.list_enabled_sheets()
+    else:
+        sheets = [default] if settings.sheet_id else []
+    if not sheets:
+        logger.warning("No sheet to process: set SHEET_ID in .env or pass --sheet%s",
+                       "" if not all_sheets else
+                       ", or add one with scripts/manage_sheets.py add")
+        return
+
+    logger.info("Run %s: mode=%s, browser=%s, store=%s%s, llm=%s/%s (effort %s), chat=%s, "
+                "vendor secret overrides=%s", run_id, "DUMMY" if dummy else "REAL",
+                "none" if dummy else settings.browser_backend, settings.store_backend,
+                f" ({settings.store_file})" if settings.store_backend == "file" else "",
+                settings.llm_provider, settings.llm_model, settings.llm_effort,
+                "on" if settings.chat_webhook_url else "off",
+                settings.vendor_secret_overrides or "none")
+    if vendor_overrides:
+        logger.info("Vendor config for this run: %s", vendor_overrides)
+    shared = build_shared_deps(settings, store, dummy=dummy,
+                               vendor_overrides=vendor_overrides)
+    logger.info("Processing %d sheet(s): %s", len(sheets),
+                ", ".join(s["sheet_id"] for s in sheets))
+    results = await asyncio.gather(*(run_one_sheet(shared, s, run_id) for s in sheets))
+    failed = [r["sheet_id"] for r in results if r.get("error")]
+    if failed:
+        logger.warning("Sheets that failed to run: %s", failed)
 
 
 def build_parser() -> argparse.ArgumentParser:

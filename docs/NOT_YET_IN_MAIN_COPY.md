@@ -616,5 +616,8 @@ New in this copy (the main copy has none of it):
       Delivery of an in-stock line instead of 0 (client, 2026-11-06). **copy**.
 - [ ] Pipeline: `LlmKeyRejected` / `llm_key_rejected` (a 401/403 from the LLM provider stops the
       account's searches; rows FAILED). Tests `tests/test_llm_key_rejected.py`. **copy**.
+- [ ] Sheet trigger (2026-11-06): `apps_script/` (Code.gs, appsscript.json, README), `/trigger`
+      run-again flag (`RERUN_FLAG` in store.py, passes in `job_main.run`), `TRIGGER_RUN_LOCAL` /
+      `TRIGGER_LOCAL_ARGS` (config.py, api.py). Tests `tests/test_sheet_trigger.py`. **copy**.
 
 - [ ] This file itself, once everything above is ticked.

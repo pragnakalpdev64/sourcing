@@ -39,6 +39,19 @@ that a code change broke.
 7. **AvSight Fields:** Always use Serialized = N, UOM = EA, Type Requested = Outright,
    Condition Code = Condition Code Quoted.
 
+## Team additions
+
+- **Short stock, the rest due in (team, 2026-11-06):** less on hand than the quantity asked,
+  and the deliveries shown complete it: Qty Quoted = Quantity Requested = the quantity asked,
+  priced for it, and Delivery = days to the first due date on which stock on hand plus
+  everything due in up to that day (all warehouses, same dates added up) reaches it (12 asked,
+  5 on hand, 10 due Nov 25 -> Nov 25). Never completed by the deliveries shown, or enough on
+  hand: rules 1 and 4 as before (the stock, Delivery 0). `models.complete_by`; tests
+  `test_rule_4_short_stock_...`.
+- **Incoming stock in Internal Comments for in-stock lines too (team, 2026-11-06):** every
+  warehouse's deliveries, same dates added up (416F25-4: `NEXT IN NOV 25, 2026: 10, NEXT IN NOV
+  27, 2026: 7`); never the restock lead time.
+
 ## DASI rules (client, 2026-10-29)
 
 - **DASI 1, combining lines:** if pricing, stock location and MOQ are the same, lines can be
@@ -60,7 +73,7 @@ lots)`). Tests: `test_rule_dasi_1_...`, `test_rule_dasi_2_...`.
 | 1 Quantity | `models.ResultRow.as_rfq_record`, `models.rfq_quote` | Met on quoted lines. **Gap:** a No Quote line with Qty Quoted 0 keeps the customer's quantity in Quantity Requested |
 | 2 Incoming stock | `models.soonest_due_in` | Met (same date added up across warehouses; soonest date only) |
 | 3 MOQ and pricing | `pipeline.quote_price`, `moq_note`, `price_break_note` | Price and price breaks met. **Gap:** the quantity asked is only in the comments when it's below the MOQ (`(ASKED 10)`) |
-| 4 Delivery | `models.rfq_delivery`, `pipeline.stock_note` | Met |
+| 4 Delivery | `models.rfq_delivery`, `pipeline.stock_note` | Met; short stock completed by deliveries: days to that date (team addition above) |
 | 5 No Quote | `models.rfq_quote` | Out of stock with price + lead time quoted, no Delivery on No Quote: met. **Gap:** an in-stock priced line whose page shows no condition is No Quote; we never read the supplier's own "can't buy" signal |
 | 6 Approved substitutes | `pipeline.alternate_notes` | Met (lead time in the requested part's comments since 2026-10-28) |
 | 7 AvSight fields | `models.ResultRow.as_rfq_record`, `pipeline.same_uom` | Met. **Changed 2026-10-30 (LB requests):** UOM = the request's unit, else the line's, else `EA` (`PC`/`EACH` count as EA); only lines in the request's unit are written (a line showing no unit counts as EA), never converted; none in that unit: `NOT_FOUND` |

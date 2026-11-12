@@ -1030,9 +1030,13 @@ def test_stock_note_names_every_warehouse_with_its_stock_below():
                                 qty_available="50" if stocked else "Out of stock"),
                           "10", priced=True, stocked=stocked)
 
-    # in stock: no restock dates (client, 2026-10-23)
-    assert note(True) == ("• STK BREA, CA / SINGAPORE / WAREHOUSE NOT NAMED\n"
-                          "    ◦ BREA, CA: 45 ON HAND\n    ◦ SINGAPORE: 5 ON HAND")
+    # in stock: its incoming stock listed too, as out of stock (team, 2026-11-06)
+    assert note(True) == note(False)
+    # 416F25-4 (2026-11-06): 5 on hand; Nov 25 10, Nov 27 1 and 6 -> two entries
+    filt = ("Warehouse: Netherlands\nQty on hand: 5\nNext day in: Nov 25, 2026\nQty due in: 10\n"
+            "Next day in: Nov 27, 2026\nQty due in: 1\nNext day in: Nov 27, 2026\nQty due in: 6")
+    assert note(True, filt) == ("• STK NETHERLANDS\n    ◦ NETHERLANDS: 5 ON HAND, "
+                                "NEXT IN NOV 25, 2026: 10, NEXT IN NOV 27, 2026: 7")
     assert note(False) == (
         "• STK BREA, CA / SINGAPORE / WAREHOUSE NOT NAMED\n"
         "    ◦ BREA, CA: 45 ON HAND, NEXT IN MAY 20, 2027: 200, NEXT IN JUN 1, 2027\n"
@@ -1236,7 +1240,7 @@ async def test_internal_comments_hold_stock_price_breaks_and_substitute_note():
     await run(deps)
     a1, b2 = written
     assert a1.internal_comments == (
-        "• STK BREA, CA\n    ◦ BREA, CA: 45 ON HAND\n"     # 45 quoted (all in stock): 1-249 row
+        "• STK BREA, CA\n    ◦ BREA, CA: 45 ON HAND, NEXT IN MAY 20, 2027: 200\n"  # 45 quoted: 1-249 row
         "• PRICE BREAKS:\n    ◦ 1-249 $23.70\n    ◦ 250+ $22.22\n"
         "• APPROVED SUBSTITUTE ALSO OFFERED WITH LEAD TIME: PN B2")   # B2 has no stock
     assert b2.internal_comments == "• OUT OF STOCK\n    ◦ UK: 0 ON HAND\n• APPROVED SUBSTITUTE FOR PN A1"

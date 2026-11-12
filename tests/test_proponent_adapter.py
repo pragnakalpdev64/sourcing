@@ -1254,6 +1254,171 @@ async def test_custom_warehouse_dropdown_is_picked_by_clicks(page_for):
     assert await page.evaluate("window.picks") == 2             # Singapore, then Brea, CA
 
 
+# Run 2026-11-06 15:06: a pick redraws the dropdown, a new <select> without our
+# mark (the second pass found Singapore selected; every read of "its row" had come
+# back empty, all picks counted as failed). Two parts, so the second dropdown is
+# found by its place after the first one was redrawn.
+def _redrawn_dropdown(n):
+    return f'<div id="wh{n}" class="whbox"></div>'
+
+
+REDRAWN_LAYOUT_HTML = (
+    f"<html><body>{REAL_HEADER_IN}<table><tbody>"
+    + _result("4066-0014", "$2,774.16", "FLOAT,ASSY", "22",
+              _warehouse_table(_redrawn_dropdown(0), "Nov 26, 2026", "30", "17")
+              + '<div id="whname0">Details for Warehouse: Brea, CA</div>')
+    + _result("40P6050", "$391.97", "VALVE", "148",
+              _warehouse_table(_redrawn_dropdown(1), "", "", "113")
+              + '<div id="whname1">Details for Warehouse: Netherlands</div>')
+    + """</tbody></table>
+<script>
+const WH = [{MAIN: ['Nov 26, 2026', '30', '17', 'Brea, CA'], SIN: ['', '', '5', 'Singapore']},
+            {AMS: ['', '', '113', 'Netherlands'], SIN: ['Dec 7, 2026', '10', '35', 'Singapore']}];
+window.picks = 0;
+function draw(n, value) {
+  const opts = Object.keys(WH[n]);
+  const box = document.getElementById('wh' + n);
+  box.innerHTML = '<div class="bb-custom-select-container bb-customSelect">'
+    + '<span class="bb-custom-select-opener" role="combobox" tabindex="0"><span>Warehouse: '
+    + WH[n][value][3] + '</span></span><select tabindex="-1" style="display: none;">'
+    + opts.map(v => `<option value="${v}"${v === value ? ' selected' : ''}>Warehouse: ${WH[n][v][3]}</option>`).join('')
+    + '</select><div class="bb-custom-select-panel" role="listbox" style="display:none">'
+    + opts.map(v => `<div class="bb-custom-select-option" data-value="${v}" role="option">Warehouse: ${WH[n][v][3]}</div>`).join('')
+    + '</div></div>';
+}
+draw(0, 'MAIN'); draw(1, 'AMS');
+document.addEventListener('click', e => {
+  const opener = e.target.closest('.bb-custom-select-opener');
+  if (opener) { opener.parentNode.querySelector('.bb-custom-select-panel').style.display = 'block'; return; }
+  const opt = e.target.closest('[role=option]');
+  if (!opt) return;
+  window.picks++;
+  const box = opt.closest('.whbox');
+  const n = Number(box.id.slice(2));
+  const v = WH[n][opt.dataset.value];
+  setTimeout(() => {
+    draw(n, opt.dataset.value);                     // a new <select>: our mark is gone
+    const cells = box.closest('tr').children;
+    cells[1].innerText = v[0]; cells[2].innerText = v[1]; cells[3].innerText = v[2];
+    document.getElementById('whname' + n).innerText = 'Details for Warehouse: ' + v[3];
+  }, 200);
+});
+</script></body></html>""")
+
+
+@pytest.mark.asyncio
+async def test_warehouse_dropdown_redrawn_by_each_pick_is_found_again(page_for):
+    from sourcing.vendors import proponent
+
+    page = await page_for(MockProcart())
+    await page.set_content(REDRAWN_LAYOUT_HTML)
+    adapter = ProponentAdapter(extractor=FakeExtractor())
+    await adapter._expand_all_details(page)
+    text = await proponent._page_text(page, "bulk")
+    first = text[text.index("4066-0014"):text.index("Details for Warehouse: Brea")]
+    assert "Nov 26, 2026\t30\t17" in first and "Warehouse: Singapore\t\t\t5" in first
+    second = text[text.index("40P6050"):text.index("Details for Warehouse: Netherlands")]
+    assert "Warehouse: Singapore\tDec 7, 2026\t10\t35" in second and "\t113" in second
+    values = await page.evaluate("Array.from(document.querySelectorAll('select')).map(s => s.value)")
+    assert values == ["MAIN", "AMS"]                            # first warehouses again
+    assert await page.evaluate("window.picks") == 4
+    assert not adapter._warehouse_gaps and not adapter.assist.events
+
+    # a second pass changes nothing
+    await adapter._expand_all_details(page)
+    assert await page.evaluate("window.picks") == 4
+    assert (await proponent._page_text(page, "bulk")).count("Warehouse: Singapore") == 2
+
+
+# The page fills each result's warehouse table from /Handlers/PartSearchHandler.ashx
+# (its own script, debug_pages/20261104-175506-bulk.html). Shape assumed from that
+# script (DisplayName, Item_site, WhsQty, Due_date, TotQty); not yet seen live.
+def _handler_json(onhand_brea="17.0000"):
+    return {
+        "4066-0014": {"d": {"rows": [
+            {"DisplayName": "Warehouse: Brea, CA", "Item_site": "MAIN", "WhsQty": onhand_brea,
+             "Due_date": ["11/26/2026"], "TotQty": ["30"]},
+            {"DisplayName": "Warehouse: Singapore", "Item_site": "SIN", "WhsQty": "5.0000",
+             "Due_date": [""], "TotQty": [""]}]}},
+        "40P6050": {"d": {"rows": [
+            {"DisplayName": "Warehouse: Netherlands", "Item_site": "AMS", "WhsQty": "113",
+             "Due_date": [], "TotQty": []},
+            {"DisplayName": "Warehouse: Singapore", "Item_site": "SIN", "WhsQty": "35",
+             "Due_date": ["12/7/2026"], "TotQty": ["10"]}]}},
+    }
+
+
+async def _served_results_page(page_for, data):
+    import json as _json
+    from urllib.parse import parse_qs as _pq, urlparse as _up
+    page = await page_for(MockProcart())
+    asked = []
+
+    async def handler(route):
+        part = _pq(_up(route.request.url).query).get("PartNo", [""])[0]
+        asked.append(part)
+        await route.fulfill(status=200, content_type="application/json; charset=utf-8",
+                            body=_json.dumps(data.get(part, {"d": {"rows": []}})))
+
+    async def results(route):
+        await route.fulfill(status=200, content_type="text/html", body=REDRAWN_LAYOUT_HTML)
+    await page.route("**/Handlers/PartSearchHandler.ashx*", handler)
+    await page.route("**/PartSearchResults.aspx", results)
+    await page.goto("https://procart.proponent.com/PartSearchResults.aspx")
+    return page, asked
+
+
+@pytest.mark.asyncio
+async def test_every_warehouse_read_from_the_pages_data_without_the_dropdown(page_for):
+    from sourcing.vendors import proponent
+
+    page, asked = await _served_results_page(page_for, _handler_json())
+    adapter = ProponentAdapter(extractor=FakeExtractor())
+    await adapter._expand_all_details(page)
+    text = await proponent._page_text(page, "bulk")
+    first = text[text.index("4066-0014"):text.index("Details for Warehouse: Brea")]
+    assert "Nov 26, 2026\t30\t17" in first and "Warehouse: Singapore\t\t\t5" in first
+    second = text[text.index("40P6050"):text.index("Details for Warehouse: Netherlands")]
+    assert "Warehouse: Singapore\tDec 7, 2026\t10\t35" in second
+    assert await page.evaluate("window.picks") == 0             # dropdowns left alone
+    assert sorted(asked) == ["4066-0014", "40P6050"]
+    assert not adapter._warehouse_gaps
+
+
+def test_warehouse_reply_read_as_named_fields_or_as_cell_lists():
+    # The page's formatter takes either form (rowObject.Due_date or rowObject[6]).
+    import json as _json
+    from sourcing.vendors.proponent import _warehouse_records, _warehouse_values, _wh_name
+    cells = {"page": 1, "rows": [
+        {"id": "1", "cell": ["", "", "<span>Warehouse: Brea, CA</span>", "", "", "",
+                             "11/26/2026<br />1/5/2027", "30<br />12", "17.0000", "1", "", ""]},
+        {"id": "2", "cell": ["", "", "Warehouse: Singapore", "", "", "", "", "", "5", "1", "", ""]}]}
+    recs = _warehouse_records(_json.dumps(cells))
+    assert [_wh_name(r) for r in recs] == ["Warehouse: Brea, CA", "Warehouse: Singapore"]
+    assert _warehouse_values(recs[0]) == ["Nov 26, 2026\nJan 5, 2027", "30\n12", "17"]
+    assert _warehouse_values(recs[1]) == ["", "", "5"]
+    named = {"d": _json.dumps({"rows": [{"DisplayName": "Warehouse: Singapore", "Item_site": "SIN",
+                                        "WhsQty": "1,234.00", "Due_date": ["", "12/7/2026"],
+                                        "TotQty": ["", "10"]}]})}
+    recs = _warehouse_records(_json.dumps(named))
+    assert _warehouse_values(recs[0]) == ["Dec 7, 2026", "10", "1234"]
+    assert _warehouse_records("error") == [] and _warehouse_records('{"rows": []}') == []
+
+
+@pytest.mark.asyncio
+async def test_warehouse_data_not_matching_the_page_falls_back_to_the_dropdown(page_for):
+    from sourcing.vendors import proponent
+
+    page, _ = await _served_results_page(page_for, _handler_json(onhand_brea="99"))
+    adapter = ProponentAdapter(extractor=FakeExtractor())
+    await adapter._expand_all_details(page)
+    text = await proponent._page_text(page, "bulk")
+    first = text[text.index("4066-0014"):text.index("Details for Warehouse: Brea")]
+    assert "Warehouse: Singapore\t\t\t5" in first           # read by the dropdown
+    assert "99" not in first
+    assert await page.evaluate("window.picks") == 2             # Singapore, then Brea, CA
+
+
 # The UI changes again (class names the code doesn't know; roles as before): the
 # coded pick finds nothing, the LLM picks opener then warehouse, the row's
 # numbers prove it, and the recipe saved does it next run without the LLM.
