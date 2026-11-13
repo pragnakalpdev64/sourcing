@@ -81,13 +81,13 @@ async def main(vendors: list[str], user: str, send_chat: bool) -> int:
     def vendor_record(vendor: str) -> dict:
         from sourcing.store import make_store
 
-        return make_store(s.store_backend, s.gcp_project, s.store_file).get_vendor(vendor) or {}
+        return make_store(s.store_backend, s.store_project, s.store_file).get_vendor(vendor) or {}
 
     def vendor_registry(vendor: str):
         from sourcing.store import make_store
         from sourcing.vendors.registry import VendorRegistry
 
-        reg = VendorRegistry(make_store(s.store_backend, s.gcp_project, s.store_file))
+        reg = VendorRegistry(make_store(s.store_backend, s.store_project, s.store_file))
         vendor_id = reg.resolve_id(vendor)
         if reg.record(vendor_id) is None and not reg.has_adapter(vendor_id):
             return (f"{vendor}: no record yet; the worker sets it up from its secret's url "

@@ -96,7 +96,7 @@ def main() -> None:
     args = parser.parse_args()
 
     s = get_settings()
-    store = make_store(s.store_backend, s.gcp_project, s.store_file)
+    store = make_store(s.store_backend, s.store_project, s.store_file)
 
     if args.cmd == "list":
         admins = ", ".join(s.credential_admins) or "(none: set CREDENTIAL_ADMINS)"

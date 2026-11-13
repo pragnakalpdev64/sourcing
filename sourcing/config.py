@@ -65,6 +65,10 @@ class Settings:
     # between runs) or "memory" (lost when the run ends) for local runs / tests
     store_backend: str
     store_file: str
+    # Project of the Firestore database, when it isn't GCP_PROJECT (2026-11-13: for
+    # testing, Firestore in the add-on's project; sourcing-ai-dev's own project
+    # has none). Empty = GCP_PROJECT.
+    store_project_override: str
 
     # Vendor credentials (GCP Secret Manager, in gcp_project), e.g.
     # "sourcing-vendor-proponent=sourcing-vendor-test" reads Proponent's shared login
@@ -100,6 +104,10 @@ class Settings:
     anthropic_api_key: str
     openai_api_key: str
     gemini_api_key: str
+
+    @property
+    def store_project(self) -> str:
+        return self.store_project_override or self.gcp_project
 
     @property
     def llm_api_key(self) -> str:
@@ -160,6 +168,7 @@ class Settings:
             requests_tab=_env("REQUESTS_TAB", "Requests"),
             results_tab=_env("RESULTS_TAB", "Results"),
             store_backend=_env("STORE_BACKEND", "firestore").lower(),
+            store_project_override=_env("STORE_PROJECT"),
             store_file=_env("STORE_FILE") or str(Path(__file__).resolve().parent.parent
                                                  / ".local_store.json"),
             vendor_secret_overrides=_env("VENDOR_SECRET_OVERRIDES"),

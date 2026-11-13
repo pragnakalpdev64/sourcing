@@ -69,7 +69,23 @@ function turnOn() {
     return;
   }
   editTriggers_(ss).forEach(function (t) { ScriptApp.deleteTrigger(t); });
-  ScriptApp.newTrigger(HANDLER_EDIT).forSpreadsheet(ss).onEdit().create();
+  // Google doesn't run installable triggers in an add-on test deployment
+  // (2026-11-13: menu "Search now" worked, adding a row started nothing), so say
+  // so instead of promising an automatic start.
+  var made = '';
+  try {
+    ScriptApp.newTrigger(HANDLER_EDIT).forSpreadsheet(ss).onEdit().create();
+  } catch (err) {
+    made = String(err);
+  }
+  if (made || !editTriggers_(ss).length) {
+    console.error('SourcingAI: edit trigger not installed: %s', made || 'none listed');
+    ui.alert('SourcingAI', 'Automatic search could not be turned on here' +
+             (made ? ' (' + made + ')' : '') + '. In a test deployment Google ' +
+             'does not run edit triggers: use Extensions > SourcingAI > Search new rows ' +
+             'now. It works automatically once the add-on is installed.', ui.ButtonSet.OK);
+    return;
+  }
   var share = setting_('SERVICE_ACCOUNT_EMAIL', '');
   ui.alert('SourcingAI is on for this sheet',
            'New rows in "' + tab + '" are searched about 90 seconds after the last edit. ' +

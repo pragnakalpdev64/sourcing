@@ -8,6 +8,7 @@ guess ("Your Price", "12 Available") until the first live run. Skipped if no loc
 Chromium."""
 from __future__ import annotations
 
+import json
 import re
 from urllib.parse import parse_qs, unquote, urlparse
 
@@ -57,7 +58,6 @@ HEADER_OUT = '<a class="profile" href="#">Hello, Log In!</a><a onclick="GoToLogi
 PAGE = """<html><head><title>{title}</title></head><body>
 <form action="/Account/LogOff" id="logoutForm" method="post"><input name="__RequestVerificationToken" type="hidden" value="t"></form>
 <header>{header}<span>0 items</span></header>{body}
-<div>Service Center Stock</div><div>Location</div><div>On Hand Quantity</div>
 <footer>&copy; 2026 Textron Aviation</footer>
 <script>function logout() {{ document.getElementById('logoutForm').submit(); }}</script></body></html>"""
 
@@ -93,6 +93,8 @@ def block(n, pn, signed_in=True):
         if p["us"] != "0" else ""
     stock = (f'<div>{p["stock"]} IN STOCK</div><label>Quantity</label><input name="qty" value="1">'
              f'<button>Add to Cart</button><div>Ships from {p.get("ships", "Wichita")}</div>'
+             + (f'<a href="#" onclick="ShowSC(\'{pn}\'); return false;">Service Center Stock</a>'
+                if p["stock"] else '<div>No Service Center Stock Available</div>')
              if p["stock"] is not None else "")
     price = (your + stock if signed_in else
              '<h2>Want to see more?</h2><h3><a href="/Account/Login">Log in</a> or <a>Register as '
@@ -150,6 +152,23 @@ CODE_PAGE = """<form action="/Account/VerifyCode" method="post"><h2>Verify your 
 <a href="/Account/SendCode">I didn't receive the code. Take me to the previous step.</a>"""
 
 
+# Service Center Stock (team, 2026-11-13; markup assumed): a hidden dialog on every
+# page, its table filled a moment after the link is clicked, as an AJAX call would.
+SC_STOCK = {"A-7079B-24": [["Wichita, KS", "4"], ["Orlando, FL", "0"], ["Mesa, AZ", "1"]],
+            "6839": [["Van Nuys, CA", "12"]]}
+SC_DIALOG = """<div class="modal" id="scModal" role="dialog" style="display:none"><div class="modal-content">
+<button type="button" class="close" data-dismiss="modal"
+ onclick="document.getElementById('scModal').style.display='none'">&times;</button>
+<h4>Service Center Stock</h4><table><thead><tr><th>Location</th><th>On Hand Quantity</th></tr></thead>
+<tbody id="scRows"></tbody></table></div></div>
+<script>const SC = """ + json.dumps(SC_STOCK) + """;
+function ShowSC(pn) { const rows = document.getElementById('scRows');
+  rows.innerHTML = '<tr><td>Loading...</td></tr>';
+  document.getElementById('scModal').style.display = 'block';
+  setTimeout(() => { rows.innerHTML = (SC[pn] || []).map(r => '<tr><td>' + r[0] + '</td><td>'
+    + r[1] + '</td></tr>').join(''); }, 300); }</script>"""
+
+
 class MockTextron:
     def __init__(self, signed_in=True, qty_boxes=True):
         self.signed_in = signed_in
@@ -165,7 +184,7 @@ class MockTextron:
 
     def page(self, body, title="Textron Aviation"):
         return PAGE.format(title=title, header=HEADER_IN if self.signed_in else HEADER_OUT,
-                           body=body)
+                           body=body).replace("</body>", SC_DIALOG + "</body>")
 
     async def handle(self, route):
         req = route.request
@@ -356,7 +375,9 @@ async def test_one_part_by_its_address(textron):
     offer = outcome.offers[0]
     assert (offer.price, offer.currency, offer.uom, offer.condition) == ("45.51", "USD", "EA", "NE")
     assert offer.qty_available == "160"           # the page's "160 IN STOCK", not the LLM's 12
-    assert offer.vendor_note == "PRICE VALID UNTIL STOCK DEPLETED"
+    assert offer.vendor_note == ("PRICE VALID UNTIL STOCK DEPLETED; "
+                                 "SERVICE CENTER STOCK: WICHITA, KS QTY 4; MESA, AZ QTY 1")
+    assert "Note: SERVICE CENTER STOCK: WICHITA, KS QTY 4; MESA, AZ QTY 1" in text
     assert "Stock shown: 160 IN STOCK" in text and "Ships from: Wichita" in text
     assert offer.listing == "requested" and offer.moq is None and offer.review is None
     assert outcome.alternates == ["34-0070371-01", "WL-L7079-24"]
@@ -404,6 +425,10 @@ async def test_multiple_part_search_with_quantities(textron):
     rivet = outcomes[rid(11)].offers[0]
     assert rivet.uom == "LB" and rivet.moq == "5" and rivet.currency == "USD"
     assert rivet.qty_available == "Out of stock" and rivet.vendor_note == "SOLD BY THE POUND"
+    # Service Center Stock dialog -> Internal Comments; a 0 row left out; none for the rivet.
+    lamp = outcomes[rid(10)].offers[0]
+    assert lamp.vendor_note.endswith("SERVICE CENTER STOCK: WICHITA, KS QTY 4; MESA, AZ QTY 1")
+    assert lamp.qty_available == "160" and lamp.warehouses == "Warehouse: Wichita\nQty on hand: 160"
     assert "Quantity typed into the Multiple Part Search: 2" in reader.texts[0]
     assert len(reader.texts) == 1 and usage.calls == 1
 
@@ -551,6 +576,8 @@ async def test_real_run_wordings_19_parts(textron):
     lamp = outcomes[rid(4)].offers[0]
     assert lamp.moq == "10" and lamp.qty_available == "7440" and lamp.lead_time == "In stock"
     assert "SOLD IN MULTIPLES OF 10" in lamp.vendor_note and "MAX SHELF LIFE 12 MONTHS" in lamp.vendor_note
+    assert "SERVICE CENTER STOCK: VAN NUYS, CA QTY 12" in lamp.vendor_note
+    assert "SERVICE CENTER" not in outcomes[rid(5)].offers[0].vendor_note   # link, but no rows
     assert lamp.warehouses == "Warehouse: Wichita\nQty on hand: 7440"
     block = outcomes[rid(5)].offers[0]
     assert (block.price, block.currency) == ("1760.63", "USD")

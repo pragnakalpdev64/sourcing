@@ -92,7 +92,7 @@ async def main_async(args) -> int:
         os.environ["LOCAL_BROWSER_LIVE_VIEW"] = "1"
     get_settings.cache_clear()
     s = get_settings()
-    store = make_store(s.store_backend, s.gcp_project, s.store_file)
+    store = make_store(s.store_backend, s.store_project, s.store_file)
     vendor_id = slugify(args.vendor_id)
     record = store.get_vendor(vendor_id)
 

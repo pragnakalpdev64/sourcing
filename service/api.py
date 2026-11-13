@@ -77,7 +77,7 @@ def store():
     global _store
     if _store is None:
         s = get_settings()
-        _store = make_store(s.store_backend, s.gcp_project, s.store_file)
+        _store = make_store(s.store_backend, s.store_project, s.store_file)
     return _store
 
 

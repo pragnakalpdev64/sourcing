@@ -195,7 +195,7 @@ async def wait_until_quiet(store: Store, quiet_seconds: int, clock=None, sleep=N
 async def run(dummy: bool, vendor_overrides: Optional[dict[str, dict]] = None,
               all_sheets: bool = False) -> int:
     settings = get_settings()
-    store = make_store(settings.store_backend, settings.gcp_project, settings.store_file)
+    store = make_store(settings.store_backend, settings.store_project, settings.store_file)
     for n in range(MAX_PASSES):
         run_id = new_run_id()
         if not store.acquire_lock(WORKER_LOCK, run_id, settings.job_lock_seconds):

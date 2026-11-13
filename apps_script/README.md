@@ -46,6 +46,10 @@ worker opens it later as that account, not as the person.
    - `TRIGGER_QUIET_SECONDS`: default 90.
 4. Try it: **Deploy > Test deployments > Install type: Editor add-on**, pick a test
    sheet, open it, then Extensions > SourcingAI > Turn on for this sheet.
+   **A test deployment doesn't run the edit trigger** (Google: installable triggers
+   aren't supported when testing; seen 2026-11-13: Search new rows now worked, a new
+   row started nothing). Test the call and the run with **Search new rows now**; the
+   automatic start only works once the add-on is installed (step 5–6).
 5. Publish: **Deploy > New deployment** (type Add-on). In the Marketplace SDK's App
    Configuration: Editor add-on, Sheets, the script ID and that deployment, visibility
    Private. Fill in the Store listing.

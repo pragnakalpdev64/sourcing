@@ -25,7 +25,8 @@ debug_pages/*-textron-*-read.txt):
   5 bulk      Parts/PartSearch/Multiple: one box per part (6 shown, "Add Another" adds
               one, at most 20), the requested quantity in the row's quantity box when
               the form has one (team: part and qty per row; the signed-out form has
-              part boxes only), Search -> PartsDetail?PageType=Multiple, one block per
+              part boxes only; the whole form is filled by one script in the
+              page, 2026-11-13), Search -> PartsDetail?PageType=Multiple, one block per
               part. A part with no block there, or every part when the form can't be
               used, is opened by its PartsDetail address in its own tab, 3 at once
               (team, 2026-11-12). Vendor config `bulk_mode: "tabs"` skips the form.
@@ -36,11 +37,15 @@ debug_pages/*-textron-*-read.txt):
               "Cessna Alternate", "Beech-One-Way Supersedure"). Read by Textron's
               prompt (textron_prompt.py); then the page's own values are set on the
               line (_finish)
+  7 service   each block's Service Center Stock link opens a Location / On Hand
+    centers   Quantity dialog (team, 2026-11-13): its rows go into Internal Comments
+              ("SERVICE CENTER STOCK: <location> QTY <n>"), read by a script in the
+              page for every part at once; never qty / warehouses
 
 Alternates are not lines of their own (default_show_substitutes off, as Wencor and
 Aviall): their part numbers go into the requested part's Internal Comments
 (listed_alternates). Never opened: cart, lists, quotes, orders, Remove Item,
-Service Center Stock (AOG stock), Kit to Cart, Parts List Upload.
+Kit to Cart, Parts List Upload.
 """
 from __future__ import annotations
 
@@ -132,7 +137,6 @@ LOGOUT_JS = """() => { const f = document.getElementById('logoutForm');
 MULTIPLE_FORM = "form:has(#SearchRows)"
 PART_BOXES = "#SearchRows input[name='AddParts']"
 ROWS = "#SearchRows .form-group"
-ADD_ANOTHER = "a:has-text('Add Another')"
 SEARCH_BUTTON = f"{MULTIPLE_FORM} button[type='submit']"
 # The quantity box of a row, when the form has one (signed in; not seen signed out).
 QTY_IN_ROW = ("input[name*='qty' i]:not([type=hidden]), input[id*='qty' i]:not([type=hidden]), "
@@ -140,6 +144,125 @@ QTY_IN_ROW = ("input[name*='qty' i]:not([type=hidden]), input[id*='qty' i]:not([
               "input[placeholder*='quant' i]")
 MAX_PARTS = 20
 TABS_PARALLEL = 3
+# The whole form filled by one script in the page (2026-11-13, team, from the run 27
+# recording): one Playwright call per "Add Another" click and per box took 1m51s for
+# 19 parts on Browserbase. The page's own Add Another is clicked (its AddPartNoRow
+# adds the row), then every box set with input/change events, as typing would.
+FILL_FORM_JS = """async ({parts, qtys, qtySel, custom}) => {
+  const rowsBox = document.querySelector('#SearchRows');
+  if (!rowsBox) return {error: 'no #SearchRows'};
+  const form = rowsBox.closest('form') || document;
+  const boxes = () => [...rowsBox.querySelectorAll('input[name="AddParts"]')];
+  const add = [...document.querySelectorAll('a, button')]
+    .find(a => /^\\s*add another\\s*$/i.test(a.textContent || ''));
+  while (boxes().length < parts.length) {
+    const before = boxes().length;
+    if (!add) return {error: "no 'Add Another'", boxes: before};
+    add.click();
+    for (let i = 0; i < 20 && boxes().length <= before; i++) await new Promise(r => setTimeout(r, 50));
+    if (boxes().length <= before) return {error: "'Add Another' added no part box", boxes: before};
+  }
+  const setter = Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value').set;
+  const set = (el, v) => { setter.call(el, v);
+    el.dispatchEvent(new Event('input', {bubbles: true}));
+    el.dispatchEvent(new Event('change', {bubbles: true})); };
+  const all = boxes();
+  const anyQty = custom ? [...document.querySelectorAll(custom)] : [...form.querySelectorAll(qtySel)];
+  const typed = {}; let noQty = 0;
+  all.forEach((box, i) => {
+    set(box, i < parts.length ? parts[i] : '');
+    if (i >= parts.length || !qtys[i]) return;
+    const row = box.closest('.form-group') || box.parentElement;
+    const q = (!custom && row.querySelector(qtySel)) || anyQty[i];
+    if (!q) { noQty++; return; }
+    set(q, qtys[i]); typed[i] = qtys[i];
+  });
+  const inputs = noQty ? [...rowsBox.querySelectorAll('input, select')].slice(0, 6)
+    .map(i => [i.tagName, i.type, i.name, i.id, i.placeholder].join('|')) : [];
+  return {boxes: all.length, values: all.map(b => b.value), typed, noQty, inputs};
+}"""
+
+# Service Center Stock (team, 2026-11-13): the link under "Ships from ..." opens a
+# dialog with a Location / On Hand Quantity table (stock at Textron's service centers);
+# its rows go into the line's Internal Comments. Its markup isn't seen yet: the link
+# is found by its exact wording in the part's block ("No Service Center Stock
+# Available" has no link), clicked by a script in the page, the dialog read once its
+# text stops changing, then closed. A link with a real address is fetched instead
+# (nothing clicked). One script for every part: a round trip per part is slow on
+# Browserbase. Vendor config `service_center_stock: false` turns it off.
+SERVICE_CENTER_LINE = re.compile(r"^\s*Service Center Stock\s*$", re.I | re.M)
+SERVICE_CENTER_PART_SECONDS = 8
+SERVICE_CENTER_SECONDS = 120         # for every part of one page together
+SERVICE_CENTER_ROWS_MAX = 10
+SERVICE_CENTER_JS = """async ({ns, perPart, budget, maxRows}) => {
+  const sleep = ms => new Promise(r => setTimeout(r, ms));
+  const clean = t => (t || '').replace(/\\s+/g, ' ').trim();
+  const visible = el => { if (!el || !el.isConnected) return false;
+    const s = getComputedStyle(el), r = el.getBoundingClientRect();
+    return s.display !== 'none' && s.visibility !== 'hidden' && r.width > 0 && r.height > 0; };
+  const DIALOGS = '.modal, [role="dialog"], .ui-dialog, .popover, .k-window';
+  const shown = () => [...document.querySelectorAll(DIALOGS)]
+    .filter(d => visible(d) && /on hand|location|service center/i.test(d.innerText || ''));
+  const rowsOf = root => [...root.querySelectorAll('tr')]
+    .map(tr => [...tr.querySelectorAll('td')].map(td => clean(td.textContent)))
+    .filter(cells => cells.some(c => c)).slice(0, maxRows);
+  const wording = e => clean(e.textContent).toLowerCase() === 'service center stock';
+  const start = Date.now(), out = {};
+  for (const n of ns) {
+    if (Date.now() - start > budget) { out[n] = {error: 'time limit for the page reached'}; continue; }
+    const scopes = [`[data-sai-side="${n}"]`, `[data-sai-left="${n}"]`]
+      .map(s => document.querySelector(s)).filter(Boolean);
+    let link = null;
+    for (const sel of ['a, button, [onclick], [data-toggle], [data-bs-toggle]', 'span, div, li, p']) {
+      for (const s of scopes) { link = [...s.querySelectorAll(sel)].find(wording); if (link) break; }
+      if (link) break;
+    }
+    if (!link) { out[n] = {error: 'no Service Center Stock link'}; continue; }
+    const info = {link: link.outerHTML.slice(0, 400)};
+    const href = link.tagName === 'A' ? (link.getAttribute('href') || '') : '';
+    if (href && !href.startsWith('#') && !/^javascript:/i.test(href)) {
+      try {
+        const r = await fetch(href, {credentials: 'include'});
+        const doc = new DOMParser().parseFromString(await r.text(), 'text/html');
+        info.rows = rowsOf(doc); info.text = clean(doc.body && doc.body.textContent).slice(0, 1500);
+        info.how = 'fetched ' + href;
+      } catch (e) { info.error = 'fetch failed: ' + e; }
+      out[n] = info; continue;
+    }
+    link.click();
+    const t0 = Date.now(); let dlg = null, last = null, same = 0;
+    while (Date.now() - t0 < perPart) {
+      await sleep(250);
+      const d = shown().pop();
+      if (!d) continue;
+      const txt = clean(d.innerText);
+      if (/loading|please wait/i.test(txt)) { same = 0; last = txt; continue; }
+      if (txt === last) same++; else { same = 0; last = txt; }
+      if (same >= 2 && Date.now() - t0 >= 700) { dlg = d; break; }
+    }
+    if (!dlg) {
+      dlg = shown().pop();
+      if (!dlg) { info.error = 'no dialog opened'; out[n] = info; continue; }
+      info.unsettled = true;
+    }
+    info.rows = rowsOf(dlg); info.text = clean(dlg.innerText).slice(0, 1500);
+    info.dialog = dlg.outerHTML.slice(0, 6000); info.how = 'dialog';
+    const closer = [...dlg.querySelectorAll('[data-dismiss], [data-bs-dismiss], .close, .btn-close, button')]
+      .find(b => visible(b) && (b.matches('[data-dismiss], [data-bs-dismiss], .close, .btn-close')
+                                || /^(×|x|close)$/i.test(clean(b.textContent))));
+    if (closer) closer.click();
+    else document.dispatchEvent(new KeyboardEvent('keydown', {key: 'Escape', keyCode: 27, bubbles: true}));
+    for (let i = 0; i < 14 && visible(dlg); i++) await sleep(150);
+    if (visible(dlg)) {
+      // Left open, it would be read again for the next part: hidden on this page only.
+      info.close_failed = true; dlg.style.display = 'none';
+      document.querySelectorAll('.modal-backdrop').forEach(b => b.remove());
+      document.body.classList.remove('modal-open');
+    }
+    out[n] = info;
+  }
+  return out;
+}"""
 _SKIP_RESOURCES = ("image", "font", "media")
 
 # One block per part on PartsDetail (single and multiple): the left column holds the
@@ -162,6 +285,9 @@ BLOCKS_JS = """() => {
     const left = inp.closest('[class*="col-sm-8"]') || inp.parentElement;
     let side = left.nextElementSibling;
     while (side && !/(^|\\s)col-/.test(side.className || '')) side = side.nextElementSibling;
+    // Marked for the Service Center Stock read (SERVICE_CENTER_JS).
+    left.setAttribute('data-sai-left', n);
+    if (side) side.setAttribute('data-sai-side', n);
     return {n, pn: (inp.value || '').trim(), data, subs: Object.values(subs),
             price_us: val('YourPriceUS_' + n), price_eur: val('YourPriceEUR_' + n),
             description: clean((document.getElementById('partDescription_' + n) || {}).innerText),
@@ -205,7 +331,8 @@ _AIRCRAFT = re.compile(r"Applicable Aircraft.*?List not comprehensive, may be ap
 _BOILERPLATE = ("Each delivered OEM part will meet the original manufacturer’s specification or, "
                 "if the part is not an OEM part, it will meet or exceed the original "
                 "manufacturer’s specification.")
-_SIDE_DROP = re.compile(r"^(Remove Item|Add to List|Want to see more\?)$", re.I | re.M)
+# "Service Center Stock" is the dialog link the program reads itself (_read_service_center).
+_SIDE_DROP = re.compile(r"^(Remove Item|Add to List|Want to see more\?|Service Center Stock)$", re.I | re.M)
 BLOCK_TEXT_MAX = 4000
 SUBSTITUTES_MAX = 5
 # Textron's iMROCondition is NEW on what was seen; an empty one gets this code
@@ -264,6 +391,8 @@ def block_facts(block: dict) -> dict:
     if shelf:
         notes.append(f"MAX SHELF LIFE {shelf.group(1).strip().upper()}")
     notes += [note for wording, note in _LINE_NOTES if wording in flat]
+    if block.get("service_center"):
+        notes.append("SERVICE CENTER STOCK: " + "; ".join(block["service_center"]))
     return {
         "pn": block.get("pn") or "",
         "description": block.get("description") or "",
@@ -300,6 +429,23 @@ def _stock(side: str) -> Optional[str]:
     """The block's "<n> IN STOCK" as a number ("160"); None when not shown."""
     match = _STOCK.search(side)
     return match.group(1).replace(",", "") if match else None
+
+
+def service_center_rows(rows: list[list[str]]) -> list[str]:
+    """The dialog's table rows as "WICHITA, KS QTY 4"; a row with 0 on hand is left out."""
+    out = []
+    for cells in rows or []:
+        cells = [c for c in cells if c]
+        if not cells:
+            continue
+        qty = _number(cells[-1]) if len(cells) > 1 else None
+        if qty is not None:
+            if qty <= 0:
+                continue
+            out.append(f"{' '.join(cells[:-1]).upper()} QTY {qty:g}")
+        else:
+            out.append(" ".join(cells).upper())
+    return list(dict.fromkeys(out))
 
 
 def block_section(block: dict) -> str:
@@ -757,6 +903,7 @@ class TextronAdapter(GenericAdapter):
             return []
         blocks = await self._blocks(page)
         await self._check_signed_in(page, blocks)
+        await self._read_service_center(page, blocks)
         for block in blocks:
             block["link"] = url
             block["how"] = f"opened by its address for {part}"
@@ -822,44 +969,32 @@ class TextronAdapter(GenericAdapter):
             raise SessionExpired(f"Textron Multiple Part Search went to {page.url}")
         if await self._password_field(page):
             raise SessionExpired("Textron sign-in form shown instead of Multiple Part Search")
-        boxes = page.locator(PART_BOXES)
-        if not await boxes.count():
+        if not await page.locator(PART_BOXES).count():
             raise BulkSearchUnavailable(f"No part boxes on {page.url}")
-        while await boxes.count() < len(rows):
-            before = await boxes.count()
-            await page.locator(ADD_ANOTHER).first.click()
-            await page.wait_for_timeout(200)
-            if await boxes.count() <= before:
-                raise BulkSearchUnavailable("'Add Another' added no part box")
-        typed: dict[str, str] = {}
-        no_qty_box = 0
-        for i, row in enumerate(rows):
-            part = " ".join(row.part_number.split())
-            await boxes.nth(i).fill(part)
-            qty = requested_qty(row.qty_needed)
-            if not qty:
-                continue
-            box = await self._qty_box(page, i)
-            if box is None:
-                no_qty_box += 1
-                continue
-            await box.fill(qty)
-            typed[_key(part)] = qty
-        for i in range(len(rows), await boxes.count()):
-            await boxes.nth(i).fill("")
-        if no_qty_box:
+        parts = [" ".join(r.part_number.split()) for r in rows]
+        qtys = [requested_qty(r.qty_needed) or "" for r in rows]
+        started = time.time()
+        try:
+            filled = await asyncio.wait_for(page.evaluate(FILL_FORM_JS, {
+                "parts": parts, "qtys": qtys, "qtySel": QTY_IN_ROW,
+                "custom": self.config.get("qty_box_selector") or ""}), web.PAGE_SCRIPT_TIMEOUT)
+        except Exception as exc:
+            raise BulkSearchUnavailable(f"Multiple Part Search form not filled: {exc!r}") from exc
+        if filled.get("error"):
+            raise BulkSearchUnavailable(f"Multiple Part Search: {filled['error']} "
+                                        f"({filled.get('boxes')} box(es))")
+        if filled["values"][:len(parts)] != parts:
+            raise BulkSearchUnavailable(f"Multiple Part Search boxes hold {filled['values']!r}, "
+                                        f"not {parts!r}")
+        typed = {_key(parts[int(i)]): q for i, q in (filled.get("typed") or {}).items()}
+        if filled.get("noQty"):
             # The signed-in form showed none the rules know (2026-11-12, 19 parts):
             # what its rows hold, to pin the quantity box.
-            try:
-                inputs = await page.evaluate("""() => [...document.querySelectorAll(
-                    '#SearchRows input, #SearchRows select')].slice(0, 6).map(i =>
-                    [i.tagName, i.type, i.name, i.id, i.placeholder].join('|'))""")
-            except Exception:
-                inputs = "?"
             logger.info("Textron Multiple Part Search: no quantity box recognised; %d part(s) "
-                        "searched without their quantity. Row inputs: %s", no_qty_box, inputs)
-        logger.info("Textron Multiple Part Search: %d part(s), %d quantity box(es) filled",
-                    len(rows), len(typed))
+                        "searched without their quantity. Row inputs: %s", filled["noQty"],
+                        filled.get("inputs"))
+        logger.info("Textron Multiple Part Search: %d part(s) in %d box(es), %d quantity box(es) "
+                    "filled in %.1fs", len(rows), filled["boxes"], len(typed), time.time() - started)
         button = page.locator(SEARCH_BUTTON).first
         if not await button.count():
             raise BulkSearchUnavailable("No Search button on the Multiple Part Search form")
@@ -879,28 +1014,61 @@ class TextronAdapter(GenericAdapter):
             raise BulkSearchUnavailable(f"Multiple Part Search stayed at {page.url}: {message!r}")
         blocks = await self._blocks(page)
         await self._check_signed_in(page, blocks)
+        await self._read_service_center(page, blocks)
         for block in blocks:
             block["link"] = detail_url(block.get("pn") or "")
             block["how"] = "from the Multiple Part Search"
         return blocks, page.url, typed
 
-    async def _qty_box(self, page, index: int):
-        """The quantity box beside part box `index`: in its own row, else the
-        index-th quantity box of the form. None when the form has none."""
-        custom = self.config.get("qty_box_selector")
+    async def _read_service_center(self, page, blocks: list[dict]) -> None:
+        """Each block's Service Center Stock dialog read into block["service_center"]
+        (Internal Comments). Never stops the search: a part whose dialog isn't read
+        just has no such note (logged)."""
+        if not self.config.get("service_center_stock", True):
+            return
+        wanted = [b for b in blocks
+                  if SERVICE_CENTER_LINE.search((b.get("side") or "") + "\n" + (b.get("main") or ""))
+                  and not block_facts(b)["not_found"] and not _discontinued_only(b)]
+        if not wanted:
+            return
+        budget = float(self.config.get("service_center_seconds", SERVICE_CENTER_SECONDS))
+        calls: list[str] = []
+
+        def on_request(request) -> None:
+            # The dialog's own data address, if it has one: a direct fetch next time.
+            if request.resource_type in ("xhr", "fetch") and len(calls) < 5:
+                calls.append(f"{request.method} {request.url}")
+        started = time.time()
+        page.on("request", on_request)
         try:
-            if custom:
-                boxes = page.locator(custom)
-                return boxes.nth(index) if await boxes.count() > index else None
-            in_row = page.locator(ROWS).nth(index).locator(QTY_IN_ROW)
-            if await in_row.count():
-                return in_row.first
-            anywhere = page.locator(f"{MULTIPLE_FORM} :is({QTY_IN_ROW})")
-            if await anywhere.count() > index:
-                return anywhere.nth(index)
+            found = await asyncio.wait_for(page.evaluate(SERVICE_CENTER_JS, {
+                "ns": [b["n"] for b in wanted], "perPart": SERVICE_CENTER_PART_SECONDS * 1000,
+                "budget": budget * 1000, "maxRows": SERVICE_CENTER_ROWS_MAX}), budget + 20)
         except Exception as exc:
-            logger.debug("Quantity box %d: %r", index, exc)
-        return None
+            logger.warning("Textron Service Center Stock not read at %s: %r", page.url, exc)
+            return
+        finally:
+            page.remove_listener("request", on_request)
+        read = 0
+        for b in wanted:
+            info = found.get(str(b["n"])) or found.get(b["n"]) or {}
+            rows = service_center_rows(info.get("rows") or [])
+            if rows:
+                b["service_center"] = rows
+                read += 1
+            elif info.get("error") or not info.get("rows"):
+                logger.info("Textron %s Service Center Stock: nothing read (%s; link %s; text %r)",
+                            b.get("pn"), info.get("error") or "no table rows",
+                            info.get("link", "-"), (info.get("text") or "")[:200])
+            if info.get("close_failed"):
+                logger.warning("Textron %s: Service Center Stock dialog didn't close (hidden by the "
+                               "program)", b.get("pn"))
+        logger.info("Textron Service Center Stock: %d of %d part(s) with stock listed, %.1fs%s",
+                    read, len(wanted), time.time() - started,
+                    f"; page calls seen: {calls}" if calls else "")
+        if _dumping():
+            _dump("service-center", "\n\n".join(
+                f"--- {b.get('pn')} ---\n{found.get(str(b['n'])) or found.get(b['n'])}" for b in wanted))
 
     # -- the text the LLM reads ----------------------------------------------------------
     def _remember(self, block: dict, requested: str, qty_typed: Optional[str]) -> list[str]:

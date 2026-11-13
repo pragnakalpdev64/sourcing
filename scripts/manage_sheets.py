@@ -35,7 +35,7 @@ def main() -> int:
     args = parser.parse_args()
 
     s = get_settings()
-    store = make_store(s.store_backend, s.gcp_project, s.store_file)
+    store = make_store(s.store_backend, s.store_project, s.store_file)
 
     if args.action == "list":
         sheets = store.list_enabled_sheets(enabled_only=False)
