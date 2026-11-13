@@ -201,7 +201,8 @@ class PersonHandoff:
     async def watch_live_view(self, adapter: VendorAdapter, page, url: str, *, account: str,
                               method: str, people: tuple = ()) -> bool:
         """Send the Live View link and wait until the person has logged in on the
-        open page. False when the wait ran out."""
+        open page. False when the wait ran out, or when the adapter's check raised
+        MfaRequired: the sign-in ended without signing in."""
         hid = secrets.token_hex(16)
         now = time.time()
         minutes = max(1, self.wait_seconds // 60)
@@ -232,6 +233,21 @@ class PersonHandoff:
                 logger.warning("[%s] Live View check took over %ds; trying again", account,
                                LIVE_CHECK_TIMEOUT)
                 done = False
+            except MfaRequired as ended:
+                # The adapter saw the sign-in end without signing in (Textron 2026-11-13:
+                # back on the login form): no point waiting out the clock. The run then
+                # logs out if needed and closes the browser session.
+                self.store.update_hitl(hid, {"state": EXPIRED, "finished_at": time.time(),
+                                             "ended": str(ended)[:300]})
+                self.store.audit("hitl_live_view_ended", account_id=account, method=method,
+                                 reason=str(ended)[:300])
+                logger.warning("[%s] The login ended without signing in: %s", account, ended)
+                for person in people or ("",):
+                    await self.notifier.send(
+                        f"{adapter.display_name}: the login ended without signing in ({ended}). "
+                        "The run stopped and closed that browser; set the rows back to NEW to "
+                        "try again.", to=person or None)
+                return False
             if not done and time.time() - last_note >= 30:
                 last_note = time.time()
                 logger.info("[%s] Still waiting for the person (page at %s, %d s left)",
@@ -345,6 +361,18 @@ async def logout_with_handoff(adapter: VendorAdapter, page, handoff: Optional[Pe
 HOLD_POLL_SECONDS = 15
 HOLD_RETRY_EVERY = 4
 
+def _browser_gone(handle) -> bool:
+    """The page closed or the browser's connection lost: no logout can be done or
+    checked through it any more."""
+    try:
+        if handle.page.is_closed() is True:
+            return True
+        browser = getattr(handle, "browser", None)
+        return browser is not None and browser.is_connected() is False
+    except Exception:
+        return False                  # can't tell: keep waiting, as before
+
+
 async def hold_until_logged_out(account: str, adapter: VendorAdapter, handle,
                                  browser) -> bool:
     """The logout isn't confirmed: the browser is never closed on a session that
@@ -373,6 +401,14 @@ async def hold_until_logged_out(account: str, adapter: VendorAdapter, handle,
     while True:
         await asyncio.sleep(HOLD_POLL_SECONDS)
         checks += 1
+        if _browser_gone(handle):
+            # Nothing left to wait on (Textron 2026-11-12: the window closed, then
+            # every check failed with "Connection closed" for as long as the run lived).
+            logger.warning("[%s] The browser was closed before the logout was confirmed: "
+                           "the portal session may stay open until it expires. Log out "
+                           "of %s by hand if it was signed in.", account,
+                           adapter.display_name)
+            return False
         try:
             if not reachable and checks % HOLD_RETRY_EVERY == 0:
                 if await adapter.logout(page):

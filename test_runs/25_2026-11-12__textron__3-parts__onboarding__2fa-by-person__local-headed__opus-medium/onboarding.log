@@ -1,0 +1,59 @@
+Onboarding textron_aviation with TextronAdapter: login from secret sourcing-vendor-textron-aviation, browser local (window shown), LLM anthropic claude-opus-5-5 (effort medium), fresh (saved selectors ignored)
+2FA: local live view link (DevTools on 127.0.0.1) sent in Chat; open it on this machine and log in there; wait 600s
+2026-11-12 18:56:00,144 INFO sourcing.browser: Opened local Chromium 156.0.8078.4 (session local-29f2ed40dc6a, headless=False, live view=127.0.0.1:44757; no saved cookies, context label local-e3eebc703d594ea582d271d5849cbcb5)
+2026-11-12 18:56:00,144 INFO sourcing.vendors.generic: Login: Textron Aviation as purchasing@skylinkintl.com
+2026-11-12 18:56:02,615 INFO sourcing.vendors.textron: Textron account check: 302 to https://ww2.txtav.com/Account/Login?ReturnUrl=%2FDashboard -> signed out
+2026-11-12 18:56:02,615 INFO sourcing.vendors.generic: Login: opening https://ww2.txtav.com/Account/Login (from secret sourcing-vendor-textron-aviation url)
+2026-11-12 18:56:38,373 INFO sourcing.vendors.web: Consent popup #onetrust-banner-sdk: clicking 'Reject all (OneTrust)'
+2026-11-12 18:56:43,381 INFO sourcing.vendors.web: Consent popup answered; no reload
+2026-11-12 18:56:56,799 INFO sourcing.vendors.textron: Login: Log In button state ready
+2026-11-12 18:56:56,799 INFO sourcing.vendors.textron: Login: submitting with button#btnSignIn
+2026-11-12 18:56:56,889 INFO sourcing.vendors.web: Login submit: submitted; waiting up to 90s for the page
+2026-11-12 18:57:01,128 INFO sourcing.vendors.web: Login submit: page ready after 4.3s (https://ww2.txtav.com/Account/SendCode?RememberMe=False)
+2026-11-12 18:57:05,232 WARNING sourcing.vendors.generic: Login: 2FA step shown (email, code box None, totp seed=no) -> needs a person
+2026-11-12 18:57:06,333 INFO sourcing.hitl: [onboarding:textron_aviation] Waiting up to 10 min for a person to log in through Live View
+2026-11-12 18:57:09,666 INFO sourcing.vendors.textron: Textron account check: 302 to https://ww2.txtav.com/Account/Login?ReturnUrl=%2FDashboard -> signed out
+2026-11-12 18:57:12,991 INFO sourcing.vendors.textron: Textron account check: 302 to https://ww2.txtav.com/Account/Login?ReturnUrl=%2FDashboard -> signed out
+2026-11-12 18:57:16,390 INFO sourcing.vendors.textron: Textron account check: 302 to https://ww2.txtav.com/Account/Login?ReturnUrl=%2FDashboard -> signed out
+2026-11-12 18:57:19,727 INFO sourcing.vendors.textron: Textron account check: 302 to https://ww2.txtav.com/Account/Login?ReturnUrl=%2FDashboard -> signed out
+2026-11-12 18:57:23,121 INFO sourcing.vendors.textron: Textron account check: 302 to https://ww2.txtav.com/Account/Login?ReturnUrl=%2FDashboard -> signed out
+2026-11-12 18:57:26,489 INFO sourcing.vendors.textron: Textron account check: 302 to https://ww2.txtav.com/Account/Login?ReturnUrl=%2FDashboard -> signed out
+2026-11-12 18:57:29,854 INFO sourcing.vendors.textron: Textron account check: 302 to https://ww2.txtav.com/Account/Login?ReturnUrl=%2FDashboard -> signed out
+2026-11-12 18:57:33,228 INFO sourcing.vendors.textron: Textron account check: 302 to https://ww2.txtav.com/Account/Login?ReturnUrl=%2FDashboard -> signed out
+2026-11-12 18:57:36,607 INFO sourcing.vendors.textron: Textron account check: 302 to https://ww2.txtav.com/Account/Login?ReturnUrl=%2FDashboard -> signed out
+2026-11-12 18:57:36,608 INFO sourcing.hitl: [onboarding:textron_aviation] Still waiting for the person (page at https://ww2.txtav.com/Account/SendCode, 568 s left)
+2026-11-12 18:58:06,980 INFO sourcing.hitl: [onboarding:textron_aviation] Still waiting for the person (page at https://ww2.txtav.com/Account/VerifyCode, 538 s left)
+2026-11-12 18:58:37,331 INFO sourcing.hitl: [onboarding:textron_aviation] Still waiting for the person (page at https://ww2.txtav.com/Account/VerifyCode, 507 s left)
+2026-11-12 18:59:07,665 INFO sourcing.hitl: [onboarding:textron_aviation] Still waiting for the person (page at https://ww2.txtav.com/Account/VerifyCode, 477 s left)
+2026-11-12 18:59:15,709 INFO sourcing.vendors.textron: Textron account check: 200 -> signed in
+2026-11-12 18:59:15,709 INFO sourcing.vendors.textron: Login: the person finished signing in (now at https://ww2.txtav.com/Dashboard)
+2026-11-12 18:59:15,731 INFO sourcing.hitl: [onboarding:textron_aviation] The person finished the login (now at https://ww2.txtav.com/Dashboard)
+2026-11-12 18:59:16,469 INFO sourcing.onboarding: Sign-in seen by the login (account page https://ww2.txtav.com/Dashboard); no separate check
+2026-11-12 18:59:23,987 INFO sourcing.vendors.textron: Textron (read): 1 block(s) for A-7079B-24, 1482 chars
+2026-11-12 18:59:23,988 INFO sourcing.vendors.textron: Saved the text read for A7079B24 to /media/pragnakalpl19/projects1/Backup/sourcing-proto_share_2026-10-15/sourcing-proto/debug_pages/20261112-185923-textron-A7079B24-read.txt
+2026-11-12 18:59:37,309 INFO sourcing.vendors.textron: Textron (read): 1 block(s) for MS20470AD4-4, 1608 chars
+2026-11-12 18:59:37,309 INFO sourcing.vendors.textron: Saved the text read for MS20470AD44 to /media/pragnakalpl19/projects1/Backup/sourcing-proto_share_2026-10-15/sourcing-proto/debug_pages/20261112-185937-textron-MS20470AD44-read.txt
+2026-11-12 18:59:47,951 INFO sourcing.vendors.textron: Textron account check: 200 -> signed in
+2026-11-12 18:59:47,951 INFO sourcing.vendors.textron: Textron: NOSUCHPART123 not found (Part Not Found.)
+2026-11-12 18:59:47,967 INFO sourcing.vendors.textron: Logout: no Log Off link shown; submitting the page's logout form
+2026-11-12 18:59:48,039 INFO sourcing.vendors.web: Logout: submitted; waiting up to 90s for the page
+2026-11-12 18:59:51,369 INFO sourcing.vendors.web: Logout: page ready after 3.4s (https://ww2.txtav.com/Account/Login?ReturnUrl=%2FDashboard)
+2026-11-12 18:59:51,736 INFO sourcing.vendors.textron: Textron account check: 302 to https://ww2.txtav.com/Account/Login?ReturnUrl=%2FDashboard -> signed out
+2026-11-12 18:59:51,736 INFO sourcing.vendors.textron: Logout: signed out (now at https://ww2.txtav.com/Account/Login?ReturnUrl=%2FDashboard)
+
+Onboarding textron_aviation (TextronAdapter): OK
+  login: signed in in 196.3s
+  sign-in check on the next page: True
+  part A-7079B-24: found, 1 offer(s), 15.5s
+      A-7079B-24  price=42.01 USD  qty=160  cond=NE  lead=In stock
+  part MS20470AD4-4: found, 1 offer(s), 10.5s
+      MS20470AD4-4  price=75.65 USD  qty=Out of stock  cond=NE  lead=Estimated availability 12/27/2026
+  part NOSUCHPART123: no results, 0 offer(s), 5.4s
+  logout: True
+  found by: password_input=saved, username_input=saved
+  learned selectors (confirmed; --save saves these):
+  TO CHECK:
+    - no direct results address learned: every search goes through the search box (slower)
+  LLM: 3 call(s) (1 to find elements), $0.1043; whole run 232.6s
+
+Saved /tmp/claude-1001/-media-pragnakalpl19-projects1-Backup-sourcing-proto-share-2026-10-15-sourcing-proto/5c8507dd-2ae4-4402-8178-4342f20bba19/scratchpad/textron_onboard.json

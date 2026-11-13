@@ -14,10 +14,12 @@ from __future__ import annotations
 
 import argparse
 import asyncio
+import signal
 import json
 import logging
 import os
 import sys
+import time
 import uuid
 from dataclasses import replace
 from datetime import datetime, timezone
@@ -158,6 +160,36 @@ async def run_one_sheet(shared: Deps, sheet: dict, run_id: str) -> dict:
 
 # A sheet that keeps getting rows can't keep one job running for ever.
 MAX_PASSES = 5
+# Nor can one that keeps being edited keep it waiting.
+MAX_QUIET_WAIT_SECONDS = 600
+
+
+async def wait_until_quiet(store: Store, quiet_seconds: int, clock=None, sleep=None) -> float:
+    """Wait until no registered sheet was edited in the last `quiet_seconds`.
+
+    The Sheets add-on calls /trigger on every edit and /trigger notes the time
+    (`last_edit_at`); add-ons can't run the 90 s timer the per-sheet script used,
+    so the job started by the first edit waits here instead, and a row is not
+    read while its quantity or vendor is still being typed. Returns the seconds
+    waited. Re-read every few seconds: edits keep coming in while it waits."""
+    clock = clock or time.time
+    sleep = sleep or asyncio.sleep
+    start = clock()
+    while True:
+        latest = max((float(s.get("last_edit_at") or 0)
+                      for s in store.list_enabled_sheets()), default=0.0)
+        left = latest + quiet_seconds - clock()
+        waited = clock() - start
+        if left <= 0:
+            return waited
+        if waited >= MAX_QUIET_WAIT_SECONDS:
+            logger.warning("Sheets still being edited after %ds: reading them now",
+                           MAX_QUIET_WAIT_SECONDS)
+            return waited
+        if waited == 0:
+            logger.info("A sheet was edited %ds ago: waiting until it's quiet for %ds",
+                        quiet_seconds - left, quiet_seconds)
+        await sleep(min(left, 5))
 
 
 async def run(dummy: bool, vendor_overrides: Optional[dict[str, dict]] = None,
@@ -169,6 +201,12 @@ async def run(dummy: bool, vendor_overrides: Optional[dict[str, dict]] = None,
         if not store.acquire_lock(WORKER_LOCK, run_id, settings.job_lock_seconds):
             logger.info("Another worker run holds the lock; exiting")
             return 0
+        try:
+            if all_sheets:
+                await wait_until_quiet(store, settings.trigger_quiet_seconds)
+        except BaseException:
+            store.release_lock(WORKER_LOCK, run_id)
+            raise
         # This pass reads the sheet now: a request made before it is covered.
         store.release_lock(RERUN_FLAG, RERUN_HOLDER)
         try:
@@ -315,9 +353,25 @@ def main(argv: Optional[list[str]] = None) -> int:
     # Flags beat .env: set them before Settings is (re)read
     os.environ.update(env_overrides(args))
     get_settings.cache_clear()
-    return asyncio.run(run(dummy=get_settings().dummy_mode,
-                           vendor_overrides=vendor_overrides(args, parser),
-                           all_sheets=args.all_sheets))
+    try:
+        return asyncio.run(_stop_on_sigterm(run(dummy=get_settings().dummy_mode,
+                                                vendor_overrides=vendor_overrides(args, parser),
+                                                all_sheets=args.all_sheets)))
+    except asyncio.CancelledError:
+        logger.warning("Run stopped by SIGTERM; browser sessions were closed")
+        return 143
+
+
+async def _stop_on_sigterm(coro):
+    """SIGTERM (Cloud Run stopping the job, the local API) ends the run like Ctrl+C:
+    the run is cancelled, so its `finally` blocks log out and release the Browserbase
+    sessions instead of leaving them open until their timeout (2026-11-13)."""
+    task = asyncio.current_task()
+    try:
+        asyncio.get_running_loop().add_signal_handler(signal.SIGTERM, task.cancel)
+    except (NotImplementedError, RuntimeError, ValueError):
+        pass                              # not the main thread / not supported here
+    return await coro
 
 
 if __name__ == "__main__":

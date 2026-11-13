@@ -327,3 +327,42 @@ async def test_without_live_view_the_code_form_is_used(page_for):
                              handoff_for(store, person), account="example__",
                              live_view_url=no_live_view)
     assert portal.signed_in and "/hitl/code?t=" in person.messages[0][1]
+
+
+@pytest.mark.asyncio
+async def test_the_adapter_can_end_the_live_view_wait(monkeypatch):
+    # Textron 2026-11-13: the sign-in went back to Send Code and the run waited out its
+    # 10 minutes. An adapter that sees the sign-in end raises MfaRequired: the wait stops.
+    from sourcing.vendors.base import MfaRequired
+    monkeypatch.setattr(hitl, "LIVE_POLL_SECONDS", 0.01)
+
+    class Ends:
+        display_name = "Textron Aviation"
+        accepts_person_login = True
+        accepts_mfa_codes = True
+        checks = 0
+
+        async def login(self, page, cred):
+            raise MfaRequired("email", input_selector="#Code")
+
+        async def person_finished_login(self, page):
+            self.checks += 1
+            if self.checks == 2:
+                raise MfaRequired("email", "back on the sign-in page")
+            return False
+
+    class Notes:
+        def __init__(self):
+            self.messages = []
+
+        async def send(self, text, to=None):
+            self.messages.append(text)
+
+    store, notes = MemoryStore(), Notes()
+    with pytest.raises(CodeNotGiven) as exc:
+        await login_with_handoff(Ends(), object(), code_cred(), handoff_for(store, notes, wait=60),
+                                 account="textron__", live_view_url=live_url)
+    assert exc.value.asked                      # rows NEEDS_ATTENTION, account NEEDS_LOGIN
+    doc, = store.hitl.values()
+    assert doc["state"] == EXPIRED and "back on the sign-in page" in doc["ended"]
+    assert "ended without signing in" in notes.messages[-1]

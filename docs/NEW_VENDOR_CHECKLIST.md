@@ -1,7 +1,7 @@
 # New vendor checklist: what the working adapters already taught us
 
 Read this before writing a new adapter or prompt. Every line comes from a real
-run on Proponent, DASI, Aviall, Wencor, AAR, Monroe or Aircraft Spruce; the file and date are
+run on Proponent, DASI, Aviall, Wencor, AAR, Monroe, Aircraft Spruce or Textron Aviation; the file and date are
 where it was seen. Start from the closest working adapter, not from scratch:
 
 | The new site looks like | Start from |
@@ -14,6 +14,7 @@ where it was seen. Start from the closest working adapter, not from scratch:
 | One product page per part number by address, no multi-part search | `aircraft_spruce.py` |
 | Single-page app (Angular / React) whose pages load JSON from an API | `incora.py` |
 | ASP.NET page with a jqGrid | `proponent.py` + `grid.py` |
+| ASP.NET MVC part page per part + a multi-part form, values in hidden fields | `textron.py` |
 | Anything else | `generic.py` alone first (vendor record only), then an adapter |
 
 ## 1. Look at the real pages first (no login needed for public ones)
@@ -57,6 +58,16 @@ where it was seen. Start from the closest working adapter, not from scratch:
   `/customer/account/logout/`, BigCommerce `/login.php?action=logout`) and confirm
   it with the same check. Logout must be confirmed before the browser closes.
 - **An OAuth / Azure AD B2C sign-in address is one sign-in's own** (Incora 2026-11-05: `authorize?state=...&code_challenge=...`). Saved as the login page and opened on the next run, B2C took the password and the app refused the answer ("Still on the sign-in form"). Start on the app's own page every time and never save the B2C address (`IncoraAdapter.login_url_candidates`, `_remember_login_page`). Short-lived tokens (Incora: signed out ~3.5 min after login) are refreshed by the app while its page is open: wait on the open page before opening the next one.
+- **A Log In button the page enables only after Google's invisible reCAPTCHA v3** (Textron
+  2026-11-12: `#btnSignIn disabled` until the score comes back; a low score shows the "I'm not a
+  robot" box). Wait for the button, never click a disabled one; the box goes to a person
+  (`TextronAdapter._sign_in_state`, `MfaRequired("captcha")`).
+- **A page's hidden form fields can hold the values it shows** (Textron's part blocks: `[n].Uom`,
+  `[n].MinOrder`, `YourPriceUS_n`, `[n].ErrorMsg`): read them as the program's own facts.
+- **A site can answer a headless browser with its own 404 page** (Textron 2026-11-12, every
+  address; curl with a browser's user agent got 200). Recognise that page and stop
+  (`LoginBlocked`): read as "no results" it would mark every part NOT_FOUND. Never work round it
+  by faking the browser.
 - The login page comes from the secret's `url` (vendor config `login_url` wins).
   Don't hard-code one in the adapter unless the team says so (Monroe, 2026-11-04).
 

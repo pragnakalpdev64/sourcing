@@ -64,3 +64,18 @@ def test_unbuilt_endpoints_say_so(client):
     resp = c.get("/credentials/update", follow_redirects=False)
     assert resp.status_code == 401 and "Sign in with Google" in resp.text
     assert c.get("/healthz").json() == {"ok": True}
+
+
+def test_trigger_says_why_when_the_job_cannot_start(client, monkeypatch):
+    # Seen 2026-11-12: a local API without TRIGGER_RUN_LOCAL, job not deployed (403).
+    from google.api_core import exceptions as gexc
+    c, _, _ = client
+
+    def refused():
+        raise gexc.PermissionDenied("Permission 'run.jobs.run' denied")
+    monkeypatch.setattr(api, "_start_job", refused)
+    resp = c.post("/trigger", headers={"X-Trigger-Secret": "s3"})
+    assert resp.status_code == 503 and "TRIGGER_RUN_LOCAL=1" in resp.json()["detail"]
+    # Not debounced: the next call tries again.
+    monkeypatch.setattr(api, "_start_job", lambda: "exec-2")
+    assert c.post("/trigger", headers={"X-Trigger-Secret": "s3"}).json()["started"] is True

@@ -108,7 +108,11 @@ def _create_as(project: str, name: str, data: bytes, client) -> str:
     except exceptions.AlreadyExists:
         # A secret with no enabled version holds no login yet (e.g. a create that
         # failed half way); filling it overwrites nothing.
-        if any(True for _ in client.list_secret_versions(parent=path, filter="state:ENABLED")):
+        # The filter only goes in `request` (the client has no filter= argument;
+        # 500 on /credentials/new for an existing secret, 2026-11-12).
+        versions = client.list_secret_versions(request={"parent": path,
+                                                        "filter": "state:ENABLED"})
+        if any(True for _ in versions):
             return "exists"
         state = "filled"
     client.add_secret_version(parent=path, payload={"data": data})

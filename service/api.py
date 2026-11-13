@@ -1,7 +1,8 @@
 """Cloud Run service `sourcing-api`.
 
-  POST /trigger              the sheet's Apps Script (apps_script/) or the Cloud
-                              Scheduler sweep -> register the caller's sheet (if
+  POST /trigger              the Sheets add-on (apps_script/, the user's Google
+                              token), an older per-sheet script or the Cloud
+                              Scheduler sweep (X-Trigger-Secret) -> register the caller's sheet (if
                               it sent one) -> start the worker job (or have the
                               running one read the sheet again)
   GET  /hitl/code?t=...      2FA code form (link sent in Chat, auth/hitl.py)
@@ -25,9 +26,11 @@ import shlex
 import subprocess
 import sys
 import threading
+import time
 import uuid
 from urllib.parse import parse_qs
 
+import httpx
 from fastapi import FastAPI, Header, HTTPException, Request
 from fastapi.responses import HTMLResponse
 
@@ -90,8 +93,24 @@ def _start_job() -> str:
 # Local mode (TRIGGER_RUN_LOCAL=1): the worker is a child process of this API.
 # The file store keeps no locks between processes, so this process tracks its
 # own child and runs it once more when rows came in meanwhile.
-_local = {"proc": None, "again": False, "sheet_id": None}
+_local = {"proc": None, "again": False, "sheet_id": None, "start_at": 0.0, "waiting": False}
 _local_lock = threading.Lock()
+
+
+def _start_local_when_quiet() -> None:
+    """Local mode's wait for a quiet sheet (on Cloud Run the worker waits: job_main)."""
+    while True:
+        with _local_lock:
+            left = _local["start_at"] - time.time()
+            if left <= 0:
+                _local["waiting"] = False
+                proc = _local["proc"]
+                if proc is not None and proc.poll() is None:
+                    _local["again"] = True   # "Search now" started one meanwhile
+                else:
+                    _start_local_job(_local["sheet_id"])
+                return
+        time.sleep(min(left, 1.0))
 
 
 def _start_local_job(sheet_id: str | None) -> str:
@@ -119,15 +138,78 @@ def _after_local_job(proc) -> None:
             _start_local_job(_local["sheet_id"])
 
 
-def _trigger_local(sheet_id: str | None, registered: bool) -> dict:
+def _trigger_local(sheet_id: str | None, registered: bool, wait: int = 0) -> dict:
     with _local_lock:
         proc = _local["proc"]
         if proc is not None and proc.poll() is None:
             _local["again"] = True
             return {"started": False, "registered": registered, "rerun": True,
                     "reason": "worker already running; it runs again when done"}
+        if wait > 0:
+            # Each edit moves the start back: it starts `wait` s after the last one.
+            _local.update(start_at=time.time() + wait, sheet_id=sheet_id)
+            if not _local["waiting"]:
+                _local["waiting"] = True
+                threading.Thread(target=_start_local_when_quiet, daemon=True).start()
+            return {"started": False, "registered": registered, "waiting": True,
+                    "reason": f"starts {wait}s after the last edit"}
         return {"started": True, "registered": registered,
                 "execution": _start_local_job(sheet_id)}
+
+
+# -- who may call /trigger -----------------------------------------------------
+# The Scheduler sweep and a per-sheet script send TRIGGER_SECRET. The add-on
+# sends the user's Google access token (ScriptApp.getOAuthToken), so it holds no
+# secret: Google tells us which OAuth client the token is for and whose it is.
+TOKENINFO_URL = "https://oauth2.googleapis.com/tokeninfo"
+
+
+async def _token_info(token: str) -> dict | None:
+    async with httpx.AsyncClient(timeout=10) as client:
+        resp = await client.get(TOKENINFO_URL, params={"access_token": token})
+    return resp.json() if resp.status_code == 200 else None
+
+
+def _addon_refusal(info: dict | None) -> str | None:
+    """Why this token may not start a run, or None if it may."""
+    s = get_settings()
+    if info is None:
+        return "Google did not accept the token"
+    client_id = str(info.get("azp") or info.get("aud") or "").lower()
+    if not s.addon_oauth_client_ids:
+        return "add-on sign-in not set up (ADDON_OAUTH_CLIENT_IDS)"
+    if client_id not in s.addon_oauth_client_ids:
+        # Logged so the right id can be set after the first test call.
+        logger.warning("/trigger: token for OAuth client %s, not the add-on's", client_id)
+        return "token is not from the SourcingAI add-on"
+    email = str(info.get("email") or "").lower()
+    if not email or str(info.get("email_verified")).lower() != "true":
+        return "Google did not confirm the email address"
+    domains = s.allowed_email_domains
+    if "*" in domains and not os.environ.get("K_SERVICE"):
+        return None   # local tests only, as on the sign-in page (web_auth.email_allowed)
+    # Only accounts of the listing's Workspace can authorize an Internal app;
+    # the domain is checked too, in case the consent screen is ever made External.
+    if email.rpartition("@")[2] not in domains:
+        return f"{email} is not a Skylink Google account"
+    return None
+
+
+async def _caller(request: Request, x_trigger_secret: str) -> str:
+    """"secret" or the add-on user's email; anything else is refused."""
+    secret = get_settings().trigger_secret
+    if x_trigger_secret:
+        if secret and hmac.compare_digest(x_trigger_secret, secret):
+            return "secret"
+        raise HTTPException(status_code=401, detail="bad trigger secret")
+    auth = request.headers.get("authorization", "")
+    if auth.lower().startswith("bearer ") and auth[7:].strip():
+        info = await _token_info(auth[7:].strip())
+        refusal = _addon_refusal(info)
+        if refusal:
+            raise HTTPException(status_code=401, detail=refusal)
+        return str(info["email"]).lower()
+    raise HTTPException(status_code=401, detail="bad trigger secret")
 
 
 @app.get("/healthz")
@@ -137,21 +219,25 @@ def healthz() -> dict:
 
 @app.post("/trigger")
 async def trigger(request: Request, x_trigger_secret: str = Header(default="")) -> dict:
-    secret = get_settings().trigger_secret
-    if not secret or not hmac.compare_digest(x_trigger_secret, secret):
-        raise HTTPException(status_code=401, detail="bad trigger secret")
+    caller = await _caller(request, x_trigger_secret)
 
     # The Scheduler sweep sends no body; any other caller may send {sheet_id, label}.
     try:
         body = await request.json()
     except Exception:
         body = {}
-    sheet_id = (body or {}).get("sheet_id")
+    body = body if isinstance(body, dict) else {}
+    sheet_id = body.get("sheet_id")
+    # The add-on calls on every edit ("edited": true) and leaves the wait to us:
+    # add-ons may not run a timer more than once an hour. "edited": false is its
+    # "Search now" (no wait); the older per-sheet script sends neither.
+    edited = body.get("edited")
+    quiet = get_settings().trigger_quiet_seconds
 
     if get_settings().trigger_run_local:
         # Not registered: the local worker searches only this sheet (--sheet), and
         # this process's copy of the file store would overwrite the worker's saves.
-        return _trigger_local(sheet_id, False)
+        return _trigger_local(sheet_id, False, quiet if edited is True else 0)
 
     st = store()
     registered = False
@@ -160,9 +246,13 @@ async def trigger(request: Request, x_trigger_secret: str = Header(default="")) 
             "label": body.get("label"),
             "requests_tab": body.get("requests_tab"),
             "results_tab": body.get("results_tab"),
+            # The worker waits until every sheet's last edit is `quiet` s old
+            # (job_main.wait_until_quiet); 0 = don't wait for this sheet.
+            "last_edit_at": None if edited is None else (time.time() if edited else 0),
+            "last_called_by": None if caller == "secret" else caller,
         })
         registered = True
-        logger.info("Registered sheet %s", sheet_id)
+        logger.info("Registered sheet %s (%s)", sheet_id, caller)
 
     if st.is_locked(WORKER_LOCK):
         # The running worker read its rows (and sheet list) when it started: it
@@ -170,13 +260,25 @@ async def trigger(request: Request, x_trigger_secret: str = Header(default="")) 
         st.acquire_lock(RERUN_FLAG, RERUN_HOLDER, RERUN_SECONDS)
         return {"started": False, "registered": registered, "rerun": True,
                 "reason": "worker already running"}
-    if not st.acquire_lock(TRIGGER_LOCK, uuid.uuid4().hex, TRIGGER_DEBOUNCE_SECONDS):
+    holder = uuid.uuid4().hex
+    if not st.acquire_lock(TRIGGER_LOCK, holder, TRIGGER_DEBOUNCE_SECONDS):
         # A job started seconds ago may already be past reading the sheet.
         st.acquire_lock(RERUN_FLAG, RERUN_HOLDER, RERUN_SECONDS)
         return {"started": False, "registered": registered, "rerun": True,
                 "reason": "debounced (a run was just started)"}
 
-    execution = _start_job()
+    try:
+        execution = _start_job()
+    except Exception as exc:
+        # Seen 2026-11-12: a local API without TRIGGER_RUN_LOCAL asked Cloud Run for the
+        # job, which isn't deployed (403 run.jobs.run): a clear answer, not a 500.
+        st.release_lock(TRIGGER_LOCK, holder)
+        logger.error("Could not start the worker job %s: %s", get_settings().job_name,
+                     str(exc).splitlines()[0][:300])
+        raise HTTPException(status_code=503, detail=(
+            f"Could not start the Cloud Run job '{get_settings().job_name}' "
+            f"({type(exc).__name__}). Not deployed yet? For a local test set "
+            "TRIGGER_RUN_LOCAL=1")) from exc
     logger.info("Started worker execution %s", execution)
     return {"started": True, "registered": registered, "execution": execution}
 

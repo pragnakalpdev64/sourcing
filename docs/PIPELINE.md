@@ -31,9 +31,16 @@ registry. Commands and flags: [COMMANDS.md](../COMMANDS.md).
 
 ## 1. Trigger (`service/api.py`)
 
-- `POST /trigger` needs header `X-Trigger-Secret`. The Scheduler sweep sends no body. The sheet's
-  Apps Script (`apps_script/Code.gs`, 2026-11-06) sends `{sheet_id, label, requests_tab}` once the
-  Requests tab has had no edits for 90s.
+- `POST /trigger` needs header `X-Trigger-Secret`, or the Sheets add-on's `Authorization: Bearer
+  <user's Google token>` (2026-11-12): Google's tokeninfo must name an OAuth client in
+  `ADDON_OAUTH_CLIENT_IDS` and a verified email in `ALLOWED_EMAIL_DOMAINS`. The Scheduler sweep
+  sends no body. The per-sheet script (`apps_script/per_sheet/Code.gs`, 2026-11-06) sends
+  `{sheet_id, label, requests_tab}` once the Requests tab has had no edits for 90s.
+- The add-on (`apps_script/addon/Code.gs`) calls on every edit with `"edited": true`: the sheet's
+  `last_edit_at` is noted and the job waits until every sheet has been quiet for
+  `TRIGGER_QUIET_SECONDS` (default 90, at most 10 min) before a pass (`job_main.wait_until_quiet`;
+  add-ons may run a timer only once an hour). Its "Search new rows now" sends `"edited": false`
+  (`last_edit_at` = 0, no wait). Local mode waits in the API instead.
 - A call while a worker runs (or seconds after one started) sets `RERUN_FLAG`: the worker clears it
   when a pass starts and, if it was set again meanwhile, reads the sheets once more (at most 5 passes).
 - `TRIGGER_RUN_LOCAL=1` (local testing through ngrok only): the worker runs as a child process of

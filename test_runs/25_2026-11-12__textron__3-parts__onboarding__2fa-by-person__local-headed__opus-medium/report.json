@@ -1,0 +1,73 @@
+{
+  "vendor_id": "textron_aviation",
+  "adapter": "TextronAdapter",
+  "signed_in": true,
+  "login_seconds": 196.3,
+  "signed_in_check": true,
+  "parts": [
+    {
+      "part_number": "A-7079B-24",
+      "status": "found",
+      "seconds": 15.5,
+      "offers": [
+        {
+          "part_number": "A-7079B-24",
+          "price": "42.01",
+          "currency": "USD",
+          "qty_available": "160",
+          "condition": "NE",
+          "lead_time": "In stock"
+        }
+      ],
+      "note": "",
+      "page_url": "https://ww2.txtav.com/Parts/PartSearch/PartsDetail/A-7079B-24"
+    },
+    {
+      "part_number": "MS20470AD4-4",
+      "status": "found",
+      "seconds": 10.5,
+      "offers": [
+        {
+          "part_number": "MS20470AD4-4",
+          "price": "75.65",
+          "currency": "USD",
+          "qty_available": "Out of stock",
+          "condition": "NE",
+          "lead_time": "Estimated availability 12/27/2026"
+        }
+      ],
+      "note": "",
+      "page_url": "https://ww2.txtav.com/Parts/PartSearch/PartsDetail/MS20470AD4-4"
+    },
+    {
+      "part_number": "NOSUCHPART123",
+      "status": "no results",
+      "seconds": 5.4,
+      "offers": [],
+      "note": "",
+      "page_url": "https://ww2.txtav.com/Parts/PartSearch/PartsDetail/NOSUCHPART123"
+    }
+  ],
+  "logged_out": true,
+  "stopped": "",
+  "login_only": false,
+  "learned": {},
+  "not_confirmed": [],
+  "found_by": {
+    "password_input": "saved",
+    "username_input": "saved"
+  },
+  "llm_discovery_calls": 1,
+  "llm": {
+    "calls": 3,
+    "input_tokens": 22035,
+    "output_tokens": 806,
+    "cache_read_tokens": 0,
+    "cost_usd": 0.10426
+  },
+  "seconds": 232.6,
+  "ok": true,
+  "to_check": [
+    "no direct results address learned: every search goes through the search box (slower)"
+  ]
+}

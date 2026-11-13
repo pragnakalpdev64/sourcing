@@ -114,6 +114,14 @@ class Settings:
     # with TRIGGER_LOCAL_ARGS added (e.g. "--dummy"). Never set on Cloud Run.
     trigger_run_local: bool
     trigger_local_args: str
+    # The Sheets add-on (apps_script/) signs its /trigger calls with the user's
+    # Google token instead of TRIGGER_SECRET. Accepted only from these OAuth
+    # clients: the one Apps Script made in the add-on's listing project (Google
+    # Cloud console > Credentials, "Apps Script"). Client ids, not secrets.
+    addon_oauth_client_ids: tuple
+    # A sheet's rows are read once nobody has edited it for this long, so a row
+    # isn't searched while its quantity or vendor is still being typed.
+    trigger_quiet_seconds: int
     # Where the API runs (Cloud Run URL, or http://localhost:8080 locally). Set =
     # a 2FA code the worker can't make is asked from the requester over Chat
     # with a link to the API's code form (sourcing/auth/hitl.py).
@@ -172,6 +180,8 @@ class Settings:
             trigger_secret=_env("TRIGGER_SECRET"),
             trigger_run_local=_env_bool("TRIGGER_RUN_LOCAL"),
             trigger_local_args=_env("TRIGGER_LOCAL_ARGS"),
+            addon_oauth_client_ids=_env_list("ADDON_OAUTH_CLIENT_IDS"),
+            trigger_quiet_seconds=_env_int("TRIGGER_QUIET_SECONDS", 90),
             public_base_url=_env("PUBLIC_BASE_URL"),
             chat_app_space=_env("CHAT_APP_SPACE"),
             chat_app_audience=_env("CHAT_APP_AUDIENCE"),

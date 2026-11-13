@@ -1,7 +1,7 @@
 /**
  * SourcingAI: start a search when a team member adds a row to the Requests tab.
  *
- * Installed in the request sheet (Extensions > Apps Script), set up once with
+ * Installed in one request sheet (Extensions > Apps Script), set up once with
  * setup() (see apps_script/README.md). What it does:
  *   - an edit on the Requests tab (typing or pasting rows) is noted;
  *   - once nobody has edited the tab for DELAY_SECONDS, it calls SourcingAI's

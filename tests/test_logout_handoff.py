@@ -172,3 +172,28 @@ async def test_a_local_browser_is_not_closed_before_the_logout_is_confirmed(monk
     assert StuckFakeAdapter.tries == 2 and order == ["hold", "close"]
     account = store.accounts[f"proponent__{JANE}"]
     assert account["last_login_at"] is None and account["last_logout_at"]
+
+
+@pytest.mark.asyncio
+async def test_the_hold_ends_when_the_browser_is_gone(monkeypatch):
+    # Textron 2026-11-12: the window closed, then "Connection closed" on every check
+    # for as long as the run lived.
+    from types import SimpleNamespace
+    from sourcing.auth import hitl
+    monkeypatch.setattr(hitl, "HOLD_POLL_SECONDS", 0)
+
+    class Gone:
+        display_name = "Textron Aviation"
+
+        async def person_finished_logout(self, page):
+            raise AssertionError("not checked on a closed browser")
+
+    class Browser:
+        shows_window = True
+
+        async def live_view_url(self, session_id):
+            raise RuntimeError("none")
+
+    page = SimpleNamespace(is_closed=lambda: True)
+    handle = SimpleNamespace(page=page, session_id="s1", browser=None)
+    assert await hitl.hold_until_logged_out("textron__shared", Gone(), handle, Browser()) is False

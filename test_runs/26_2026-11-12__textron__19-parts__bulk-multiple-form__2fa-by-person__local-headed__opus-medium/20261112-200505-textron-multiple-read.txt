@@ -1,0 +1,562 @@
+--- Part 1: https://ww2.txtav.com/Parts/PartSearch/PartsDetail/101-320234-3 (from the Multiple Part Search) ---
+--- What the program read for part 1 (the page's own data fields) ---
+Part number: 101-320234-3
+Is the requested part 101-320234-3: yes
+Description: PLACARD- AIR INSTRUMENT IDENT
+Unit of measure: EA
+Condition: NEW
+Your price in the page's data: USD 0 / EUR 0
+Availability note in the page's data: Contact customer support for availability.
+--- Page text of part 1 ---
+CATEGORIES / AIRFRAME PARTS / DECALS & PLACARDS
+TEXTRON AVIATION PART NUMBER
+101-320234-3
+PLACARD- AIR INSTRUMENT IDENT
+Unit of Measure: EA
+Maximum Shelf Life: 12 Months
+Part Type: Proprietary
+NOTES
+Extended Inactivity - This part has had no recent activity which may result in extended quote timing
+PLEASE CONTACT US FOR ASSISTANCE WITH PRICING.
+CREATE LIST
+--- Part 2: https://ww2.txtav.com/Parts/PartSearch/PartsDetail/A-7079B-24 (from the Multiple Part Search) ---
+--- What the program read for part 2 (the page's own data fields) ---
+Part number: A-7079B-24
+Is the requested part A-7079B-24: yes
+Description: LAMP DEICE LIGHT ASSEMBLY
+Unit of measure: EA
+Condition: NEW
+Your price in the page's data: USD 42.01 / EUR 37.43
+Stock shown: 160 IN STOCK
+Ships from: Wichita
+Availability note in the page's data: Contact customer support for availability
+Alternate listed: 34-0070371-01 FOR CESSNA APPLICATION ONLY (Cessna Alternate)
+Alternate listed: WL-L7079-24 SEE TECHNICAL PUBLICATIONS FOR APPLICATION (Beech-One-Way Supersedure)
+--- Page text of part 2 ---
+CATEGORIES / CABIN AND ENVIRONMENTAL / HOLDERS / LAMP HOLDER
+A-7079B-24
+LAMP DEICE LIGHT ASSEMBLY
+Your Price: $42.01 / 37,43 €
+LIST PRICE: $70.01 / 62,38 € DISCOUNT: 40%
+Unit of Measure: EA
+Weight: 0.03 lbs
+Dimensions : 2.1 (L) x 1.45 (W) x 1.25 (H) in
+Packaged Weight: 0.05 lbs
+Packaged Dimensions : 5.05 (L) x 4 (W) x 1.75 (H) in
+160 IN STOCK
+Quantity
+Ships from Wichita
+Service Center Stock
+CREATE LIST
+FOR CESSNA APPLICATION ONLY
+34-0070371-01
+SEE TECHNICAL PUBLICATIONS FOR APPLICATION
+WL-L7079-24
+PRICE REVIEW
+--- Part 3: https://ww2.txtav.com/Parts/PartSearch/PartsDetail/4596 (from the Multiple Part Search) ---
+--- What the program read for part 3 (the page's own data fields) ---
+Part number: 4596
+Is the requested part 4596: yes
+Description: LAMP
+Unit of measure: EA
+Condition: NEW
+Your price in the page's data: USD 33.83 / EUR 30.15
+Stock shown: 282 IN STOCK
+Ships from: Wichita
+Availability note in the page's data: Contact customer support for availability
+Alternate listed: 01-0772102-10 APPLICATION SPECIFIC ALTERNATE SEE COMMENTS (Beech-Model Restricted)
+Alternate listed: 87-05207-002 SEE TECHNICAL PUBLICATIONS FOR APPLICATION (Beech-Model Restricted)
+--- Page text of part 3 ---
+CATEGORIES / CABIN AND ENVIRONMENTAL / HOLDERS / LAMP HOLDER
+4596
+LAMP
+Your Price: $33.83 / 30,15 €
+LIST PRICE: $56.39 / 50,24 € DISCOUNT: 40%
+Unit of Measure: EA
+Weight: 0.45 lbs
+Dimensions : 4.35 (L) x 4.3 (W) x 2.45 (H) in
+Packaged Weight: 0.53 lbs
+Packaged Dimensions : 4.05 (L) x 3.8 (W) x 3.95 (H) in
+282 IN STOCK
+Quantity
+Ships from Wichita
+Service Center Stock
+CREATE LIST
+APPLICATION SPECIFIC ALTERNATE SEE COMMENTS
+01-0772102-10
+SEE TECHNICAL PUBLICATIONS FOR APPLICATION
+87-05207-002
+PRICE REVIEW
+--- Part 4: https://ww2.txtav.com/Parts/PartSearch/PartsDetail/AS3209-013 (from the Multiple Part Search) ---
+--- What the program read for part 4 (the page's own data fields) ---
+Part number: AS3209-013
+Is the requested part AS3209-013: yes
+Description: PACKING, PREFORMED O-RING
+Unit of measure: EA
+Condition: NEW
+Your price in the page's data: USD 0.59 / EUR 0.52
+Stock shown: 1120 IN STOCK
+Ships from: Wichita
+Availability note in the page's data: Contact customer support for availability
+Alternate listed: M83248/1-013 ACCEPTABLE ALTERNATE FOR BEECH APPLICATIONS (Beech-Alternate)
+--- Page text of part 4 ---
+CATEGORIES / CONSUMABLES / GASKETS, SEALS, & O-RINGS
+AS3209-013
+PACKING, PREFORMED O-RING
+Your Price: $0.59 / 0,52 €
+LIST PRICE: $0.84 / 0,75 € DISCOUNT: 30%
+Unit of Measure: EA
+Weight: 0.01 Pounds
+Dimensions : 0.58 (L) x 0.58 (W) x 0.07 (H) Inches
+Packaged Weight: 0.01 Pounds
+Packaged Dimensions : 4.45 (L) x 2.35 (W) x 0.8 (H) Inches
+DESCRIPTION
+Military Standard Hydraulic O-Ring
+Fluorocarbon Rubber
+Preformed
+Thickness: 0.067 in.
+Inner Diameter: 0.421 in.
+Industry Standard Specification: AS3209
+1120 IN STOCK
+Quantity
+Ships from Wichita
+Service Center Stock
+CREATE LIST
+ACCEPTABLE ALTERNATE FOR BEECH APPLICATIONS
+M83248/1-013
+PRICE REVIEW
+--- Part 5: https://ww2.txtav.com/Parts/PartSearch/PartsDetail/102A10001-15 (from the Multiple Part Search) ---
+--- What the program read for part 5 (the page's own data fields) ---
+Part number: 102A10001-15
+Is the requested part 102A10001-15: yes
+Description: O RING
+Unit of measure: EA
+Condition: NEW
+Your price in the page's data: USD 38.4 / EUR 0
+Stock shown: 0 IN STOCK
+Ships from: Wichita
+Availability note in the page's data: Contact customer support for availability
+Alternate listed: M25988/1-237 ACCEPTABLE REPLACEMENT (Cessna & Beech-One Way Supersedure)
+--- Page text of part 5 ---
+CATEGORIES / CONSUMABLES / GASKETS, SEALS, & O-RINGS
+102A10001-15
+O RING
+Your Price: $38.40
+LIST PRICE: $48.00 DISCOUNT: 20%
+Unit of Measure: EA
+Maximum Shelf Life: 180 Months
+Weight: 0.01 lbs
+Dimensions : 3.7 (L) x 3.45 (W) x 0.25 (H) in
+Packaged Weight: 0.03 lbs
+Packaged Dimensions : 7.55 (L) x 5.75 (W) x 0.3 (H) in
+0 IN STOCK
+Contact customer support for availability.
+Quantity
+Ships from Wichita
+No Service Center Stock Available
+CREATE LIST
+ACCEPTABLE REPLACEMENT
+M25988/1-237
+PRICE REVIEW
+--- Part 6: https://ww2.txtav.com/Parts/PartSearch/PartsDetail/PT6A-100HRBECHKT (from the Multiple Part Search) ---
+--- What the program read for part 6 (the page's own data fields) ---
+Part number: PT6A-100HRBECHKT
+Is the requested part PT6A-100HRBECHKT: yes
+Description: KIT-100HR INSP PTS BEECH KIT
+Unit of measure: EA
+Condition: NEW
+Your price in the page's data: USD 104.95 / EUR 93.51
+Stock shown: 181 IN STOCK
+Ships from: Wichita
+Availability note in the page's data: Order today with estimated availability 7/28/2026
+Alternate listed: AL-PT6-100FW ACCEPTABLE ALTERNATE FOR BEECH APPLICATIONS (Beech-Alternate)
+--- Page text of part 6 ---
+CATEGORIES / HARDWARE
+TEXTRON AVIATION PART NUMBER
+PT6A-100HRBECHKT
+KIT-100HR INSP PTS BEECH KIT
+MANUFACTURER PART NUMBER
+PT6A-100HRBEECH KT
+Your Price: $104.95 / 93,51 €
+LIST PRICE: $139.93 / 124,68 € DISCOUNT: 25%
+Unit of Measure: EA
+Weight: 0.52 Pounds
+Packaged Weight: 0.52 Pounds
+Packaged Dimensions : 9.2 (L) x 7.7 (W) x 3 (H) Inches
+181 IN STOCK
+Quantity
+Ships from Wichita
+Service Center Stock
+CREATE LIST
+ACCEPTABLE ALTERNATE FOR BEECH APPLICATIONS
+AL-PT6-100FW
+PRICE REVIEW
+--- Part 7: https://ww2.txtav.com/Parts/PartSearch/PartsDetail/570357 (from the Multiple Part Search) ---
+--- What the program read for part 7 (the page's own data fields) ---
+Part number: 570357
+Is the requested part 570357: yes
+Description: FILTER HYDRAULIC
+Unit of measure: EA
+Condition: NEW
+Your price in the page's data: USD 130.13 / EUR 115.95
+Stock shown: 434 IN STOCK
+Ships from: Wichita
+Availability note in the page's data: Contact customer support for availability.
+--- Page text of part 7 ---
+CATEGORIES / CONSUMABLES / FILTERS / HYDRAULIC FILTERS
+570357
+FILTER HYDRAULIC
+Your Price: $130.13 / 115,95 €
+LIST PRICE: $173.51 / 154,60 € DISCOUNT: 25%
+Unit of Measure: EA
+Weight: 0.06 lbs
+Dimensions : 2.9 (L) x 0.9 (W) x 1 (H) in
+Packaged Weight: 0.08 lbs
+Packaged Dimensions : 3.5 (L) x 1.65 (W) x 1.75 (H) in
+434 IN STOCK
+Quantity
+Ships from Wichita
+Service Center Stock
+CREATE LIST
+PRICE REVIEW
+--- Part 8: https://ww2.txtav.com/Parts/PartSearch/PartsDetail/M83461-1-122 (from the Multiple Part Search) ---
+--- What the program read for part 8 (the page's own data fields) ---
+Part number: M83461-1-122
+Is the requested part M83461-1-122: yes
+Description: PACKING
+Unit of measure: EA
+Condition: NEW
+Your price in the page's data: USD 0 / EUR 0
+Availability note in the page's data: Contact customer support for availability.
+Alternate listed: M83461/1-122 REPLACEMENT FOR CESSNA & BEECH APPLICATIONS (Cessna & Beech-One Way Supersedure)
+--- Page text of part 8 ---
+CATEGORIES / CONSUMABLES / GASKETS, SEALS, & O-RINGS
+TEXTRON AVIATION PART NUMBER
+M83461-1-122
+PACKING
+Unit of Measure: EA
+Maximum Shelf Life: 180 Months
+NO LONGER AVAILABLE.
+PLEASE SEE OPTIONS BELOW.
+CREATE LIST
+REPLACEMENT FOR CESSNA & BEECH APPLICATIONS
+M83461/1-122
+--- Part 9: https://ww2.txtav.com/Parts/PartSearch/PartsDetail/6839 (from the Multiple Part Search) ---
+--- What the program read for part 9 (the page's own data fields) ---
+Part number: 6839
+Is the requested part 6839: yes
+Description: LAMP
+Unit of measure: EA
+Minimum order: 10
+Condition: NEW
+Your price in the page's data: USD 1.42 / EUR 1.26
+Stock shown: 7440 IN STOCK
+Ships from: Wichita
+Availability note in the page's data: Order today with estimated availability 6/26/2026
+Alternate listed: CM6839 ALTERNATE (Cessna Alternate)
+--- Page text of part 9 ---
+CATEGORIES / CABIN AND ENVIRONMENTAL / HOLDERS / LAMP HOLDER
+6839
+LAMP
+Your Price: $1.42 / 1,26 €
+LIST PRICE: $1.61 / 1,43 € DISCOUNT: 12%
+Unit of Measure: EA
+Must be a Multiple of: 10
+Weight: 0.01 Pounds
+Dimensions : 0.38 (L) x 0.18 (W) x 0.18 (H) Inches
+Packaged Weight: 0.01 Pounds
+Packaged Dimensions : 3.5 (L) x 3 (W) x 0.3 (H) Inches
+7440 IN STOCK
+Quantity
+Ships from Wichita
+Service Center Stock
+CREATE LIST
+ALTERNATE
+CM6839
+PRICE REVIEW
+--- Part 10: https://ww2.txtav.com/Parts/PartSearch/PartsDetail/C253001-0102 (from the Multiple Part Search) ---
+--- What the program read for part 10 (the page's own data fields) ---
+Part number: C253001-0102
+Is the requested part C253001-0102: yes
+Description: DOOR LOCK ASSEMBLY
+Unit of measure: EA
+Condition: NEW
+Your price in the page's data: USD 92.83 / EUR 82.71
+Stock shown: 60 IN STOCK
+Ships from: Wichita
+Availability note in the page's data: Contact customer support for availability
+--- Page text of part 10 ---
+CATEGORIES / LANDING GEAR / LANDING GEAR DOORS
+C253001-0102
+DOOR LOCK ASSEMBLY
+Your Price: $92.83 / 82,71 €
+LIST PRICE: $132.61 / 118,16 € DISCOUNT: 30%
+Unit of Measure: EA
+Packaged Weight: 0.12 lb
+Packaged Dimensions : 2.95 (L) x 3.95 (W) x 1 (H) in
+60 IN STOCK
+Quantity
+Ships from Wichita
+No Service Center Stock Available
+CREATE LIST
+PRICE REVIEW
+--- Part 11: https://ww2.txtav.com/Parts/PartSearch/PartsDetail/C253001-0107 (from the Multiple Part Search) ---
+--- What the program read for part 11 (the page's own data fields) ---
+Part number: C253001-0107
+Is the requested part C253001-0107: yes
+Description: LOCK ASSEMBLY CABIN DOOR
+Unit of measure: ST
+Condition: NEW
+Your price in the page's data: USD 140.64 / EUR 125.31
+Stock shown: 0 IN STOCK
+Ships from: Wichita
+Availability note in the page's data: Order today with estimated availability 12/27/2026
+--- Page text of part 11 ---
+CATEGORIES / AVIONICS / CLOCK
+C253001-0107
+LOCK ASSEMBLY CABIN DOOR
+Your Price: $140.64 / 125,31 €
+LIST PRICE: $200.91 / 179,01 € DISCOUNT: 30%
+Unit of Measure: ST
+Weight: 0.23 lbs
+Dimensions : 3.35 (L) x 2.3 (W) x 1.05 (H) in
+Packaged Weight: 0.24 lbs
+Packaged Dimensions : 3.05 (L) x 3 (W) x 1.15 (H) in
+0 IN STOCK
+Order today with estimated availability 12/27/2026.
+Quantity
+Ships from Wichita
+No Service Center Stock Available
+CREATE LIST
+PRICE REVIEW
+--- Part 12: https://ww2.txtav.com/Parts/PartSearch/PartsDetail/C292501-0106 (from the Multiple Part Search) ---
+--- What the program read for part 12 (the page's own data fields) ---
+Part number: C292501-0106
+Is the requested part C292501-0106: yes
+Description: KIT SWITCH
+Unit of measure: EA
+Condition: NEW
+Your price in the page's data: USD 284.07 / EUR 253.11
+Stock shown: 180 IN STOCK
+Ships from: Wichita
+Availability note in the page's data: Contact customer support for availability
+--- Page text of part 12 ---
+CATEGORIES / ELECTRICAL / SWITCHES AND RELAYS / SWITCHES
+C292501-0106
+KIT SWITCH
+Your Price: $284.07 / 253,11 €
+LIST PRICE: $378.76 / 337,48 € DISCOUNT: 25%
+Unit of Measure: EA
+Weight: 0.53 Pounds
+Packaged Weight: 0.53 Pounds
+Packaged Dimensions : 4.15 (L) x 2.1 (W) x 2.05 (H) Inches
+180 IN STOCK
+Quantity
+FREE FedEx Ground SHIPPING
+Ships from Wichita
+No Service Center Stock Available
+CREATE LIST
+PRICE REVIEW
+--- Part 13: https://ww2.txtav.com/Parts/PartSearch/PartsDetail/C299505-0102 (from the Multiple Part Search) ---
+--- What the program read for part 13 (the page's own data fields) ---
+Part number: C299505-0102
+Is the requested part C299505-0102: yes
+Description: THROTTLE CONT CABLE
+Unit of measure: EA
+Condition: NEW
+Your price in the page's data: USD 1537.5 / EUR 1369.92
+Stock shown: 17 IN STOCK
+Ships from: Wichita
+Availability note in the page's data: Contact customer support for availability
+--- Page text of part 13 ---
+CATEGORIES / PROPULSION AND ENGINE COMPONENTS / CONTROL SYSTEMS / THROTTLE CONTROLS
+TEXTRON AVIATION PART NUMBER
+C299505-0102
+THROTTLE CONT CABLE
+Your Price: $1,537.50 / 1.369,92 €
+LIST PRICE: $1,537.50 / 1.369,92 €
+Unit of Measure: EA
+Packaged Weight: 0.86 Pounds
+Packaged Dimensions : 43 (L) x 2 (W) x 2 (H) Inches
+17 IN STOCK
+Quantity
+FREE FedEx Ground SHIPPING
+Ships from Wichita
+No Service Center Stock Available
+CREATE LIST
+PRICE REVIEW
+--- Part 14: https://ww2.txtav.com/Parts/PartSearch/PartsDetail/C30010-11 (from the Multiple Part Search) ---
+--- What the program read for part 14 (the page's own data fields) ---
+Part number: C30010-11
+Is the requested part C30010-11: yes
+Description: DUCT COOL 8 INCH
+Unit of measure: FT
+Minimum order: 10
+Condition: NEW
+Your price in the page's data: USD 52.49 / EUR 0
+Stock shown: 20 IN STOCK
+Ships from: Wichita
+Availability note in the page's data: Contact customer support for availability.
+Alternate listed: 1250240-3 NEXT HIGHER ASSY (Cessna One-Way)
+--- Page text of part 14 ---
+CATEGORIES / AIRFRAME PARTS / DUCT
+TEXTRON AVIATION PART NUMBER
+C30010-11
+DUCT COOL 8 INCH
+Your Price: $52.49
+LIST PRICE: $59.65 DISCOUNT: 12%
+Unit of Measure: FT
+Must be a Multiple of: 10
+20 IN STOCK
+Quantity
+Ships from Wichita
+Service Center Stock
+CREATE LIST
+NEXT HIGHER ASSY
+1250240-3
+PRICE REVIEW
+--- Part 15: https://ww2.txtav.com/Parts/PartSearch/PartsDetail/C301001-0211 (from the Multiple Part Search) ---
+--- What the program read for part 15 (the page's own data fields) ---
+Part number: C301001-0211
+Is the requested part C301001-0211: yes
+Description: COUPLING
+Unit of measure: EA
+Condition: NEW
+Your price in the page's data: USD 97.31 / EUR 86.7
+Stock shown: 0 IN STOCK
+Ships from: Wichita
+Availability note in the page's data: Order today with estimated availability 1/6/2027
+--- Page text of part 15 ---
+CATEGORIES / ELECTRICAL / ELECTRICAL CONNECTORS / TERMINALS
+C301001-0211
+COUPLING
+Your Price: $97.31 / 86,70 €
+LIST PRICE: $97.31 / 86,70 €
+Unit of Measure: EA
+Maximum Shelf Life: 96 Months
+Part Type: Proprietary
+Weight: 0.04 lbs
+Dimensions : 1.1 (L) x 1.05 (W) x 0.45 (H) in
+Packaged Weight: 0.05 lbs
+Packaged Dimensions : 3 (L) x 2 (W) x 0.9 (H) in
+0 IN STOCK
+Order today with estimated availability 1/6/2027.
+Quantity
+Ships from Wichita
+No Service Center Stock Available
+CREATE LIST
+PRICE REVIEW
+--- Part 16: https://ww2.txtav.com/Parts/PartSearch/PartsDetail/C307PRF-11 (from the Multiple Part Search) ---
+--- What the program read for part 16 (the page's own data fields) ---
+Part number: C307PRF-11
+Is the requested part C307PRF-11: yes
+Description: PROBE
+Unit of measure: EA
+Condition: NEW
+Your price in the page's data: USD 131.48 / EUR 0
+Stock shown: 4 IN STOCK
+Ships from: Wichita
+Availability note in the page's data: Contact customer support for availability
+--- Page text of part 16 ---
+CATEGORIES / FUEL SYSTEMS / FUEL PROBE
+C307PRF-11
+PROBE
+Your Price: $131.48
+LIST PRICE: $149.41 DISCOUNT: 12%
+Unit of Measure: EA
+Packaged Weight: 0.16 lbs
+Packaged Dimensions : 6.15 (L) x 4.95 (W) x 0.65 (H) in
+4 IN STOCK
+Quantity
+Ships from Wichita
+No Service Center Stock Available
+CREATE LIST
+PRICE REVIEW
+--- Part 17: https://ww2.txtav.com/Parts/PartSearch/PartsDetail/C3317-230 (from the Multiple Part Search) ---
+--- What the program read for part 17 (the page's own data fields) ---
+Part number: C3317-230
+Is the requested part C3317-230: yes
+Description: O RING
+Unit of measure: EA
+Condition: NEW
+Your price in the page's data: USD 0 / EUR 0
+Availability note in the page's data: Contact customer support for availability
+Alternate listed: C-3317-230 MANDATORY FOR ALL  APPLICATIONS (Cessna & Beech-One Way Supersedure)
+--- Page text of part 17 ---
+CATEGORIES / CONSUMABLES / GASKETS, SEALS, & O-RINGS
+TEXTRON AVIATION PART NUMBER
+C3317-230
+O RING
+Unit of Measure: EA
+NO LONGER AVAILABLE.
+PLEASE SEE OPTIONS BELOW.
+CREATE LIST
+MANDATORY FOR ALL APPLICATIONS
+C-3317-230
+--- Part 18: https://ww2.txtav.com/Parts/PartSearch/PartsDetail/C352TS (from the Multiple Part Search) ---
+--- What the program read for part 18 (the page's own data fields) ---
+Part number: C352TS
+Is the requested part C352TS: yes
+Description: FIRE EXTINGUISHER
+Unit of measure: EA
+Condition: NEW
+Your price in the page's data: USD 0 / EUR 0
+Availability note in the page's data: Contact customer support for availability
+Alternate listed: 339TS SEE TECHNICAL PUBLICATIONS FOR APPLICATION (Cessna Alternate)
+Alternate listed: C352TSREP REPAIR SERVICES (Beech-Alternate)
+Alternate listed: C352TSW REMANUFACTURED PART NUMBER (Cessna Alternate)
+--- Page text of part 18 ---
+CATEGORIES / SAFETY EQUIPMENT / FIRE / FIRE EXTINGUISHERS
+C352TS
+FIRE EXTINGUISHER
+NEW REPAIR SERVICES
+Unit of Measure: EA
+Maximum Shelf Life: 144 Months
+Weight: 2.5 Pounds
+Dimensions : 14.5 (L) x 4.43 (W) x 3 (H) Inches
+Packaged Weight: 5.58 Pounds
+Packaged Dimensions : 17.05 (L) x 6.65 (W) x 4.3 (H) Inches
+Hazardous Material
+DESCRIPTION
+Fire Extinguisher
+Most popular Halon 1211 fire extinguisher
+Does not leave residue
+Effective at putting our flammable liquid and electrical fires
+Works by chemically disrupting combustion
+Comes with two-strap bracket
+Discharge range: 9 to 15 feet
+NO LONGER AVAILABLE.
+PLEASE SEE OPTIONS BELOW.
+CREATE LIST
+SEE TECHNICAL PUBLICATIONS FOR APPLICATION
+339TS
+--- Part 19: https://ww2.txtav.com/Parts/PartSearch/PartsDetail/C40187 (from the Multiple Part Search) ---
+--- What the program read for part 19 (the page's own data fields) ---
+Part number: C40187
+Is the requested part C40187: yes
+Description: BLOCK ASSEMBLY
+Unit of measure: EA
+Condition: NEW
+Your price in the page's data: USD 1760.63 / EUR 0
+Stock shown: 3 IN STOCK
+Ships from: Columbus, GA
+Availability note in the page's data: Contact customer support for availability
+--- Page text of part 19 ---
+CATEGORIES / ELECTRICAL / ELECTRICAL CONNECTORS / TERMINALS
+C40187
+BLOCK ASSEMBLY
+Your Price: $1,760.63
+LIST PRICE: $1,760.63
+Unit of Measure: EA
+Part Type: Proprietary
+Weight: 0.28 Pounds
+Dimensions : 5.6 (L) x 5.45 (W) x 1.6 (H) Inches
+Packaged Weight: 0.29 lbs
+Packaged Dimensions : 6.5 (L) x 3.7 (W) x 1.95 (H) in
+3 IN STOCK
+Quantity
+FREE FedEx Ground SHIPPING
+Ships from Columbus, GA
+No Service Center Stock Available
+CREATE LIST
+PRICE REVIEW

@@ -14,6 +14,7 @@ from .generic import GenericAdapter
 from .incora import IncoraAdapter
 from .monroe import MonroeAdapter
 from .proponent import ProponentAdapter
+from .textron import TextronAdapter
 from .wencor import WencorAdapter
 
 # Adapter names a vendor record can pick with "adapter": "<name>". "generic"
@@ -28,6 +29,7 @@ ADAPTER_TYPES: dict[str, type[VendorAdapter]] = {
     "monroe": MonroeAdapter,
     "aircraft_spruce": AircraftSpruceAdapter,
     "incora": IncoraAdapter,
+    "textron": TextronAdapter,
 }
 
 # Vendors that work without a record (built before the registry), by the
@@ -53,6 +55,10 @@ ADAPTERS: dict[str, type[VendorAdapter]] = {
     "shop_incora": IncoraAdapter,
     "wesco": IncoraAdapter,
     "wesco_aircraft": IncoraAdapter,
+    "textron_aviation": TextronAdapter,
+    "textron": TextronAdapter,
+    "textronaviation": TextronAdapter,
+    "txtav": TextronAdapter,
 }
 
 

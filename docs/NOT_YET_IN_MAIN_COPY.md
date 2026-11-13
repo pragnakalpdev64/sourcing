@@ -619,5 +619,20 @@ New in this copy (the main copy has none of it):
 - [ ] Sheet trigger (2026-11-06): `apps_script/` (Code.gs, appsscript.json, README), `/trigger`
       run-again flag (`RERUN_FLAG` in store.py, passes in `job_main.run`), `TRIGGER_RUN_LOCAL` /
       `TRIGGER_LOCAL_ARGS` (config.py, api.py). Tests `tests/test_sheet_trigger.py`. **copy**.
+- [ ] Sheets add-on (2026-11-12): `apps_script/addon/`, script moved to `apps_script/per_sheet/`;
+      `/trigger` accepts the add-on user's Google token (`_caller`, `_addon_refusal`,
+      `ADDON_OAUTH_CLIENT_IDS`), notes `last_edit_at`; `job_main.wait_until_quiet`
+      (`TRIGGER_QUIET_SECONDS`); local-mode wait in api.py. Tests in `tests/test_sheet_trigger.py`. **copy**.
+
+## Textron Aviation adapter (2026-11-12)
+
+- [ ] `sourcing/vendors/textron.py` + `textron_prompt.py`, registered in `vendors/__init__.py`
+      (`textron_aviation`, `textron`, `textronaviation`, `txtav`); tests
+      `tests/test_textron_adapter.py`. ww2.txtav.com (ASP.NET MVC): login with the reCAPTCHA-v3
+      Log In button wait, 2FA by the Live View handoff, signed in = /Dashboard; one part by
+      `PartsDetail/<part>`, bulk by the Multiple Part Search form (part + qty per row) with tabs
+      for what it misses (`bulk_mode`, `tabs_parallel`, `qty_box_selector` vendor settings); the
+      site's 404 page -> `LoginBlocked`. Not yet signed in on the live portal; secret
+      `sourcing-vendor-textron-aviation` comes later. **copy** (built on `GenericAdapter`).
 
 - [ ] This file itself, once everything above is ticked.

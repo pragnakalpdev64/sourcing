@@ -324,8 +324,10 @@ class FakeSecretManager:
             raise gexc.AlreadyExists("exists")
         self.versions[secret_id] = []
 
-    def list_secret_versions(self, parent, filter):
-        return iter(self.versions[parent.rsplit("/", 1)[1]])
+    def list_secret_versions(self, request=None, *, parent=None):
+        # The real client's shape: the filter only fits in `request`.
+        assert request and request.get("filter") == "state:ENABLED" and parent is None
+        return iter(self.versions[request["parent"].rsplit("/", 1)[1]])
 
     def add_secret_version(self, parent, payload):
         self.versions[parent.rsplit("/", 1)[1]].append(payload["data"])

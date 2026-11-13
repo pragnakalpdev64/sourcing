@@ -75,3 +75,25 @@ async def test_which_sheets_run(monkeypatch, all_sheets, expected):
     monkeypatch.setattr(job_main, "run_one_sheet", fake_run_one)
     await job_main.run(dummy=True, all_sheets=all_sheets)
     assert sorted(ran) == sorted(expected)
+
+
+def test_sigterm_ends_the_run_like_ctrl_c():
+    # 2026-11-13: a stopped worker must still run its finally blocks (logout, release
+    # the Browserbase session), not die with the session open.
+    import asyncio
+    import os
+    import signal
+
+    from service.job_main import _stop_on_sigterm
+    cleaned = []
+
+    async def run():
+        try:
+            asyncio.get_running_loop().call_later(0.05, os.kill, os.getpid(), signal.SIGTERM)
+            await asyncio.sleep(5)
+        finally:
+            cleaned.append("browser released")
+
+    with pytest.raises(asyncio.CancelledError):
+        asyncio.run(_stop_on_sigterm(run()))
+    assert cleaned == ["browser released"]
