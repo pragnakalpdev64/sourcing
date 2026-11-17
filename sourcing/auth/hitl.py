@@ -66,6 +66,19 @@ WAITING, CODE_GIVEN, CODE_USED = "waiting", "code_given", "code_used"
 SIGNED_IN, CODE_REJECTED, EXPIRED = "signed_in", "code_rejected", "expired"
 
 
+def what_is_asked(method: str) -> str:
+    """The sign-in step a person is asked to do, in words. Not every handoff is a
+    2FA code: Textron on Browserbase showed its "I'm not a robot" box (2026-11-16)."""
+    method = (method or "").lower()
+    if method == "captcha":
+        return "an \"I'm not a robot\" check"
+    if method in ("email", "sms"):
+        return f"a 2FA code sent by {method}"
+    if method == "totp":
+        return "an authenticator code"
+    return "a sign-in step it couldn't finish by itself"
+
+
 def _page_url(page) -> str:
     try:
         return page.url.split("?")[0]
@@ -211,9 +224,10 @@ class PersonHandoff:
             "vendor_name": adapter.display_name, "method": method, "people": list(people),
             "created_at": now, "expires_at": now + self.wait_seconds,
         })
-        text = (f"🔐 {adapter.display_name} needs you to finish the login (it asks for a "
-                f"{method} code or approval). Open the live browser and log in there: {url} "
-                f"The run waits {minutes} min. The link controls that browser: don't share it.")
+        text = (f"🔐 {adapter.display_name} needs you to finish the login (it asks for "
+                f"{what_is_asked(method)}). Open the live browser and log in there: {url} "
+                f"The run waits {minutes} min, then logs out and closes that browser. "
+                "The link controls that browser: don't share it.")
         for person in people or ("",):
             await self.notifier.send(text, to=person or None)
         self.store.audit("hitl_live_view_sent", account_id=account, method=method)

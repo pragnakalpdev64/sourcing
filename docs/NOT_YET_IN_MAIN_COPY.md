@@ -623,6 +623,15 @@ New in this copy (the main copy has none of it):
       `/trigger` accepts the add-on user's Google token (`_caller`, `_addon_refusal`,
       `ADDON_OAUTH_CLIENT_IDS`), notes `last_edit_at`; `job_main.wait_until_quiet`
       (`TRIGGER_QUIET_SECONDS`); local-mode wait in api.py. Tests in `tests/test_sheet_trigger.py`. **copy**.
+- [ ] Sheet relay (2026-11-16, client: the service never opens the Sheet): `sourcing/sheet_relay.py`,
+      store methods `put_sheet_snapshot` / `get_sheet_snapshot` / `add_sheet_ops` / `sheet_ops` /
+      `ack_sheet_ops` (memory + Firestore), `/sheet/pull` + `/sheet/ack` and the snapshot in
+      `/trigger` (api.py), `SHEET_ACCESS=relay` + `STORE_PROJECT` (config.py, job_main.py), the
+      add-on's pull/apply/ack (`Code.gs`); a person's Status edit wins (`stale_rows`, `writeCells_`).
+      Tests `tests/test_sheet_relay.py`. **copy**.
+- [ ] IAP for the add-on (2026-11-16): `service/iap.py`, `_iap_email` in `_caller`, `IAP_AUDIENCE`;
+      add-on sends `Proxy-Authorization` with `ScriptApp.getIdentityToken()` (scope `openid`).
+      Tests at the end of `tests/test_sheet_trigger.py`. **copy**.
 
 ## Textron Aviation adapter (2026-11-12)
 

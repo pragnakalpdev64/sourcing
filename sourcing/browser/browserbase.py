@@ -8,6 +8,7 @@ from __future__ import annotations
 
 import asyncio
 import logging
+import uuid
 from typing import Optional
 
 from playwright.async_api import async_playwright
@@ -18,6 +19,14 @@ from ..config import captcha_solving_allowed
 from .local import LOCAL_CONTEXT_PREFIX
 
 logger = logging.getLogger("sourcing.browser")
+
+
+def _is_uuid(value: str) -> bool:
+    try:
+        uuid.UUID(value)
+        return True
+    except (ValueError, TypeError):
+        return False
 
 
 def _is_context_not_found(exc: Exception) -> bool:
@@ -48,9 +57,13 @@ class BrowserbaseClient:
                    timeout_seconds: Optional[int] = None,
                    metadata: Optional[dict] = None, stealth: bool = False) -> BrowserHandle:
         """stealth: Browserbase proxy (vendor setting browser_stealth)."""
-        # A label made by the local backend: it was never a Browserbase Context.
+        # A label made by the local backend or a --dummy run ("dummy-context", saved on
+        # the add-on's accounts 2026-11-16): never a Browserbase Context, which is a UUID
+        # (Browserbase answers 400 "Invalid uuid at browserSettings.context.id").
         if context_id.startswith(LOCAL_CONTEXT_PREFIX):
             raise ContextNotFound(f"{context_id} was made by BROWSER_BACKEND=local")
+        if not _is_uuid(context_id):
+            raise ContextNotFound(f"{context_id} is not a Browserbase Context id")
         # Browserbase ends the session (and the browser with it) at this limit,
         # even mid-run, so it must outlast the longest run. Billing is by the
         # minutes actually used: the session is released as soon as the run ends.

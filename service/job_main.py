@@ -28,6 +28,7 @@ from typing import Optional
 from sourcing.config import Settings, get_settings, quiet_http_logs
 from sourcing.notify.chat import ChatNotifier
 from sourcing.pipeline import Deps, Pipeline, default_adapter_factory
+from sourcing.sheet_relay import open_relay_sheet
 from sourcing.sheets import open_sheet
 from sourcing.sinks.sheet import SheetSink
 
@@ -132,13 +133,21 @@ def build_shared_deps(settings: Settings, store: Store, *, dummy: bool,
 async def run_one_sheet(shared: Deps, sheet: dict, run_id: str) -> dict:
     sheet_id = sheet["sheet_id"]
     try:
-        sheets = await asyncio.to_thread(
-            open_sheet, sheet_id, sheet.get("requests_tab", "Requests"),
-            sheet.get("results_tab", "Results"),
-        )
+        if get_settings().sheet_access == "relay" and not sheet_id.lower().endswith(".xlsx"):
+            # The add-on's copy of the sheet; writes go back through it (sheet_relay).
+            sheets = await asyncio.to_thread(
+                open_relay_sheet, shared.store, sheet_id, sheet.get("requests_tab", "Requests"),
+                sheet.get("results_tab", "Results"))
+        else:
+            sheets = await asyncio.to_thread(
+                open_sheet, sheet_id, sheet.get("requests_tab", "Requests"),
+                sheet.get("results_tab", "Results"),
+            )
     except Exception as exc:
-        logger.error("Sheet %s: could not open (%r). Is it shared with the runtime "
-                     "service account?", sheet_id, exc)
+        logger.error("Sheet %s: could not open (%r). %s", sheet_id, exc,
+                     "Has the add-on sent it (Search new rows now)?"
+                     if get_settings().sheet_access == "relay" else
+                     "Is it shared with the runtime service account?")
         return {"sheet_id": sheet_id, "error": repr(exc)[:300]}
 
     # The RFQ tab always; the Results tab only when asked (--results; client, 2026-10-29).

@@ -8,6 +8,7 @@ a local JSON file, for local runs without Firestore.
 from __future__ import annotations
 
 import copy
+import itertools
 import json
 import os
 import threading
@@ -25,6 +26,19 @@ TRIGGER_LOCK = "trigger"  # short debounce for /trigger
 RERUN_FLAG = "rerun"
 RERUN_HOLDER = "requested"
 RERUN_SECONDS = 3600
+
+
+_op_counter = itertools.count()
+
+
+def _op_seq() -> str:
+    """Sortable id of a pending sheet write: time, then a counter for writes made
+    in the same nanosecond, then randomness so two processes never clash."""
+    return f"{time.time_ns():020d}-{next(_op_counter) % 1000000:06d}-{uuid.uuid4().hex[:6]}"
+
+
+# Firestore keeps at most 1 MiB per document; the sheet copy is one document.
+MAX_SNAPSHOT_BYTES = 900_000
 
 
 def _lease_is_free(doc: Optional[dict], holder: str, now: float,
@@ -112,6 +126,27 @@ class Store(ABC):
     @abstractmethod
     def set_sheet_enabled(self, sheet_id: str, enabled: bool) -> None: ...
 
+    # --- sheet relay (sourcing/sheet_relay.py) ---------------------------
+    # The worker may not open a Skylink Sheet (client, 2026-11-13: their org blocks
+    # the service account; the add-on does every read and write). The add-on sends
+    # a copy of the sheet; the worker's writes wait here until the add-on has
+    # written them into the sheet and confirmed (ack).
+    def put_sheet_snapshot(self, sheet_id: str, tabs: dict) -> None:
+        raise NotImplementedError(f"{type(self).__name__} has no sheet relay")
+
+    def get_sheet_snapshot(self, sheet_id: str) -> Optional[dict]:
+        raise NotImplementedError(f"{type(self).__name__} has no sheet relay")
+
+    def add_sheet_ops(self, sheet_id: str, ops: list[dict]) -> None:
+        raise NotImplementedError(f"{type(self).__name__} has no sheet relay")
+
+    def sheet_ops(self, sheet_id: str) -> list[dict]:
+        """Pending writes, oldest first: [{"id", "seq", "op"}]."""
+        raise NotImplementedError(f"{type(self).__name__} has no sheet relay")
+
+    def ack_sheet_ops(self, sheet_id: str, ids: list[str]) -> None:
+        raise NotImplementedError(f"{type(self).__name__} has no sheet relay")
+
     # --- jobs / rows / audit --------------------------------------------
     @abstractmethod
     def update_job(self, run_id: str, fields: dict) -> None: ...
@@ -151,6 +186,34 @@ class MemoryStore(Store):
         self.rows: dict[str, dict] = {}
         self.audit_log: list[dict] = []
         self.hitl: dict[str, dict] = {}
+        self.sheet_snapshots: dict[str, dict] = {}
+        self.sheet_op_queue: dict[str, list[dict]] = {}
+
+    def put_sheet_snapshot(self, sheet_id: str, tabs: dict) -> None:
+        with self._lock:
+            self.sheet_snapshots[sheet_id] = {"tabs": copy.deepcopy(tabs), "at": time.time()}
+
+    def get_sheet_snapshot(self, sheet_id: str) -> Optional[dict]:
+        with self._lock:
+            return copy.deepcopy(self.sheet_snapshots.get(sheet_id))
+
+    def add_sheet_ops(self, sheet_id: str, ops: list[dict]) -> None:
+        with self._lock:
+            queue = self.sheet_op_queue.setdefault(sheet_id, [])
+            for op in ops:
+                seq = _op_seq()
+                queue.append({"id": seq, "seq": seq, "op": copy.deepcopy(op)})
+
+    def sheet_ops(self, sheet_id: str) -> list[dict]:
+        with self._lock:
+            return sorted(copy.deepcopy(self.sheet_op_queue.get(sheet_id, [])),
+                          key=lambda o: o["seq"])
+
+    def ack_sheet_ops(self, sheet_id: str, ids: list[str]) -> None:
+        done = set(ids)
+        with self._lock:
+            self.sheet_op_queue[sheet_id] = [o for o in self.sheet_op_queue.get(sheet_id, [])
+                                             if o["id"] not in done]
 
     def acquire_lock(self, name: str, holder: str, ttl_seconds: int) -> bool:
         with self._lock:
@@ -431,6 +494,45 @@ class FirestoreStore(Store):
 
     def update_hitl(self, hitl_id: str, fields: dict) -> None:
         self.db.collection("hitl").document(hitl_id).set(fields, merge=True)
+
+    # Sheet values are lists of lists, which Firestore can't store: kept as JSON text.
+    def put_sheet_snapshot(self, sheet_id: str, tabs: dict) -> None:
+        text = json.dumps(tabs, ensure_ascii=False)
+        if len(text.encode("utf-8")) > MAX_SNAPSHOT_BYTES:
+            raise ValueError(f"sheet copy is {len(text) // 1000} KB; at most "
+                             f"{MAX_SNAPSHOT_BYTES // 1000} KB fit (archive old Requests rows)")
+        self.db.collection("sheet_snapshots").document(sheet_id).set(
+            {"tabs_json": text, "at": time.time()})
+
+    def get_sheet_snapshot(self, sheet_id: str) -> Optional[dict]:
+        snap = self.db.collection("sheet_snapshots").document(sheet_id).get()
+        if not snap.exists:
+            return None
+        doc = snap.to_dict() or {}
+        return {"tabs": json.loads(doc.get("tabs_json") or "{}"), "at": doc.get("at")}
+
+    def add_sheet_ops(self, sheet_id: str, ops: list[dict]) -> None:
+        for start in range(0, len(ops), 400):      # Firestore: 500 writes per batch
+            batch = self.db.batch()
+            for op in ops[start:start + 400]:
+                seq = _op_seq()
+                batch.set(self.db.collection("sheet_ops").document(seq),
+                          {"sheet_id": sheet_id, "seq": seq,
+                           "op_json": json.dumps(op, ensure_ascii=False)})
+            batch.commit()
+
+    def sheet_ops(self, sheet_id: str) -> list[dict]:
+        docs = self.db.collection("sheet_ops").where("sheet_id", "==", sheet_id).stream()
+        out = [{"id": d.id, "seq": doc.get("seq", d.id), "op": json.loads(doc["op_json"])}
+               for d in docs if (doc := d.to_dict() or {}).get("op_json")]
+        return sorted(out, key=lambda o: o["seq"])
+
+    def ack_sheet_ops(self, sheet_id: str, ids: list[str]) -> None:
+        for start in range(0, len(ids), 400):
+            batch = self.db.batch()
+            for op_id in ids[start:start + 400]:
+                batch.delete(self.db.collection("sheet_ops").document(op_id))
+            batch.commit()
 
     def audit(self, event: str, **fields: Any) -> None:
         self.db.collection("audit").document(uuid.uuid4().hex).set(

@@ -330,3 +330,100 @@ def test_local_mode_waits_for_a_quiet_sheet(local, monkeypatch):
             break
         threading.Event().wait(0.05)
     assert len(procs) == 1 and procs[0].cmd[-1] == "sheetA"
+
+
+# -- behind Google sign-in (IAP, service/iap.py) --------------------------------
+IAP_AUD = "/projects/490776059622/locations/us-central1/services/sourcing-ai-dev"
+
+
+@pytest.fixture
+def iap(monkeypatch, addon):
+    from service import iap as iap_mod
+
+    c, store, started, info = addon
+    monkeypatch.setenv("IAP_AUDIENCE", IAP_AUD)
+    get_settings.cache_clear()
+    signed = {"good": {"iss": iap_mod.IAP_ISSUER, "email": "ann@skylink.com", "aud": IAP_AUD}}
+    monkeypatch.setattr(iap_mod, "_iap_keys", lambda fresh=False: {"k": "pem"})
+
+    def decode(token, audience, keys):
+        assert audience == IAP_AUD
+        if token not in signed:
+            raise ValueError("bad signature")
+        return signed[token]
+
+    monkeypatch.setattr(iap_mod, "_decode", decode)
+    yield c, started, signed
+
+
+def test_iap_signed_addon_call_starts_a_run(iap):
+    c, started, _ = iap
+    headers = dict(BEARER, **{"X-Goog-IAP-JWT-Assertion": "good"})
+    resp = c.post("/trigger", headers=headers, json={"sheet_id": "s1", "edited": False})
+    assert resp.status_code == 200 and started == [1]
+
+
+@pytest.mark.parametrize("assertion, status", [(None, 401), ("forged", 401)])
+def test_behind_iap_a_call_without_its_signature_is_refused(iap, assertion, status):
+    c, started, _ = iap
+    headers = dict(BEARER)
+    if assertion:
+        headers["X-Goog-IAP-JWT-Assertion"] = assertion
+    resp = c.post("/trigger", headers=headers, json={"sheet_id": "s1"})
+    assert resp.status_code == status and started == []
+    # the secret alone doesn't get past it either
+    resp = c.post("/trigger", headers=H, json={"sheet_id": "s1"})
+    assert resp.status_code == 401 and started == []
+
+
+def test_iap_and_addon_token_must_be_the_same_person(iap):
+    c, started, signed = iap
+    signed["bob"] = {"iss": signed["good"]["iss"], "email": "bob@skylink.com"}
+    headers = dict(BEARER, **{"X-Goog-IAP-JWT-Assertion": "bob"})
+    resp = c.post("/trigger", headers=headers, json={"sheet_id": "s1"})
+    assert resp.status_code == 401 and "differ" in resp.text and started == []
+
+
+def test_plain_email_header_must_match_the_signed_one(iap):
+    c, started, _ = iap
+    headers = dict(BEARER, **{"X-Goog-IAP-JWT-Assertion": "good",
+                              "X-Goog-Authenticated-User-Email": "accounts.google.com:eve@skylink.com"})
+    assert c.post("/trigger", headers=headers, json={"sheet_id": "s1"}).status_code == 401
+
+
+def test_sweep_behind_iap_needs_secret_and_signature(iap):
+    c, started, signed = iap
+    signed["sweep"] = {"iss": signed["good"]["iss"], "email": "sweep@proj.iam.gserviceaccount.com"}
+    headers = dict(H, **{"X-Goog-IAP-JWT-Assertion": "sweep"})
+    assert c.post("/trigger", headers=headers).status_code == 200
+
+
+def test_iap_token_is_checked_with_googles_es256_keys(monkeypatch):
+    """The real decode path, with a key made here in place of Google's IAP keys."""
+    import time as _time
+
+    from cryptography.hazmat.primitives import serialization
+    from cryptography.hazmat.primitives.asymmetric import ec
+    from google.auth import crypt, jwt
+
+    from service import iap as iap_mod
+
+    key = ec.generate_private_key(ec.SECP256R1())
+    pem = key.private_bytes(serialization.Encoding.PEM, serialization.PrivateFormat.PKCS8,
+                            serialization.NoEncryption())
+    public = key.public_key().public_bytes(serialization.Encoding.PEM,
+                                           serialization.PublicFormat.SubjectPublicKeyInfo)
+    signer = crypt.ES256Signer.from_string(pem, "k1")
+    now = int(_time.time())
+    claims = {"iss": iap_mod.IAP_ISSUER, "aud": IAP_AUD, "email": "Ann@skylink.com",
+              "iat": now, "exp": now + 600}
+    token = jwt.encode(signer, claims).decode()
+    monkeypatch.setattr(iap_mod, "_fetch_keys", lambda: {"k1": public.decode()})
+    monkeypatch.setitem(iap_mod._keys, "pem", None)
+    headers = {iap_mod.ASSERTION_HEADER: token}
+    assert iap_mod.verified_email(headers, IAP_AUD) == "ann@skylink.com"
+    with pytest.raises(iap_mod.IapRefused):
+        iap_mod.verified_email(headers, "/projects/1/locations/x/services/other")
+    other = jwt.encode(signer, dict(claims, iss="https://accounts.google.com")).decode()
+    with pytest.raises(iap_mod.IapRefused):
+        iap_mod.verified_email({iap_mod.ASSERTION_HEADER: other}, IAP_AUD)

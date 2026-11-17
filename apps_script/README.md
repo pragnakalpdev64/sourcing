@@ -18,8 +18,14 @@ Two ways to put it in a sheet:
 Either way, a search already running when the call comes reads the sheet once more
 before it ends (`RERUN_FLAG`, `service/job_main.py`, at most 5 passes).
 
-**Every sheet must be shared with the worker's service account as Editor.** The
-worker opens it later as that account, not as the person.
+**Add-on: the service never opens the sheet** (client, 2026-11-13: Skylink's org
+blocks the service account). With each call the add-on sends a copy of the Requests
+tab; the search's writes (Status, Notes, Run ID, RFQ lines) wait in the store until
+the add-on writes them into the sheet (`/sheet/pull`, `/sheet/ack`;
+`sourcing/sheet_relay.py`, service setting `SHEET_ACCESS=relay`, needs Firestore). It
+keeps checking for about 5 minutes after a search starts; what's still waiting is
+written on the next edit, when the sheet is opened, or with **Get results now**.
+The per-sheet script still needs its sheet shared with the service account.
 
 ## Add-on (`addon/`)
 
@@ -36,7 +42,7 @@ worker opens it later as that account, not as the person.
      `addon/appsscript.json`.
    - Project Settings > Google Cloud Platform project > **Change project** > the project number.
    - Project Settings > Script properties: `TRIGGER_URL` (`https://<host>/trigger`),
-     `SERVICE_ACCOUNT_EMAIL` (shown to people when they turn it on), optional `REQUESTS_TAB`.
+     optional `REQUESTS_TAB`.
 3. The service's settings (`.env` locally, env vars on Cloud Run):
    - `ADDON_OAUTH_CLIENT_IDS`: the OAuth client id Apps Script made in the listing
      project (Google Cloud console > APIs & Services > Credentials, the one named
@@ -55,16 +61,35 @@ worker opens it later as that account, not as the person.
    Private. Fill in the Store listing.
 6. The admin installs it for the domain from the Admin console.
 
+### Behind Google sign-in (IAP, sourcing-ai-dev)
+
+The client keeps IAP on. The add-on gets through it with the user's Google ID token
+(`ScriptApp.getIdentityToken()`, scope `openid`) in `Proxy-Authorization`. IAP checks
+that token and passes `Authorization` (the access token our own check uses) on
+unchanged. The service then takes the email only from IAP's signed header
+(`X-Goog-IAP-JWT-Assertion`, `service/iap.py`) and refuses the call if it isn't
+the same person as the add-on's token. Set up once in `skylink-material-planning`:
+
+- service setting `IAP_AUDIENCE`: `/projects/490776059622/locations/us-central1/services/<service>`
+  (IAP on Cloud Run) or `/projects/490776059622/global/backendServices/<id>` (load balancer);
+- IAP's **programmatic access** list: the add-on's OAuth client id (the one in
+  `ADDON_OAUTH_CLIENT_IDS`), since the ID token is made for that client, not IAP's own;
+- every user (or a Skylink group): role **IAP-secured Web App User** on the service;
+- the Scheduler sweep: an OIDC token from its service account (and that account given
+  the same role), plus `X-Trigger-Secret` as now.
+
+Refused at IAP: the add-on shows "Google sign-in (IAP) did not let the call through".
+
 A new version of `Code.gs`: paste it, make a new deployment, and point the Marketplace
 SDK at it. People don't install anything again.
 
 ### Each person, in their own sheet
 
 1. Extensions > SourcingAI > **Turn on for this sheet**. It checks the Requests tab
-   has a Part Number column and installs the edit trigger. The trigger runs as this person.
-2. Share the sheet with the service account it shows, as Editor (once per sheet).
-3. Add rows. The search starts about 90 seconds after the last edit. **Search new
-   rows now** starts at once.
+   has a Part Number column and installs the edit and open triggers. They run as this person.
+2. Add rows. The search starts about 90 seconds after the last edit; statuses and
+   offers appear as they come. **Search new rows now** starts at once, **Get results
+   now** writes whatever is waiting.
 
 ## Per-sheet script (`per_sheet/`)
 

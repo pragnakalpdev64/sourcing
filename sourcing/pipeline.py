@@ -18,7 +18,7 @@ from datetime import datetime, timezone
 from typing import Callable, Optional
 from urllib.parse import urlencode
 
-from .auth.hitl import hold_until_logged_out, logout_with_handoff
+from .auth.hitl import hold_until_logged_out, logout_with_handoff, what_is_asked
 from .auth.manager import AuthManager, CannotLogin, LoginDeferred, NeedsHuman
 from .conditions import CONDITION_CODES, normalize_condition
 from . import health
@@ -1120,13 +1120,15 @@ class Pipeline:
             # Not asked (no handoff, no code box found): a developer has to look.
             state = AccountState.NEEDS_LOGIN if exc.asked else AccountState.NEEDS_ATTENTION
             self.d.store.update_account(aid, {"state": state.value, "last_error": str(exc)})
-            why = ("no code arrived in time or it was not accepted" if exc.asked else
+            asked_for = what_is_asked(exc.method)
+            why = ("nobody finished it in time (or the code was not accepted); the run "
+                   "logged out and closed that browser" if exc.asked else
                    "this run can't ask a person for it")
             await self._set(pending, RowStatus.NEEDS_ATTENTION,
-                            f"{adapter.display_name} needs a 2FA code ({exc.method}); {why}")
+                            f"{adapter.display_name} asked for {asked_for}; {why}")
             await self._notify_requesters(
-                pending, f"{adapter.display_name} is asking for a 2FA code ({exc.method}) and "
-                f"{why}; {len(pending)} part(s) are waiting. Set their Status back to NEW to "
+                pending, f"{adapter.display_name} asked for {asked_for} and {why}; "
+                f"{len(pending)} part(s) are waiting. Set their Status back to NEW to "
                 "try again.")
         except CannotLogin as exc:
             pending = pending + (retry or [])  # parts still waiting for their retry

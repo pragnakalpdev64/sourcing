@@ -40,6 +40,9 @@ async def test_browserbase_refuses_a_local_context_label_without_calling_the_api
     client._create_session = no_api
     with pytest.raises(ContextNotFound):
         await client.open(f"{LOCAL_CONTEXT_PREFIX}abc")
+    # Saved by a --dummy run (add-on accounts, 2026-11-16): Browserbase answers 400.
+    with pytest.raises(ContextNotFound):
+        await client.open("dummy-context")
 
 
 @pytest.mark.asyncio
@@ -55,7 +58,7 @@ async def test_stealth_sessions_only_for_vendors_that_ask(vendor, config, stealt
         RuntimeError("stop after create"))
     adapter = adapter_class(vendor)(vendor_config=config)
     with pytest.raises(RuntimeError, match="stop after create"):
-        await client.open("ctx-1", **adapter.browser_options)
+        await client.open("00000000-0000-4000-8000-000000000001", **adapter.browser_options)
     settings = calls[0]["browser_settings"]
     assert settings["solve_captchas"] is False
     assert "advanced_stealth" not in settings
@@ -73,7 +76,7 @@ async def test_captcha_solving_only_with_the_dev_switch(monkeypatch, env, solve)
     client._bb.sessions.create = lambda **kw: calls.append(kw) or (_ for _ in ()).throw(
         RuntimeError("stop after create"))
     with pytest.raises(RuntimeError, match="stop after create"):
-        await client.open("ctx-1")
+        await client.open("00000000-0000-4000-8000-000000000001")
     assert calls[0]["browser_settings"]["solve_captchas"] is solve
 
 

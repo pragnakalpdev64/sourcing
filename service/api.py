@@ -195,8 +195,29 @@ def _addon_refusal(info: dict | None) -> str | None:
     return None
 
 
+async def _iap_email(request: Request) -> str | None:
+    """The email IAP signed for this request; None when no IAP is set up
+    (IAP_AUDIENCE empty: local runs). Behind IAP, a request without its valid
+    signed header is refused, whatever else it carries."""
+    import asyncio
+
+    from service.iap import IapRefused, verified_email
+
+    audience = get_settings().iap_audience
+    if not audience:
+        return None
+    try:
+        return await asyncio.to_thread(verified_email, request.headers, audience)
+    except IapRefused as exc:
+        logger.warning("%s refused: %s", request.url.path, exc)
+        raise HTTPException(status_code=exc.status, detail=str(exc)) from exc
+
+
 async def _caller(request: Request, x_trigger_secret: str) -> str:
-    """"secret" or the add-on user's email; anything else is refused."""
+    """"secret" or the add-on user's email; anything else is refused.
+    Behind IAP the request must also carry IAP's signed header, and an add-on
+    call must be signed in at IAP as the same person as its token."""
+    iap_email = await _iap_email(request)
     secret = get_settings().trigger_secret
     if x_trigger_secret:
         if secret and hmac.compare_digest(x_trigger_secret, secret):
@@ -208,13 +229,77 @@ async def _caller(request: Request, x_trigger_secret: str) -> str:
         refusal = _addon_refusal(info)
         if refusal:
             raise HTTPException(status_code=401, detail=refusal)
-        return str(info["email"]).lower()
+        email = str(info["email"]).lower()
+        if iap_email and iap_email != email:
+            logger.warning("%s: IAP signed in %s, add-on token is %s", request.url.path,
+                           iap_email, email)
+            raise HTTPException(status_code=401, detail="IAP and add-on sign-in differ")
+        return email
     raise HTTPException(status_code=401, detail="bad trigger secret")
 
 
 @app.get("/healthz")
 def healthz() -> dict:
     return {"ok": True}
+
+
+def _relay_store():
+    if get_settings().sheet_access != "relay":
+        raise HTTPException(status_code=400, detail="SHEET_ACCESS is not relay")
+    if get_settings().store_backend == "file":
+        # The API and the worker are separate processes; a file store can't be shared.
+        raise HTTPException(status_code=400, detail="the sheet relay needs STORE_BACKEND=firestore")
+    return store()
+
+
+def _save_snapshot(sheet_id: str, snapshot) -> None:
+    ok = isinstance(snapshot, dict) and snapshot and all(
+        isinstance(k, str) and isinstance(v, list) and all(isinstance(r, list) for r in v)
+        for k, v in snapshot.items())
+    if not ok:
+        raise HTTPException(status_code=400, detail="snapshot: {tab: [[cell, ...], ...]}")
+    try:
+        _relay_store().put_sheet_snapshot(sheet_id, snapshot)
+    except ValueError as exc:
+        raise HTTPException(status_code=413, detail=str(exc)) from exc
+    logger.info("Sheet %s: copy received (%s)", sheet_id,
+                ", ".join(f"{k} {len(v)} rows" for k, v in snapshot.items()))
+
+
+async def _sheet_body(request: Request) -> dict:
+    try:
+        body = await request.json()
+    except Exception:
+        body = {}
+    if not isinstance(body, dict) or not isinstance(body.get("sheet_id"), str) or not body["sheet_id"]:
+        raise HTTPException(status_code=400, detail="sheet_id missing")
+    return body
+
+
+@app.post("/sheet/pull")
+async def sheet_pull(request: Request, x_trigger_secret: str = Header(default="")) -> dict:
+    """The add-on collects the writes waiting for its sheet (oldest first), writes
+    them into the sheet, then confirms them with /sheet/ack. `busy`: a search is
+    running or about to start, so more may come; the add-on keeps checking."""
+    await _caller(request, x_trigger_secret)
+    sheet_id = (await _sheet_body(request))["sheet_id"]
+    st = _relay_store()
+    ops = st.sheet_ops(sheet_id)[:200]      # one pull stays well inside Apps Script's limits
+    with _local_lock:
+        proc = _local["proc"]
+        local_busy = _local["waiting"] or (proc is not None and proc.poll() is None)
+    busy = bool(local_busy or st.is_locked(WORKER_LOCK) or st.is_locked(TRIGGER_LOCK))
+    return {"ops": [{"id": o["id"], **o["op"]} for o in ops], "busy": busy}
+
+
+@app.post("/sheet/ack")
+async def sheet_ack(request: Request, x_trigger_secret: str = Header(default="")) -> dict:
+    await _caller(request, x_trigger_secret)
+    body = await _sheet_body(request)
+    ids = [i for i in body.get("ids") or [] if isinstance(i, str)]
+    if ids:
+        _relay_store().ack_sheet_ops(body["sheet_id"], ids)
+    return {"acked": len(ids)}
 
 
 @app.post("/trigger")
@@ -233,6 +318,9 @@ async def trigger(request: Request, x_trigger_secret: str = Header(default="")) 
     # "Search now" (no wait); the older per-sheet script sends neither.
     edited = body.get("edited")
     quiet = get_settings().trigger_quiet_seconds
+    # The add-on sends a copy of the sheet: the worker may not open it (sheet_relay).
+    if sheet_id and body.get("snapshot") is not None:
+        _save_snapshot(sheet_id, body["snapshot"])
 
     if get_settings().trigger_run_local:
         # Not registered: the local worker searches only this sheet (--sheet), and

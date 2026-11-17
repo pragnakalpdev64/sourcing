@@ -69,6 +69,11 @@ class Settings:
     # testing, Firestore in the add-on's project; sourcing-ai-dev's own project
     # has none). Empty = GCP_PROJECT.
     store_project_override: str
+    # How the worker reaches the request sheet: "direct" (Sheets API as the
+    # runtime account) or "relay" (the add-on sends a copy and writes the results
+    # itself; sourcing/sheet_relay.py). Skylink's org blocks the service account
+    # from their Sheets (client, 2026-11-13), so Cloud Run uses relay.
+    sheet_access: str
 
     # Vendor credentials (GCP Secret Manager, in gcp_project), e.g.
     # "sourcing-vendor-proponent=sourcing-vendor-test" reads Proponent's shared login
@@ -130,6 +135,9 @@ class Settings:
     # A sheet's rows are read once nobody has edited it for this long, so a row
     # isn't searched while its quantity or vendor is still being typed.
     trigger_quiet_seconds: int
+    # IAP in front of the service (sourcing-ai-dev; service/iap.py): the audience
+    # its signed header is checked for. Empty = no IAP (local runs through ngrok).
+    iap_audience: str
     # Where the API runs (Cloud Run URL, or http://localhost:8080 locally). Set =
     # a 2FA code the worker can't make is asked from the requester over Chat
     # with a link to the API's code form (sourcing/auth/hitl.py).
@@ -169,6 +177,7 @@ class Settings:
             results_tab=_env("RESULTS_TAB", "Results"),
             store_backend=_env("STORE_BACKEND", "firestore").lower(),
             store_project_override=_env("STORE_PROJECT"),
+            sheet_access=_env("SHEET_ACCESS", "direct").lower(),
             store_file=_env("STORE_FILE") or str(Path(__file__).resolve().parent.parent
                                                  / ".local_store.json"),
             vendor_secret_overrides=_env("VENDOR_SECRET_OVERRIDES"),
@@ -191,6 +200,7 @@ class Settings:
             trigger_local_args=_env("TRIGGER_LOCAL_ARGS"),
             addon_oauth_client_ids=_env_list("ADDON_OAUTH_CLIENT_IDS"),
             trigger_quiet_seconds=_env_int("TRIGGER_QUIET_SECONDS", 90),
+            iap_audience=_env("IAP_AUDIENCE"),
             public_base_url=_env("PUBLIC_BASE_URL"),
             chat_app_space=_env("CHAT_APP_SPACE"),
             chat_app_audience=_env("CHAT_APP_AUDIENCE"),

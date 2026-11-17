@@ -13,7 +13,7 @@ import service.api as api
 import sourcing.auth.hitl as hitl
 from sourcing.auth.hitl import (
     CODE_REJECTED, EXPIRED, SIGNED_IN, PersonHandoff, CodeNotGiven, accept_code, code_card,
-    hitl_id, login_with_handoff,
+    hitl_id, login_with_handoff, what_is_asked,
 )
 from sourcing.browser.base import LiveViewUnavailable
 from sourcing.config import get_settings
@@ -366,3 +366,11 @@ async def test_the_adapter_can_end_the_live_view_wait(monkeypatch):
     doc, = store.hitl.values()
     assert doc["state"] == EXPIRED and "back on the sign-in page" in doc["ended"]
     assert "ended without signing in" in notes.messages[-1]
+
+
+def test_messages_name_what_the_portal_asked_for():
+    # 2026-11-16: Textron on Browserbase showed a CAPTCHA, and Chat / the rows said
+    # "a captcha code" / "needs a 2FA code (captcha)".
+    assert "robot" in what_is_asked("captcha") and "code" not in what_is_asked("captcha")
+    assert what_is_asked("email") == "a 2FA code sent by email"
+    assert "code" not in what_is_asked("unknown")
