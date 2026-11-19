@@ -28,7 +28,9 @@ REPO="${REGION}-docker.pkg.dev/${PROJECT}/mie-dev/sourcing-ai"
 # Firestore for the add-on relay lives in the add-on's own project (no billing, no secrets).
 STORE_PROJECT="sourcing-skylink-addon"
 ADDON_PROJECT_NUMBER="1011595872116"
-ADDON_CLIENT_ID="1011595872116-n7pglcfpupq3o51ju3jcj00vd5q979em.apps.googleusercontent.com"
+# The add-on's current client (since the spreadsheets scope, 2026-11-19) and the earlier one;
+# the project number covers any later one Apps Script makes.
+ADDON_CLIENT_ID="1011595872116-1dnm2qrepuqh80bkg2k0kbnu3meqq1iv.apps.googleusercontent.com;1011595872116-n7pglcfpupq3o51ju3jcj00vd5q979em.apps.googleusercontent.com"
 
 WORKER_ARGS="--dummy"
 if [[ "${1:-}" == "--real" ]]; then

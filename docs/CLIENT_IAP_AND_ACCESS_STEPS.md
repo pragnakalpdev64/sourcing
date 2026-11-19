@@ -95,6 +95,7 @@ access_settings:
   oauth_settings:
     programmatic_clients:
     - 1011595872116-n7pglcfpupq3o51ju3jcj00vd5q979em.apps.googleusercontent.com
+    - 1011595872116-1dnm2qrepuqh80bkg2k0kbnu3meqq1iv.apps.googleusercontent.com
 EOF
 
 gcloud iap settings set iap_settings.yaml --project=skylink-material-planning \
@@ -105,7 +106,10 @@ gcloud iap settings get --project=skylink-material-planning \
   --resource-type=cloud-run --region=us-central1 --service=sourcing-ai-dev
 ```
 
-**Check:** the output lists the client ID under `programmatic_clients`.
+**Check:** the output lists both client IDs under `programmatic_clients`.
+
+The second ID was added 2026-11-19: after the add-on was given the `spreadsheets` permission,
+Apps Script signs its calls with a new client (`…1dnm2qre…`), and IAP refused it (401).
 
 **Undo:** run `set` again with the list as it was in step 1.
 
