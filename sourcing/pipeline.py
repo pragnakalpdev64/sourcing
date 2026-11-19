@@ -89,6 +89,9 @@ class Deps:
     # The API's address: a rejected password's Chat message links to its login
     # update page (service/credentials_ui.py). Empty = no link.
     public_base_url: str = ""
+    # The worker's heartbeat for this sheet (sourcing/progress.py, sheet relay
+    # only): the add-on's sidebar shows the current step. None = not reported.
+    progress: Optional[object] = None
 
 
 @dataclass
@@ -504,6 +507,15 @@ def stock_note(offer: Offer, qty_needed: Optional[str], *, priced: bool, stocked
     return "\n".join(lines)
 
 
+def uom_note(offer: Offer) -> str:
+    """What one unit is, when it isn't a single piece: "• UOM SHEET: 4' X 12' SHEET,
+    .032 THICK" (Internal Comments in capitals, as the client writes them)."""
+    if not offer.uom_detail:
+        return ""
+    unit = f" {offer.uom.upper()}" if offer.uom else ""
+    return f"{POINT}UOM{unit}: {offer.uom_detail.upper()}"
+
+
 def price_break_note(offer: Offer, currency: str) -> str:
     """The line's whole price-break table, as the client writes it, one
     sub-point per row: "• PRICE BREAKS:" then "    ◦ 1-4 $15.64" ...
@@ -729,6 +741,10 @@ class Pipeline:
         # (same_part_groups, 2026-10-30).
         self._twins: dict[str, list[RequestRow]] = {}
 
+    def _progress(self, method: str, *args) -> None:
+        if self.d.progress is not None:
+            getattr(self.d.progress, method)(*args)
+
     def _vendor_key(self, row: RequestRow) -> str:
         """The row's vendor id (record id, alias or built-in name resolved), as the
         run's per-vendor numbers are keyed."""
@@ -788,6 +804,8 @@ class Pipeline:
                 await asyncio.sleep(wait)
         for rows, status, note, extra in items:
             self._note_status(rows, status, note, extra)
+        self._progress("rows_finished", [r.row_id for rows, status, _, _ in items
+                                         if status != RowStatus.RUNNING for r in rows])
 
     def _note_status(self, rows: list[RequestRow], status: RowStatus, note: Optional[str],
                      extra: Optional[dict]) -> None:
@@ -829,6 +847,7 @@ class Pipeline:
                 first = False
                 seen.update(r.sheet_row for r in rows)
                 logger.info("Run %s picked up %d NEW rows", self.run_id, len(rows))
+                self._progress("rows_picked", len(rows))
                 await asyncio.to_thread(self.d.sheets.set_status, rows, RowStatus.RUNNING, self.run_id)
                 await self._process_batch(rows)
             await self._save_default_limits()
@@ -1033,8 +1052,10 @@ class Pipeline:
             logger.info("[%s] One search per part: %d part(s)%s", aid, len(pending),
                         "" if min_parts is None or adapter.bulk_batch_size <= 1
                         else f" (bulk from {min_parts})")
+        name = adapter.display_name
         try:
             people = tuple(sorted({r.requester for r in rows if r.requester}))
+            self._progress("step", aid, f"{name}: signing in")
             handle = await self.auth.open_authenticated(adapter, cred, people)
             signed_in = True
             relogged = False
@@ -1054,7 +1075,12 @@ class Pipeline:
                                 row.row_id, (RowStatus.NOT_FOUND, None))
                             await self._set([row], status, note)
                     bulk_ok = False
+                    self._progress("step", aid, f"{name}: searching {len(pending)} part(s) "
+                                   "again one by one")
                     continue
+                if retry is not None:
+                    self._progress("step", aid, f"{name}: searching, {len(pending)} part(s) "
+                                   "to go")
                 try:
                     if bulk_ok and len(pending) > 1:
                         batch = pending[:bulk_size]
@@ -1173,6 +1199,7 @@ class Pipeline:
             self._first_run_check(adapter, self._vendor_key(rows[0]))
             if handle is not None:
                 people = tuple(sorted({r.requester for r in rows if r.requester}))
+                self._progress("step", aid, f"{name}: signing out")
                 if signed_in and adapter.config.get("logout_after_run", True):
                     await self._logout(adapter, handle, aid, people)
                 elif not signed_in:
@@ -1180,6 +1207,7 @@ class Pipeline:
                     await self.auth.logout_if_maybe_signed_in(adapter, handle, aid, people)
                 await self.d.browser.close(handle)
                 logger.info("[%s] Browser session %s released", aid, handle.session_id)
+            self._progress("step", aid, None)
             self.d.store.release_lease(aid, self.run_id)
 
     async def _logout(self, adapter: VendorAdapter, handle, aid: str, people: tuple = ()) -> None:
@@ -1469,9 +1497,14 @@ class Pipeline:
                 warehouses=o.warehouses or missing(vendor, o, "WAREHOUSES"),
                 # default_condition (vendor config): for a portal that never shows a
                 # condition but only sells one kind (set only once the client confirms).
+                # Without a price (a No Quote line) the condition the page shows
+                # still goes on it (Condition Code = Condition Quoted, rule 7 of the
+                # client's checklist); seen 2026-11-17: AAR 224514-9 is FN on the
+                # site and its No Quote line said "-". Nothing guessed there: no
+                # default condition, no "check page".
                 condition=(o.condition or normalize_condition(
                     adapter.config.get("default_condition")) or missing(vendor, o, "CONDITION"))
-                if priced else "",
+                if priced else (o.condition or ""),
                 lead_time=lead_days(o, vendor),
                 # RFQ Delivery: 0 in stock, else the lead time (client, 2026-10-23);
                 # in stock at a vendor with a fixed shipping time, that time (Incora 7,
@@ -1483,6 +1516,7 @@ class Pipeline:
                 # substitute note below them.
                 internal_comments=join_comments(
                     stock_note(o, row.qty_needed, priced=priced, stocked=stocked),
+                    uom_note(o),
                     price_break_note(o, currency) if priced else "", o.vendor_note or ""),
                 **request_details(row, o),
             )))

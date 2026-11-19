@@ -14,6 +14,8 @@ infra/secrets.env
 .local_store.json.tmp
 .local_store.json.hitl/
 .local_login*.json
+# A passkey's private key (scripts/passkey_spike.py, our own test account only).
+.local_passkey*.json
 
 # Raw vendor pages saved during runs (debug). They show the signed-in Skylink
 # account and the vendor's price pages, so they stay on the machine that made them.
@@ -29,3 +31,8 @@ test_runs/state_snapshot*/local_store*.json
 # Loose local run logs (real runs are saved under test_runs/)
 /run_*.log
 /*_onboard.log
+# Local API / worker logs (they hold the Chat webhook URL and vendor page text).
+/api_live*.log
+/*_run.log
+# Playwright MCP browser snapshots.
+.playwright-mcp/

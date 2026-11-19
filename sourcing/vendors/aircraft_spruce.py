@@ -144,6 +144,55 @@ _PART = re.compile(r"Part#\s*(\S+)", re.I)
 _MODEL = re.compile(r"MFR Model#\s*(.+)", re.I)
 # Rivets are sold by the pound: "86.6 Expected to ship" (AN470AD-4-4, 2026-11-05).
 _PARTIAL = re.compile(r"^\s*([\d,]+(?:\.\d+)?)\s+Expected to", re.I | re.M)
+# Quantity pricing the product text states (seen 2026-11-18, signed in):
+# AN960-416L "Less 20% for quantity 100/Part No."; CherryMax rivets "Packaged Items
+# Single | Pack of 100" with a "Price Per 100" table ("CR3243-4-1 4-1 .140 .025-.062
+# $376.00"; CR3212 has the part number in its 4th column); AN4-31A "15% discount
+# on qty of 50-99" / "20% discount on qty of 100+". Kept as written (no discounted
+# price worked out: the page states none), in Internal Comments.
+_QTY_DISCOUNT = re.compile(r"Less\s+(\d+(?:\.\d+)?)\s*%\s+for\s+(?:quantity|qty\.?)\s+"
+                           r"(\d[\d,]*)\s*(/\s*Part No\.?)?", re.I)
+_PCT_DISCOUNT = re.compile(r"(\d+(?:\.\d+)?)\s*%\s*discount\s+on\s+(?:qty|quantity)\.?\s+of\s+"
+                           r"(\d[\d,]*\s*(?:-\s*\d[\d,]*|\+)?)", re.I)
+_PACK_OPTION = re.compile(r"Pack of\s+(\d[\d,]*)", re.I)
+_PRICE_PER = re.compile(r"Price Per\s+(\d[\d,]*)", re.I)
+_DOLLARS = re.compile(r"\$\s*([\d,]+\.\d{2})")
+_EXPECTED = re.compile(r"Expected to (?:Ship|Deliver|arrive):\s*(.+)", re.I)
+
+
+def pricing_notes(section: str, pn: str) -> list[str]:
+    """Quantity discount and pack option the product's own text states, in the
+    client's capitals; [] when there are none."""
+    notes = []
+    for m in _QTY_DISCOUNT.finditer(section or ""):
+        notes.append(f"LESS {m.group(1)}% FOR QTY {m.group(2)}"
+                     + (" PER PART NO." if m.group(3) else ""))
+    for m in _PCT_DISCOUNT.finditer(section or ""):
+        span = re.sub(r"\s+", "", m.group(2))
+        notes.append(f"{m.group(1)}% DISCOUNT FOR QTY {span}")
+    if pn and re.search(r"Packaged Items", section or "", re.I):
+        pack = _PACK_OPTION.search(section)
+        per = _PRICE_PER.search(section)
+        price = None
+        if per:
+            rows = [(line.split(), _DOLLARS.findall(line)) for line in section.splitlines()]
+            rows = [(words, found) for words, found in rows if words and found]
+            # The table's row for this part (its title line names it too, priceless);
+            # some tables name only the dash number ("4-4" for CR3242-4-4, 2026-11-18).
+            mine = [found for words, found in rows if _key(pn) in {_key(w) for w in words}]
+            if not mine and re.search(r"\bDash\b", section, re.I):
+                mine = [found for words, found in rows
+                        if pn.upper().endswith("-" + words[0].upper())]
+            if len(mine) == 1:
+                price = mine[0][-1]
+        if pack:
+            note = f"ALSO SOLD IN PACKS OF {pack.group(1)}"
+            if price and per:
+                note += f": ${price} PER {per.group(1)}"
+            notes.append(note)
+    return notes
+
+
 # Stock words the page's script writes (custom/plugins js, 2026-11-05).
 _IN_STOCK = re.compile(r"^In Stock\b", re.I)
 _NO_STOCK = re.compile(r"^(No Stock|Special Order|Non-Stocking Product|Made to Order|"
@@ -226,6 +275,8 @@ def product_facts(product: dict, qty_typed: Optional[float]) -> dict:
         facts["currency"] = product["currency"]
     stock = (product.get("stock") or "").strip()
     facts["stock"] = stock
+    facts["delivery"] = product.get("delivery") or ""
+    facts["pricing"] = pricing_notes(product.get("section") or "", facts["pn"])
     if _IN_STOCK.search(stock):
         facts["qty"] = qty_text(qty_typed) if qty_typed else "In stock"
         if qty_typed:
@@ -601,6 +652,15 @@ class AircraftSpruceAdapter(GenericAdapter):
                 put("part_number", facts["pn"])
         if facts.get("qty"):
             put("qty_available", facts["qty"])
+        # Out of stock with a ship date: the date is its lead time. The model left it
+        # out on some pages (11-13941 "Expected to Ship: Friday, Nov. 27", 2026-11-18)
+        # while setting it on others.
+        expected = _EXPECTED.search(facts.get("delivery") or "")
+        if facts.get("qty") == "Out of stock" and not offer.lead_time and expected \
+                and "TBD" not in expected.group(1).upper():
+            put("lead_time", f"Expected to ship {expected.group(1).strip()}")
+            offer.review = ",".join(f for f in (offer.review or "").split(",")
+                                    if f and f != "LEAD_TIME_NOT_ON_PAGE") or None
         if facts.get("price"):
             put("price", facts["price"])
             put("qty_price", facts.get("qty_price"))
@@ -613,6 +673,7 @@ class AircraftSpruceAdapter(GenericAdapter):
         notes = [facts["note"]] if facts.get("note") else []
         if by_model and not by_part and facts["pn"]:
             notes.append(f"AIRCRAFT SPRUCE PART# {facts['pn']}")
+        notes += facts.get("pricing") or []
         offer.vendor_note = "; ".join(notes) or None
         flags = [f for f in (offer.review or "").split(",") if f]
         if "description" in facts.get("how", ""):

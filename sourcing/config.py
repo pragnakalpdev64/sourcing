@@ -1,8 +1,10 @@
 """Runtime settings.
 
 On Cloud Run, infra secrets come from GCP Secret Manager mounted as env vars
-(`--set-secrets` in cloudbuild.yaml), so this module only ever reads env.
-Locally, a `.env` file next to this repo is loaded if present.
+(`--set-secrets` / `--update-secrets`), so this module only reads env there.
+Locally, a `.env` file next to this repo is loaded if present; with
+INFRA_SECRETS=gsm the infra keys are read from Secret Manager instead
+(`load_infra_secrets`).
 """
 from __future__ import annotations
 
@@ -132,6 +134,12 @@ class Settings:
     # clients: the one Apps Script made in the add-on's listing project (Google
     # Cloud console > Credentials, "Apps Script"). Client ids, not secrets.
     addon_oauth_client_ids: tuple
+    # ... or any OAuth client of these Google Cloud projects (by project number:
+    # a client id starts with it). Apps Script makes a new client for the add-on
+    # now and then (after the scope change of 2026-11-18 a third one), and each new
+    # one was refused until its id was added. Only the add-on's own listing project
+    # belongs here (it holds no other apps).
+    addon_oauth_project_numbers: tuple
     # A sheet's rows are read once nobody has edited it for this long, so a row
     # isn't searched while its quantity or vendor is still being typed.
     trigger_quiet_seconds: int
@@ -199,6 +207,7 @@ class Settings:
             trigger_run_local=_env_bool("TRIGGER_RUN_LOCAL"),
             trigger_local_args=_env("TRIGGER_LOCAL_ARGS"),
             addon_oauth_client_ids=_env_list("ADDON_OAUTH_CLIENT_IDS"),
+            addon_oauth_project_numbers=_env_list("ADDON_OAUTH_PROJECT_NUMBERS"),
             trigger_quiet_seconds=_env_int("TRIGGER_QUIET_SECONDS", 90),
             iap_audience=_env("IAP_AUDIENCE"),
             public_base_url=_env("PUBLIC_BASE_URL"),
@@ -219,8 +228,59 @@ class Settings:
         )
 
 
+# Infra keys and their Secret Manager names (same names Cloud Run maps with
+# --update-secrets on sourcing-ai-dev).
+INFRA_SECRETS = {
+    "ANTHROPIC_API_KEY": "sourcing-anthropic-api-key",
+    "BROWSERBASE_API_KEY": "sourcing-browserbase-api-key",
+    "BROWSERBASE_PROJECT_ID": "sourcing-browserbase-project-id",
+    "CHAT_WEBHOOK_URL": "sourcing-chat-webhook-url",
+}
+_LOADED_MARK = "_SOURCING_INFRA_SECRETS_LOADED"
+
+
+def load_infra_secrets(fetch=None) -> list[str]:
+    """Locally, INFRA_SECRETS=gsm reads the infra keys from Secret Manager instead
+    of .env, so a local run uses exactly what the service will (2026-11-17: .env
+    still had the old Browserbase keys after the client added the paid plan's).
+    They go into os.environ: the local worker started by the API inherits them.
+    A key that can't be read stops the start; .env is not used as a fallback.
+    On Cloud Run nothing is fetched: Cloud Run fills these from Secret Manager."""
+    if _env("INFRA_SECRETS").lower() != "gsm" or os.environ.get("K_SERVICE"):
+        return []
+    if os.environ.get(_LOADED_MARK):
+        return []
+    project = _env("GCP_PROJECT") or _env("GOOGLE_CLOUD_PROJECT")
+    if fetch is None:
+        from google.cloud import secretmanager
+
+        client = secretmanager.SecretManagerServiceClient()
+
+        def fetch(name: str) -> str:
+            path = f"projects/{project}/secrets/{name}/versions/latest"
+            return client.access_secret_version(name=path).payload.data.decode()
+    loaded = []
+    for var, secret in INFRA_SECRETS.items():
+        try:
+            value = fetch(secret).strip()
+        except Exception as exc:
+            raise RuntimeError(f"INFRA_SECRETS=gsm: could not read {secret} in {project} "
+                               f"({type(exc).__name__})") from exc
+        if not value:
+            raise RuntimeError(f"INFRA_SECRETS=gsm: {secret} is empty")
+        os.environ[var] = value
+        loaded.append(var)
+    os.environ[_LOADED_MARK] = "1"
+    import logging
+
+    logging.getLogger(__name__).info("Infra keys from Secret Manager (%s): %s",
+                                     project, ", ".join(loaded))
+    return loaded
+
+
 @lru_cache(maxsize=1)
 def get_settings() -> Settings:
+    load_infra_secrets()
     return Settings.from_env()
 
 

@@ -4,6 +4,8 @@ from __future__ import annotations
 
 import asyncio
 
+import time
+
 import pytest
 from fastapi.testclient import TestClient
 
@@ -185,9 +187,51 @@ def test_pull_gives_the_waiting_writes_and_ack_removes_them(client):
     assert body["ops"][0]["rows"] == [["a"]] and body["busy"] is False
     ids = [o["id"] for o in body["ops"]][:1]
     assert c.post("/sheet/ack", headers=H, json={"sheet_id": "sheet-1", "ids": ids}).json() == {"acked": 1}
-    left = c.post("/sheet/pull", headers=H, json={"sheet_id": "sheet-1"}).json()["ops"]
+    left = c.post("/sheet/pull", headers=H,
+                  json={"sheet_id": "sheet-1", "lease": body["lease"]}).json()["ops"]
     assert [o["kind"] for o in left] == ["add_sheet"]
     assert len(store.sheet_ops("other")) == 1
+
+
+def test_only_one_add_on_run_writes_a_sheet_at_a_time(client):
+    """Sidebar, edit trigger and hourly timer may pull at once: the second gets
+    nothing (writing) until the first is through, so RFQ lines aren't doubled."""
+    c, store = client
+    store.add_sheet_ops("s", [{"kind": "append", "tab": "RFQ", "rows": [["a"]]}])
+    first = c.post("/sheet/pull", headers=H, json={"sheet_id": "s"}).json()
+    other = c.post("/sheet/pull", headers=H, json={"sheet_id": "s"}).json()
+    assert len(first["ops"]) == 1 and first["lease"]
+    assert other["ops"] == [] and other["writing"] is True
+    c.post("/sheet/ack", headers=H, json={"sheet_id": "s", "ids": [first["ops"][0]["id"]]})
+    done = c.post("/sheet/pull", headers=H, json={"sheet_id": "s", "lease": first["lease"]}).json()
+    assert done["ops"] == [] and done["writing"] is False      # nothing left: lease freed
+    store.add_sheet_ops("s", [{"kind": "add_sheet", "tab": "X"}])
+    assert len(c.post("/sheet/pull", headers=H, json={"sheet_id": "s"}).json()["ops"]) == 1
+
+
+def test_pull_shows_the_worker_progress(client):
+    c, store = client
+    now = time.time()
+    store.set_sheet_progress("s", {"state": "running", "started_at": now - 400,
+                                   "alive_at": now - 10, "steps": ["AAR: signing in"],
+                                   "rows_total": 11, "rows_done": 3})
+    p = c.post("/sheet/pull", headers=H, json={"sheet_id": "s"}).json()["progress"]
+    assert p["state"] == "running" and p["steps"] == ["AAR: signing in"]
+    assert (p["rows_done"], p["rows_total"]) == (3, 11) and p["elapsed_seconds"] >= 400
+    store.set_sheet_progress("s", {"alive_at": now - 600})        # heartbeat stopped
+    p = c.post("/sheet/pull", headers=H, json={"sheet_id": "s"}).json()["progress"]
+    assert p["state"] == "stopped"
+
+
+def test_pull_says_starting_before_the_worker_reads_the_sheet(client):
+    c, store = client
+    store.set_sheet_progress("s", {"state": "done", "started_at": 1, "alive_at": 787,
+                                   "finished_at": 787, "rows_done": 51, "rows_total": 51})
+    store.acquire_lock(WORKER_LOCK, "run-2", 600)
+    p = c.post("/sheet/pull", headers=H, json={"sheet_id": "s"}).json()["progress"]
+    assert p["state"] == "starting"
+    # Not the earlier run's "13 min, 51 of 51 finished" (2026-11-18).
+    assert p["rows_total"] == 0 and p["elapsed_seconds"] is None
 
 
 def test_pull_says_busy_while_a_search_runs(client):

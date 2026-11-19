@@ -57,6 +57,10 @@ Return exactly one line per product. Where the program's reading and the page te
 | Partial stock | `lead_time` `In stock (<the backordered part of the delivery line, as written>)` |
 | The title (`Liquid X-30 Foam Quart Kit X-40`) | `description` |
 | A minimum stated for the product (`Minimum order: 4`, `Minimum Purchase`) | `moq` (3.3). Never the `Quantity` box, the quantity typed by the program, a kit or pack size, or a size button |
+| `$289.00/Sheet` and the size table's row for this Part# (`0.032 0.461 Alclad 4’ x 12’ 03-28010`, columns Thick. (In.), Wt/Sq.Ft., Surface Finish, Size, Part No.) | `uom_detail` `4’ x 12’ sheet, .032 thick, Alclad` |
+| `$4.95/Pack` and `Pack of 8` (or `Set of eight ...`) in the Overview | `uom_detail` `Pack of 8` |
+| `/Kit`, `/Set`: what the kit contains, when the Overview lists it (`Kit includes ...`) | `uom_detail` `Kit: <contents as written>` |
+| `/Each`, `/Piece` | `uom_detail` `"Not Present on website"` (the `Packaged Items` pack option and the `Price Per 100` table are read by the program) |
 
 - `Other price shown beside it:` is a list or regular price shown next to the price: never `price`.
 - `tagged_by` and `trace`: `"Not Present on website"` unless the product's own text names who tags or certifies this part (`8130-3`, `Certificate of Conformance`, `C of C` stated as supplied with the part). `Mfg test reports are available for an additional charge` is an extra, not a certificate of this line. Never from `FAA-approved under STC ...`, `TSO` or `PMA` wording in the Overview.

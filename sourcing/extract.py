@@ -79,10 +79,11 @@ OFFERS_SCHEMA = {
                     "tag_date": _NULLABLE_STR,
                     "description": _NULLABLE_STR,
                     "uom": _NULLABLE_STR,
+                    "uom_detail": _NULLABLE_STR,
                 },
                 "required": ["part_number", "price", "price_breaks", "currency", "qty_available", "moq",
                              "condition", "lead_time", "source_url", "warehouses", "listing",
-                             "trace", "tagged_by", "tag_date", "description", "uom"],
+                             "trace", "tagged_by", "tag_date", "description", "uom", "uom_detail"],
                 "additionalProperties": False,
             },
         },
@@ -215,7 +216,7 @@ Read `qty_available` (section 3.2) for each line before any other field, then ap
 | No quantity and no stock status shown | `"Not Present on website"` (`[]` for price_breaks) | `[]` / `"Not Present on website"` |
 
 - In the last case, leave out price, price breaks, currency and condition even when the page shows them.
-- In every case, still return `part_number`, `listing`, `source_url`, `trace`, `tagged_by`, `tag_date`, `description`, `uom` and (bulk search) `requested_part_number`.
+- In every case, still return `part_number`, `listing`, `source_url`, `trace`, `tagged_by`, `tag_date`, `description`, `uom`, `uom_detail` and (bulk search) `requested_part_number`.
 
 ### 2.3. Source Only
 
@@ -352,6 +353,14 @@ The unit the line's quantity and price are in, as the website shows it for the l
 - Copy the line's own unit, never another line's. Never convert quantities or prices between units (`3,900 EA PER LB` in a description changes nothing).
 - Not shown for the line: `"Not Present on website"`.
 
+### 3.15. uom_detail
+
+What one unit of the line is, when the unit is not a single piece (a pack, kit, set, box, bag, sheet, roll, coil, length, pound, gallon, ...): how many pieces a pack, box or bag holds, what a kit or set contains, a sheet's size and thickness, a roll's or length's length, a container's volume. Short, with the page's numbers and units: `Pack of 8`, `4' x 12' sheet, .032 thick`, `Kit: 2 blades, 2 coax cables`, `Roll of 50 ft`.
+
+- Only what the page states for this line's own unit (a size table: only the row for this line's part number). Never another size or option the page offers, never worked out from other values, never from your own knowledge.
+- The unit is a single piece (`EA`, `Each`, `Piece`, no unit shown) or nothing on the page says what a unit is: `"Not Present on website"`.
+- Extract it whatever the stock (2.2 does not apply).
+
 ## 4. Final Check
 
 Before answering, check each offer:
@@ -386,6 +395,12 @@ def bulk_offers_schema(requested: list[str]) -> dict:
 
 
 _NUMBER = re.compile(r"\d[\d,]*(?:\.\d+)?")
+
+
+def _exact_numbers(text: Optional[str]) -> set[float]:
+    """Numbers as written, unrounded, a leading dot read as a decimal: ".032" and
+    "0.032" are the same, 4 and 4.0 too."""
+    return {float(m.replace(",", "")) for m in re.findall(r"\d[\d,]*(?:\.\d+)?|\.\d+", text or "")}
 
 
 def _numbers(text: str) -> set[float]:
@@ -446,13 +461,15 @@ def _verify(offer: Offer, context: str) -> Optional[str]:
 
     lead = (offer.lead_time or "").strip()
     if lead:
-        in_stock = lead.lower().startswith("in stock")
+        says_in_stock = lead.lower().startswith("in stock")
         # "In stock" needs stock the page shows; every number must be on the page.
-        stock_shown = qty_ok and bool(qty) and "out of stock" not in qty.lower() and \
-            any(n > 0 for n in _numbers(qty))
+        # A checked "In stock" status counts as shown stock: Aircraft Spruce shows no
+        # count, and every in-stock line lost its "In stock (expected to ship ...)"
+        # lead time to a LEAD_TIME_NOT_ON_PAGE flag (11 parts, 2026-11-18).
+        stock_shown = qty_ok and in_stock(qty)
         numbers = _numbers(lead)
-        if (in_stock and not stock_shown) or (numbers and not numbers <= found) or \
-                (not in_stock and not numbers):
+        if (says_in_stock and not stock_shown) or (numbers and not numbers <= found) or \
+                (not says_in_stock and not numbers):
             offer.lead_time = None
             removed.append("LEAD_TIME")
 
@@ -474,6 +491,15 @@ def _verify(offer: Offer, context: str) -> Optional[str]:
         if not any(re.search(rf"\b{re.escape(w)}\b", text) for w in wordings):
             offer.condition = None
             removed.append("CONDITION")
+
+    # Every number of a unit's detail must be on the page (sizes, counts), compared
+    # exactly: thicknesses like ".032" are lost to _numbers' rounding (0.03) and
+    # its reading of ".032" as 32. A detail without numbers needs its words there.
+    detail_numbers = _exact_numbers(offer.uom_detail)
+    if offer.uom_detail and not (detail_numbers <= _exact_numbers(context) if detail_numbers
+                                 else _words_on_page(offer.uom_detail, text)):
+        offer.uom_detail = None
+        removed.append("UOM_DETAIL")
 
     for field in ("trace", "tagged_by", "tag_date", "uom"):
         value = getattr(offer, field)
@@ -581,6 +607,7 @@ def _offer(o: dict, part_number: str, page_text: str, page_url: str) -> Offer:
         tag_date=o.get("tag_date"),
         description=o.get("description"),
         uom=(o.get("uom") or "").strip().upper() or None,
+        uom_detail=(o.get("uom_detail") or "").strip() or None,
     )
     offer.review = _verify(offer, part_context(page_text, part_number, offer.part_number))
     _apply_stock_rule(offer)

@@ -170,18 +170,30 @@ async def _token_info(token: str) -> dict | None:
     return resp.json() if resp.status_code == 200 else None
 
 
+def _addon_client(client_id: str, s) -> bool:
+    """One of the listed clients, or any client of a listed project: Google OAuth
+    client ids are "<project number>-<id>.apps.googleusercontent.com"."""
+    if client_id in s.addon_oauth_client_ids:
+        return True
+    number, dash, rest = client_id.partition("-")
+    return (bool(dash) and number.isdigit() and rest.endswith(".apps.googleusercontent.com")
+            and number in s.addon_oauth_project_numbers)
+
+
 def _addon_refusal(info: dict | None) -> str | None:
     """Why this token may not start a run, or None if it may."""
     s = get_settings()
     if info is None:
         return "Google did not accept the token"
     client_id = str(info.get("azp") or info.get("aud") or "").lower()
-    if not s.addon_oauth_client_ids:
-        return "add-on sign-in not set up (ADDON_OAUTH_CLIENT_IDS)"
-    if client_id not in s.addon_oauth_client_ids:
+    if not s.addon_oauth_client_ids and not s.addon_oauth_project_numbers:
+        return "add-on sign-in not set up (ADDON_OAUTH_CLIENT_IDS / ADDON_OAUTH_PROJECT_NUMBERS)"
+    if not _addon_client(client_id, s):
         # Logged so the right id can be set after the first test call.
         logger.warning("/trigger: token for OAuth client %s, not the add-on's", client_id)
-        return "token is not from the SourcingAI add-on"
+        # The id goes in the answer too (it's not a secret): the add-on shows it, so a
+        # changed Apps Script project / Cloud project link is seen at once (2026-11-18).
+        return f"token is not from the SourcingAI add-on (OAuth client {client_id or 'none'})"
     email = str(info.get("email") or "").lower()
     if not email or str(info.get("email_verified")).lower() != "true":
         return "Google did not confirm the email address"
@@ -219,23 +231,30 @@ async def _caller(request: Request, x_trigger_secret: str) -> str:
     call must be signed in at IAP as the same person as its token."""
     iap_email = await _iap_email(request)
     secret = get_settings().trigger_secret
+
+    def refuse(reason: str) -> HTTPException:
+        # Logged: the add-on shows only what it is told (a sidebar 401, 2026-11-18,
+        # left no trace of why on either side).
+        logger.warning("%s refused: %s", request.url.path, reason)
+        return HTTPException(status_code=401, detail=reason)
+
     if x_trigger_secret:
         if secret and hmac.compare_digest(x_trigger_secret, secret):
             return "secret"
-        raise HTTPException(status_code=401, detail="bad trigger secret")
+        raise refuse("bad trigger secret")
     auth = request.headers.get("authorization", "")
     if auth.lower().startswith("bearer ") and auth[7:].strip():
         info = await _token_info(auth[7:].strip())
         refusal = _addon_refusal(info)
         if refusal:
-            raise HTTPException(status_code=401, detail=refusal)
+            raise refuse(refusal)
         email = str(info["email"]).lower()
         if iap_email and iap_email != email:
             logger.warning("%s: IAP signed in %s, add-on token is %s", request.url.path,
                            iap_email, email)
-            raise HTTPException(status_code=401, detail="IAP and add-on sign-in differ")
+            raise refuse("IAP and add-on sign-in differ")
         return email
-    raise HTTPException(status_code=401, detail="bad trigger secret")
+    raise refuse("no add-on token and no trigger secret")
 
 
 @app.get("/healthz")
@@ -276,20 +295,59 @@ async def _sheet_body(request: Request) -> dict:
     return body
 
 
+# Only one add-on run writes a sheet's waiting results at a time: the sidebar, the
+# edit trigger and the hourly timer may all pull at once, and two writers would
+# append the same RFQ lines twice. Apps Script's document lock can't cover the
+# timer (it has no open document), so the lease is kept here. Held while results
+# are being written; free again once a pull finds nothing, or after the TTL if
+# that add-on run died mid-write (its results then come again).
+PULL_LEASE_SECONDS = 120
+
+
+def _pull_lease_name(sheet_id: str) -> str:
+    return f"sheet_pull:{sheet_id}"
+
+
 @app.post("/sheet/pull")
 async def sheet_pull(request: Request, x_trigger_secret: str = Header(default="")) -> dict:
     """The add-on collects the writes waiting for its sheet (oldest first), writes
     them into the sheet, then confirms them with /sheet/ack. `busy`: a search is
-    running or about to start, so more may come; the add-on keeps checking."""
+    running or about to start, so more may come; the add-on keeps checking.
+    `progress`: the worker's step and heartbeat (sourcing/progress.py).
+    `lease`: send it back with the next pull and the ack; `writing`: another
+    add-on run is writing this sheet's results right now (no ops given)."""
+    from sourcing.progress import describe
+
     await _caller(request, x_trigger_secret)
-    sheet_id = (await _sheet_body(request))["sheet_id"]
+    body = await _sheet_body(request)
+    sheet_id = body["sheet_id"]
     st = _relay_store()
-    ops = st.sheet_ops(sheet_id)[:200]      # one pull stays well inside Apps Script's limits
     with _local_lock:
         proc = _local["proc"]
         local_busy = _local["waiting"] or (proc is not None and proc.poll() is None)
     busy = bool(local_busy or st.is_locked(WORKER_LOCK) or st.is_locked(TRIGGER_LOCK))
-    return {"ops": [{"id": o["id"], **o["op"]} for o in ops], "busy": busy}
+    progress = describe(st.get_sheet_progress(sheet_id), time.time())
+    if busy and (progress is None or progress["state"] in ("done", "failed")):
+        # Started but not reading the sheet yet (waiting for a quiet sheet, job
+        # starting); an earlier run's "done" is not this one's.
+        # Nothing of the earlier run: 2026-11-18 the sidebar said "Starting for 13 min,
+        # 51 of 51 row(s) finished", the previous run's time and rows.
+        progress = {"state": "starting",
+                    "steps": ["Starting (waits until the sheet is quiet for a moment)"],
+                    "rows_done": 0, "rows_total": 0, "counts": {}, "elapsed_seconds": None,
+                    "alive_seconds_ago": None, "finished_seconds_ago": None}
+    reply = {"ops": [], "busy": busy, "progress": progress, "writing": False}
+
+    lease = body.get("lease") if isinstance(body.get("lease"), str) else ""
+    lease = lease or uuid.uuid4().hex
+    name = _pull_lease_name(sheet_id)
+    if not st.acquire_lock(name, lease, PULL_LEASE_SECONDS):
+        return {**reply, "writing": True}
+    ops = st.sheet_ops(sheet_id)[:200]      # one pull stays well inside Apps Script's limits
+    if not ops:
+        st.release_lock(name, lease)
+        return reply
+    return {**reply, "ops": [{"id": o["id"], **o["op"]} for o in ops], "lease": lease}
 
 
 @app.post("/sheet/ack")

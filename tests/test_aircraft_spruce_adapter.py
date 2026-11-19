@@ -17,7 +17,8 @@ from playwright.async_api import async_playwright
 from sourcing.models import LlmUsage, Offer, RequestRow
 from sourcing.vendors import adapter_class
 from sourcing.vendors.aircraft_spruce import (
-    AircraftSpruceAdapter, product_facts, product_url, rank_by_description, requested_qty,
+    AircraftSpruceAdapter, pricing_notes, product_facts, product_url, rank_by_description,
+    requested_qty,
 )
 from sourcing.vendors.aircraft_spruce_prompt import AIRCRAFT_SPRUCE_EXTRACT_SYSTEM
 from sourcing.vendors.base import SessionExpired
@@ -239,6 +240,35 @@ async def test_no_stock_is_out_of_stock(spruce_page):
     outcome = await AircraftSpruceAdapter(extractor=reader).search(page, row("10-05620", "2"))
     assert outcome.offers[0].qty_available == "Out of stock"
     assert "Delivery line: Expected to Ship: Friday, Dec. 4" in reader.texts[0]
+    # The ship date is the out-of-stock line's lead time, also when the model left
+    # it out (11-13941, 2026-11-18).
+    assert outcome.offers[0].lead_time == "Expected to ship Friday, Dec. 4"
+
+
+def test_quantity_discount_and_pack_option_go_to_the_comments():
+    """Signed-in pages seen 2026-11-18 (AN960-416L, CR3243-4-1)."""
+    washer = ("WASHER, FLAT AN960-416L NAS1149F0432P\nPackaged Items\nSinglePack of 100\n"
+              "$0.09/Piece\nPart# AN960-416L\nLess 20% for quantity 100/Part No.")
+    assert pricing_notes(washer, "AN960-416L") == ["LESS 20% FOR QTY 100 PER PART NO.",
+                                                   "ALSO SOLD IN PACKS OF 100"]
+    rivet = ("CHERRYMAX RIVET CR3243-4-1\nPackaged Items\nSinglePack of 100\n$4.70/Piece\n"
+             "PN Dash Dia. Grip Range Price Per 100\n"
+             "CR3243-4-1 4-1 .140 .025-.062 $376.00\nCR3243-4-2 4-2 .140 .063-.125 $380.00")
+    assert pricing_notes(rivet, "CR3243-4-1") == ["ALSO SOLD IN PACKS OF 100: $376.00 PER 100"]
+    # The part number in another column (CR3212-4-6); discounts by quantity (AN4-31A).
+    cr = ("Packaged Items\nSinglePack of 100\n$6.50/Piece\n"
+          "Dash Dia. Grip Range Part Number Price Per 100\n4-6 .126 .313-.375 CR3212-4-6 $585.00")
+    assert pricing_notes(cr, "CR3212-4-6") == ["ALSO SOLD IN PACKS OF 100: $585.00 PER 100"]
+    bolt = ("Packaged Items\nSinglePack of 5\n$0.98/Piece\n15% discount on qty of 50-99\n"
+            "20% discount on qty of 100+")
+    assert pricing_notes(bolt, "AN4-31A") == ["15% DISCOUNT FOR QTY 50-99",
+                                              "20% DISCOUNT FOR QTY 100+",
+                                              "ALSO SOLD IN PACKS OF 5"]
+    dash = ("Packaged Items\nSinglePack of 100\nDash Dia. Grip Range Price Per 100\n"
+            "4-3 .140 .126-.187 $440.00\n4-4 .140 .188-.250 $449.00")
+    assert pricing_notes(dash, "CR3242-4-4") == ["ALSO SOLD IN PACKS OF 100: $449.00 PER 100"]
+    # "Pack of 8" in a /Pack product's Overview is its unit, not a pack option.
+    assert pricing_notes("$4.95/Pack\nSet of eight screws.\nPack of 8", "11-09911") == []
 
 
 @pytest.mark.asyncio

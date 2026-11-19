@@ -22,9 +22,20 @@ before it ends (`RERUN_FLAG`, `service/job_main.py`, at most 5 passes).
 blocks the service account). With each call the add-on sends a copy of the Requests
 tab; the search's writes (Status, Notes, Run ID, RFQ lines) wait in the store until
 the add-on writes them into the sheet (`/sheet/pull`, `/sheet/ack`;
-`sourcing/sheet_relay.py`, service setting `SHEET_ACCESS=relay`, needs Firestore). It
-keeps checking for about 5 minutes after a search starts; what's still waiting is
-written on the next edit, when the sheet is opened, or with **Get results now**.
+`sourcing/sheet_relay.py`, service setting `SHEET_ACCESS=relay`, needs Firestore).
+Apps Script stops any one run at 6 minutes and a search can take longer (AAR, 11
+parts: 15 min, 2026-11-17), so the results are written by whichever comes first:
+- **Show progress** (sidebar; **Search new rows now** opens it): checks every 15 s
+  while open and shows the worker's step, rows finished and last heartbeat
+  (`sourcing/progress.py`); "Not responding" when the heartbeat is over 150 s old;
+- an edit (keeps checking for about 5 minutes), opening the sheet, **Get results now**;
+- an **hourly timer**, set up by Turn on (or the next time the sheet is opened): results
+  of a search that ends while the sheet is closed are in the sheet within the hour.
+
+Only one of them writes at a time (a lease in `/sheet/pull`), so RFQ lines are not
+doubled. The timer opens the sheet by id, so the add-on's scope is `spreadsheets`
+(was `spreadsheets.currentonly` until 2026-11-18): **the admin approves the new
+scope once** after the update.
 The per-sheet script still needs its sheet shared with the service account.
 
 ## Add-on (`addon/`)
@@ -38,8 +49,8 @@ The per-sheet script still needs its sheet shared with the service account.
    - Note the **project number**.
 2. At script.google.com, a **standalone** project (New project, not from a sheet),
    owned by a Skylink account:
-   - Paste `addon/Code.gs`. In Project Settings tick "Show appsscript.json" and paste
-     `addon/appsscript.json`.
+   - Paste `addon/Code.gs`, and add an HTML file named `Sidebar` with `addon/Sidebar.html`.
+     In Project Settings tick "Show appsscript.json" and paste `addon/appsscript.json`.
    - Project Settings > Google Cloud Platform project > **Change project** > the project number.
    - Project Settings > Script properties: `TRIGGER_URL` (`https://<host>/trigger`),
      optional `REQUESTS_TAB`.
@@ -48,6 +59,9 @@ The per-sheet script still needs its sheet shared with the service account.
      project (Google Cloud console > APIs & Services > Credentials, the one named
      "Apps Script"). Not sure which one: make a test call; the API logs
      "token for OAuth client <id>, not the add-on's", and that id is the one.
+     Better: `ADDON_OAUTH_PROJECT_NUMBERS` = the listing project's number. Apps Script
+     makes a new client now and then (a third one after the scope change of
+     2026-11-18), and any client of that project is then accepted.
    - `ALLOWED_EMAIL_DOMAINS`: Skylink's domain (shared with the login update page).
    - `TRIGGER_QUIET_SECONDS`: default 90.
 4. Try it: **Deploy > Test deployments > Install type: Editor add-on**, pick a test
@@ -131,6 +145,12 @@ ngrok http 8080
 2. Add a row in the Requests tab and wait about 2 minutes. The worker's log appears in terminal 1.
    With the add-on, the API waits for the quiet time itself (`TRIGGER_QUIET_SECONDS`).
 3. `TRIGGER_LOCAL_ARGS="--dummy"` writes made-up offers and doesn't touch a portal. Drop it for a real search, which uses the `.env` settings and is a live portal search, so keep these few.
+   Live, through the add-on and the relay (Browserbase keys from Secret Manager):
+   ```bash
+   TRIGGER_RUN_LOCAL=1 TRIGGER_LOCAL_ARGS="--browser browserbase" SHEET_ACCESS=relay \
+   STORE_BACKEND=firestore STORE_PROJECT=sourcing-skylink-addon INFRA_SECRETS=gsm \
+   .venv/bin/uvicorn service.api:app --port 8080 2>&1 | tee api_live_$(date +%m%d_%H%M).log
+   ```
 4. The local worker searches the sheet the script sent (`--sheet <its id>`). The gcloud login needs the Sheets scope for it.
 
 Stop ngrok when you're done: while it runs, anyone with the address and the secret

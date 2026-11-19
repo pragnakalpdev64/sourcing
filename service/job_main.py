@@ -28,6 +28,7 @@ from typing import Optional
 from sourcing.config import Settings, get_settings, quiet_http_logs
 from sourcing.notify.chat import ChatNotifier
 from sourcing.pipeline import Deps, Pipeline, default_adapter_factory
+from sourcing.progress import SheetProgress
 from sourcing.sheet_relay import open_relay_sheet
 from sourcing.sheets import open_sheet
 from sourcing.sinks.sheet import SheetSink
@@ -132,8 +133,9 @@ def build_shared_deps(settings: Settings, store: Store, *, dummy: bool,
 
 async def run_one_sheet(shared: Deps, sheet: dict, run_id: str) -> dict:
     sheet_id = sheet["sheet_id"]
+    relay = get_settings().sheet_access == "relay" and not sheet_id.lower().endswith(".xlsx")
     try:
-        if get_settings().sheet_access == "relay" and not sheet_id.lower().endswith(".xlsx"):
+        if relay:
             # The add-on's copy of the sheet; writes go back through it (sheet_relay).
             sheets = await asyncio.to_thread(
                 open_relay_sheet, shared.store, sheet_id, sheet.get("requests_tab", "Requests"),
@@ -152,13 +154,26 @@ async def run_one_sheet(shared: Deps, sheet: dict, run_id: str) -> dict:
 
     # The RFQ tab always; the Results tab only when asked (--results; client, 2026-10-29).
     results = os.environ.get("WRITE_RESULTS_TAB", "").strip() in ("1", "true", "yes")
-    deps = replace(shared, sheets=sheets, sink=SheetSink(sheets, rfq=True, results=results))
+    # Sheet relay: the add-on's sidebar shows this run's step and heartbeat
+    # (sourcing/progress.py). With direct sheet access nobody waits on it.
+    progress = SheetProgress(shared.store, sheet_id, run_id) if relay else None
+    deps = replace(shared, sheets=sheets, sink=SheetSink(sheets, rfq=True, results=results),
+                   progress=progress)
     # Google Sheet: last 8 chars of its id; local Excel: the file name ("test")
     if sheet_id.lower().endswith(".xlsx"):
         tag = os.path.splitext(os.path.basename(sheet_id))[0]
     else:
         tag = sheet_id[-8:]
     sheet_run_id = f"{run_id}__{tag}"
+    if progress is None:
+        return await _run_pipeline(deps, sheet_id, sheet_run_id)
+    with progress:
+        outcome = await _run_pipeline(deps, sheet_id, sheet_run_id)
+        progress.finish("failed" if outcome.get("error") else "done", outcome.get("counts"))
+    return outcome
+
+
+async def _run_pipeline(deps: Deps, sheet_id: str, sheet_run_id: str) -> dict:
     try:
         summary = await Pipeline(deps, sheet_run_id).run()
     except Exception as exc:

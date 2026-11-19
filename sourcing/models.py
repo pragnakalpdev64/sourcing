@@ -107,6 +107,11 @@ class Offer:
     # adapter (RFQ tab only).
     description: Optional[str] = None
     uom: Optional[str] = None
+    # What one unit is when it isn't a single piece, as the page states it: pack
+    # count, kit contents, sheet size ("4' x 12', .032 thick"), roll length (team,
+    # 2026-11-18: Aircraft Spruce's /Sheet and /Pack prices said nothing of the size).
+    # Written to Internal Comments.
+    uom_detail: Optional[str] = None
     # Traceability and release certificate ("tag") from the line's certification
     # notes, read by the model by the client's rules (prompt 3.11, 3.12; RFQ tab only).
     trace: Optional[str] = None

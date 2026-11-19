@@ -121,6 +121,18 @@ SEND_CODE_BUTTONS = ("button#btnSendCode", "button:has-text('Send Code')", "butt
 CODE_BOXES = ("form#frmVerifyCode input#Code", *web.MFA_INPUT_SELECTORS, "input[name*='token' i]:not([type=hidden])",
               "input[type='tel']", "input[type='number']")
 CODE_BOX_WAIT_SECONDS = 30
+SEND_CHECK_SECONDS = 15
+# The Send Code button's onclick is Processing() -> $("#frmSendCode").submit()
+# (seen 2026-11-18). Email is picked with the custom drop-down's hidden <select>.
+SEND_CODE_FORM_JS = """() => {
+  const form = document.querySelector('form#frmSendCode');
+  if (!form) return null;
+  const sel = form.querySelector('select#SelectedProvider');
+  if (sel) { const o = [...sel.options].find(o => /mail/i.test(o.text || o.value));
+             if (o) sel.value = o.value; }
+  if (typeof window.Processing === 'function') { window.Processing(); return 'Processing()'; }
+  form.submit(); return 'form.submit()';
+}"""
 # The 2FA pages (2026-11-13): /Account/SendCode (#SelectedProvider: Email, Send Code)
 # and /Account/VerifyCode (#Code, Verify Code, "I didn't receive the code. Take me to
 # the previous step." -> back to SendCode). Back on SendCode this long without a new
@@ -728,11 +740,16 @@ class TextronAdapter(GenericAdapter):
                                         "Send code")
             await _settle(page)
             box = await self._wait_code_box(page)
+        elif await self._send_code_by_form(page):
+            await _settle(page)
+            box = await self._wait_code_box(page)
         if not box:
             # The coded way found no Send button / no code box: the LLM picks the
             # clicks, the code box appearing is the check (assist.py).
             async def code_box_shown() -> bool:
-                return bool(await _first_visible(page, list(CODE_BOXES)))
+                # The click posts the form; the code page comes a few seconds later
+                # (2026-11-18 the check ran before it and called a working click a miss).
+                return bool(await self._wait_code_box(page, SEND_CHECK_SECONDS))
             if await self.assist.act(page, key="textron_send_code", check=code_box_shown,
                                      goal="choose to receive the login code by Email, then "
                                           "click the button that sends the code (Send Code)",
@@ -776,8 +793,24 @@ class TextronAdapter(GenericAdapter):
                 logger.debug("Email choice %s: %r", choice, exc)
         return None
 
-    async def _wait_code_box(self, page) -> Optional[str]:
-        deadline = time.time() + CODE_BOX_WAIT_SECONDS
+    async def _send_code_by_form(self, page) -> bool:
+        """No visible Send Code button found (2026-11-18, Browserbase: neither the
+        button nor the email choice was picked up on the same page that worked on
+        11-13): do what the button does, the page's own Processing() -> submit of
+        form#frmSendCode. Its one provider (Email) is already selected."""
+        try:
+            how = await page.evaluate(SEND_CODE_FORM_JS)
+        except Exception as exc:
+            logger.info("Login 2FA: Send Code form not submitted (%r)", exc)
+            return False
+        if not how:
+            logger.info("Login 2FA: no Send Code button or form#frmSendCode on %s", page.url)
+            return False
+        logger.info("Login 2FA: no visible Send Code button; sent by the page's form (%s)", how)
+        return True
+
+    async def _wait_code_box(self, page, seconds: float = CODE_BOX_WAIT_SECONDS) -> Optional[str]:
+        deadline = time.time() + seconds
         while time.time() < deadline:
             box = await _first_visible(page, list(CODE_BOXES))
             if box:

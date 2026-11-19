@@ -629,6 +629,12 @@ New in this copy (the main copy has none of it):
       `/trigger` (api.py), `SHEET_ACCESS=relay` + `STORE_PROJECT` (config.py, job_main.py), the
       add-on's pull/apply/ack (`Code.gs`); a person's Status edit wins (`stale_rows`, `writeCells_`).
       Tests `tests/test_sheet_relay.py`. **copy**.
+- [ ] Add-on progress sidebar, worker heartbeat, hourly timer (2026-11-18): `sourcing/progress.py`
+      (`SheetProgress`, `describe`), store `set_sheet_progress` / `get_sheet_progress`, `Deps.progress`
+      + `Pipeline._progress` steps, `run_one_sheet` heartbeat for relay sheets; `/sheet/pull` returns
+      `progress` and a write lease (`PULL_LEASE_SECONDS`); add-on `Sidebar.html`, `showProgress`,
+      `sidebarPoll`, `onTimer` / `ensureTimer_`, `pullResults_(ss, maxMs)`, scope `spreadsheets`.
+      Tests `tests/test_progress.py`, lease/progress tests in `tests/test_sheet_relay.py`. **copy**.
 - [ ] IAP for the add-on (2026-11-16): `service/iap.py`, `_iap_email` in `_caller`, `IAP_AUDIENCE`;
       add-on sends `Proxy-Authorization` with `ScriptApp.getIdentityToken()` (scope `openid`).
       Tests at the end of `tests/test_sheet_trigger.py`. **copy**.

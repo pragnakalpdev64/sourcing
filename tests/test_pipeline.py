@@ -228,6 +228,14 @@ def test_worker_lock_is_exclusive():
     assert store.acquire_lock(WORKER_LOCK, "b", 60)
 
 
+def test_uom_detail_note():
+    from sourcing.pipeline import uom_note
+
+    assert uom_note(Offer("P", uom="Sheet", uom_detail="4’ x 12’ sheet, .032 thick")) == \
+        "• UOM SHEET: 4’ X 12’ SHEET, .032 THICK"
+    assert uom_note(Offer("P", uom="EA")) == ""
+
+
 def test_flags():
     row = RequestRow(sheet_row=2, rfq_id="", vendor_raw="Proponent", part_number="P",
                      qty_needed="10", condition_wanted="NE")

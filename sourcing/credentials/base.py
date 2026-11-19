@@ -9,6 +9,9 @@ Value: JSON {"username": ..., "password": ..., "totp_secret": ..., "url": ...}.
 A portal that signs in with an emailed code instead of a password (Notion,
 tested 2026-10-22) has "passwordless": true and no password; the code comes
 from a person (sourcing/auth/hitl.py).
+A portal that asks for a passkey (Aviall/Boeing, 2026-11-18) gets the program's
+own passkey in "passkeys": a list of WebAuthn credentials (with private keys)
+made by Chrome's virtual authenticator (sourcing/auth/passkey.py).
 Secret values must never be logged or written to the sheet / Firestore.
 """
 from __future__ import annotations
@@ -55,6 +58,8 @@ class VendorCredential:
     allowed_hosts: tuple = ()
     # Signs in with the username and a code the portal sends, never a password.
     passwordless: bool = field(default=False, repr=False)   # repr: no "password" in logs
+    # The program's own passkeys for this login (private keys inside: never logged).
+    passkeys: tuple = field(default=(), repr=False)
 
     @property
     def is_shared(self) -> bool:
@@ -97,8 +102,10 @@ class CredentialProvider(ABC):
             if isinstance(hosts, str):
                 hosts = hosts.split(",")
             hosts = tuple(h.strip().lower() for h in hosts if str(h).strip())
+            keys = payload.get("passkeys") or ()
+            keys = tuple(k for k in keys if isinstance(k, dict) and k.get("privateKey"))
             return VendorCredential(vendor_id, owner, key, username, password, totp, url, hosts,
-                                    passwordless)
+                                    passwordless, keys)
         raise CredentialNotFound(
             f"No credentials for vendor '{vendor_id}' (tried: "
             + ", ".join(secret_key(vendor_id, o) for o in owners) + ")"

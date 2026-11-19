@@ -146,6 +146,15 @@ CHOICE_PAGE = """<form action="/Account/SendCode" method="post"><h2>Two-Factor A
 <label><input type="radio" name="Provider" value="Phone" checked> Text message</label>
 <label><input type="radio" name="Provider" value="Email"> Email</label>
 <button type="submit">Send Code</button></form>"""
+# The real page (saved 2026-11-18): Email in a custom drop-down over a hidden
+# <select>, a type=button Send Code whose onclick submits the form by script.
+REAL_CHOICE_PAGE = """<h1>Two-Step Verification Code</h1>
+<form action="/Account/SendCode" id="frmSendCode" method="post">
+<div class="bb-custom-select-container"><span role="combobox"><span>Email</span></span>
+<select id="SelectedProvider" name="SelectedProvider" style="display:none"><option value="Email">Email</option></select></div>
+<button type="button" id="btnSendCode" onclick="Processing();" style="{button_style}">Send Code</button></form>
+<script>function Processing() { document.getElementById('btnSendCode').innerHTML = 'Processing...';
+  setTimeout(() => document.getElementById('frmSendCode').submit(), 1500); }</script>"""
 CODE_PAGE = """<form action="/Account/VerifyCode" method="post"><h2>Verify your identity</h2>
 <p>Enter the verification code we sent to your email.</p>
 <input type="text" id="Code" name="Code"><button type="submit">Verify</button></form>
@@ -181,6 +190,7 @@ class MockTextron:
         self.last_multiple: list[str] = []
         self.refuse = False
         self.codes_sent: list[str] = []
+        self.choice_page = CHOICE_PAGE
 
     def page(self, body, title="Textron Aviation"):
         return PAGE.format(title=title, header=HEADER_IN if self.signed_in else HEADER_OUT,
@@ -199,16 +209,17 @@ class MockTextron:
         elif path == "/Account/Login" and req.method == "POST":
             self.logins.append({k: v[0] for k, v in parse_qs(req.post_data or "").items()})
             if self.two_fa:
-                await html(self.page(CHOICE_PAGE, "Verify"))
+                await html(self.page(self.choice_page, "Verify"))
             else:
                 self.signed_in = True
                 await go("/Dashboard")
         elif path == "/Account/Login":
             await html(self.page(LOGIN.format(captcha="true" if self.captcha else "false"), "Log in"))
         elif path == "/Account/SendCode" and req.method == "GET":
-            await html(self.page(CHOICE_PAGE, "Verify"))
+            await html(self.page(self.choice_page, "Verify"))
         elif path == "/Account/SendCode" and req.method == "POST":
-            self.codes_sent.append(parse_qs(req.post_data or "").get("Provider", [""])[0])
+            form = parse_qs(req.post_data or "")
+            self.codes_sent.append((form.get("Provider") or form.get("SelectedProvider") or [""])[0])
             # The real site redirects to VerifyCode?Provider=Email (2026-11-13).
             await go("/Account/VerifyCode?Provider=Email&RememberMe=False")
         elif path == "/Account/VerifyCode" and req.method == "GET":
@@ -497,6 +508,20 @@ async def test_login_then_2fa_finished_by_a_person(textron):
     await page.wait_for_url(re.compile(r"/Dashboard"))
     assert await textron_adapter.person_finished_login(page) is True
     assert textron_adapter.signed_in_proof
+
+
+@pytest.mark.asyncio
+@pytest.mark.parametrize("button_style", ["", "display:none"])
+async def test_send_code_on_the_real_2fa_page(textron, button_style):
+    """2026-11-18: the real page's Send Code wasn't done by the program; a visible
+    button is clicked, else the page's own Processing() submits the form."""
+    page, portal = textron
+    portal.signed_in = False
+    portal.choice_page = REAL_CHOICE_PAGE.replace("{button_style}", button_style)
+    with pytest.raises(MfaRequired) as asked:
+        await adapter().login(page, cred())
+    assert portal.codes_sent == ["Email"]
+    assert asked.value.input_selector and "/Account/VerifyCode" in page.url
 
 
 @pytest.mark.asyncio

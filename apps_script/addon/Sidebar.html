@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html>
+<head>
+<base target="_top">
+<style>
+  /* Plain Google-sidebar look; the sidebar is 300px wide. */
+  body { font: 13px/1.45 Arial, sans-serif; color: #202124; margin: 12px; }
+  h1 { font-size: 15px; font-weight: 600; margin: 0 0 10px; }
+  .state { display: inline-block; padding: 2px 8px; border-radius: 10px; font-weight: 600;
+           font-size: 12px; background: #e8eaed; }
+  .running, .starting { background: #e8f0fe; color: #174ea6; }
+  .done { background: #e6f4ea; color: #137333; }
+  .failed, .stopped { background: #fce8e6; color: #a50e0e; }
+  ul { padding-left: 18px; margin: 8px 0; }
+  .bar { height: 6px; background: #e8eaed; border-radius: 3px; overflow: hidden; margin: 6px 0 2px; }
+  .bar > div { height: 100%; background: #1a73e8; width: 0; transition: width .4s; }
+  .muted { color: #5f6368; font-size: 12px; }
+  .note { margin-top: 10px; padding: 8px; border-radius: 6px; background: #f1f3f4; }
+  .warn { background: #fce8e6; }
+  button { margin-top: 12px; padding: 6px 14px; border: 1px solid #dadce0; border-radius: 4px;
+           background: #fff; color: #1a73e8; font-weight: 600; cursor: pointer; }
+  button:disabled { color: #9aa0a6; cursor: default; }
+</style>
+</head>
+<body>
+  <h1>SourcingAI</h1>
+  <div><span id="state" class="state">Checking…</span> <span id="time" class="muted"></span></div>
+  <ul id="steps"></ul>
+  <div id="rows" style="display:none">
+    <div class="bar"><div id="fill"></div></div>
+    <div id="rowsText" class="muted"></div>
+  </div>
+  <div id="alive" class="muted"></div>
+  <div id="note" class="note" style="display:none"></div>
+  <div id="written" class="muted" style="margin-top:8px"></div>
+  <button id="check" onclick="poll()">Check now</button>
+
+<script>
+  // While this sidebar is open it checks every few seconds: each check is a
+  // short Apps Script run (sidebarPoll in Code.gs), so a search of any length is
+  // followed and its results are written as they come (one run stops at 6 min).
+  var BUSY_MS = 15000, IDLE_MS = 60000, IDLE_STOP_MS = 20 * 60000;
+  var timer = null, idleSince = null, inFlight = false;
+  var LABELS = {starting: 'Starting', running: 'Searching', done: 'Finished',
+                failed: 'Failed', stopped: 'Not responding'};
+
+  function el(id) { return document.getElementById(id); }
+
+  function minutes(s) {
+    if (s == null) return '';
+    if (s < 60) return s + ' s';
+    var m = Math.floor(s / 60);
+    return m < 60 ? m + ' min' : Math.floor(m / 60) + ' h ' + (m % 60) + ' min';
+  }
+
+  function note(text, warn) {
+    el('note').style.display = text ? '' : 'none';
+    el('note').className = 'note' + (warn ? ' warn' : '');
+    el('note').textContent = text || '';
+  }
+
+  function show(r) {
+    var p = r.progress || {state: r.busy ? 'starting' : null};
+    var state = p.state;
+    el('state').className = 'state ' + (state || '');
+    el('state').textContent = state ? LABELS[state] || state : 'No search yet';
+    el('time').textContent = state === 'running' || state === 'starting'
+      ? (p.elapsed_seconds ? 'for ' + minutes(p.elapsed_seconds) : '')
+      : (p.finished_seconds_ago != null ? minutes(p.finished_seconds_ago) + ' ago' : '');
+
+    var steps = el('steps');
+    steps.innerHTML = '';
+    (state === 'running' || state === 'starting' ? p.steps || [] : []).forEach(function (s) {
+      var li = document.createElement('li');
+      li.textContent = s;
+      steps.appendChild(li);
+    });
+
+    if (p.rows_total) {
+      el('rows').style.display = '';
+      el('fill').style.width = Math.round(100 * p.rows_done / p.rows_total) + '%';
+      el('rowsText').textContent = p.rows_done + ' of ' + p.rows_total + ' row(s) finished';
+    } else {
+      el('rows').style.display = 'none';
+    }
+    el('alive').textContent = state === 'running'
+      ? 'Last sign of life ' + minutes(p.alive_seconds_ago) + ' ago' : '';
+
+    if (state === 'stopped') {
+      note('The search stopped answering ' + minutes(p.alive_seconds_ago) + ' ago. Rows ' +
+           'still RUNNING were not finished: set their Status to NEW to search them again.', true);
+    } else if (state === 'failed') {
+      note('The search ended with an error. See the Notes column of its rows.', true);
+    } else if (state === 'done' && p.counts) {
+      var parts = Object.keys(p.counts).map(function (k) { return k + ' ' + p.counts[k]; });
+      note(parts.length ? 'Result: ' + parts.join(', ') : '', false);
+    } else {
+      note(r.writing ? 'Another SourcingAI update is writing to this sheet; checking again.' : '');
+    }
+    if (r.written) {
+      el('written').textContent = r.written + ' update(s) written at ' +
+        new Date().toLocaleTimeString();
+    }
+    if (r.error) note(r.error, true);
+    return state === 'running' || state === 'starting' || r.busy || r.writing || r.written;
+  }
+
+  function schedule(active) {
+    clearTimeout(timer);
+    var now = Date.now();
+    if (active) idleSince = null; else if (!idleSince) idleSince = now;
+    if (idleSince && now - idleSince > IDLE_STOP_MS) {
+      el('alive').textContent = 'Paused: nothing is running. Check now to look again.';
+      return;
+    }
+    timer = setTimeout(poll, active ? BUSY_MS : IDLE_MS);
+  }
+
+  function poll() {
+    if (inFlight) return;
+    inFlight = true;
+    el('check').disabled = true;
+    google.script.run
+      .withSuccessHandler(function (r) {
+        inFlight = false;
+        el('check').disabled = false;
+        schedule(show(r || {}));
+      })
+      .withFailureHandler(function (err) {
+        inFlight = false;
+        el('check').disabled = false;
+        note('Could not check: ' + (err && err.message ? err.message : err), true);
+        schedule(true);
+      })
+      .sidebarPoll();
+  }
+
+  poll();
+</script>
+</body>
+</html>

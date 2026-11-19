@@ -197,6 +197,15 @@ async def test_rule_5_no_quote_lines_have_no_delivery():
     _, rfq = await _line(Offer(part_number="P1", qty_available="Out of stock",
                                lead_time="30 days", condition="NE"))       # no price
     assert (rfq["Type Quoted"], rfq["Delivery"], rfq["Unit Price"]) == ("No Quote", "", "0")
+    # The condition the page shows stays on it (AAR 224514-9, FN, 2026-11-17).
+    assert (rfq["Condition Quoted"], rfq["Condition Code"]) == ("NE", "NE")
+
+
+@pytest.mark.asyncio
+async def test_rule_5_no_quote_line_without_a_condition_shows_dash():
+    _, rfq = await _line(Offer(part_number="P1", qty_available="Out of stock",
+                               lead_time="30 days"))
+    assert (rfq["Type Quoted"], rfq["Condition Quoted"]) == ("No Quote", "-")
 
 
 @GAP

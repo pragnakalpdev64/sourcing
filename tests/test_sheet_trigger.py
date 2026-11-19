@@ -244,6 +244,31 @@ def test_addon_token_refused(addon, change, why):
     assert started == [] and store.list_enabled_sheets() == []
 
 
+@pytest.mark.parametrize("client_id, ok", [
+    ("123-newclient.apps.googleusercontent.com", True),      # new client, same project
+    ("999-abc.apps.googleusercontent.com", False),           # another project
+    ("123-abc.example.com", False),                          # not a Google client id
+    ("1234-abc.apps.googleusercontent.com", False),          # number must match exactly
+])
+def test_any_client_of_the_add_on_project_is_accepted(addon, monkeypatch, client_id, ok):
+    """Apps Script made a third client after the 2026-11-18 scope change; with the
+    project number set, a new client of that project works without a new id."""
+    c, _, started, info = addon
+    monkeypatch.setenv("ADDON_OAUTH_PROJECT_NUMBERS", "123")
+    get_settings.cache_clear()
+    info.update({"azp": client_id, "aud": client_id})
+    resp = c.post("/trigger", headers=BEARER, json={"sheet_id": "s1"})
+    assert (resp.status_code == 200) is ok
+
+
+def test_project_number_alone_is_enough(addon, monkeypatch):
+    c, _, started, _ = addon
+    monkeypatch.delenv("ADDON_OAUTH_CLIENT_IDS")
+    monkeypatch.setenv("ADDON_OAUTH_PROJECT_NUMBERS", "123")
+    get_settings.cache_clear()
+    assert c.post("/trigger", headers=BEARER, json={"sheet_id": "s1"}).status_code == 200
+
+
 def test_addon_token_refused_when_google_rejects_it(addon, monkeypatch):
     c, _, started, _ = addon
 

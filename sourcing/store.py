@@ -147,6 +147,15 @@ class Store(ABC):
     def ack_sheet_ops(self, sheet_id: str, ids: list[str]) -> None:
         raise NotImplementedError(f"{type(self).__name__} has no sheet relay")
 
+    # The worker's heartbeat for one sheet (sourcing/progress.py): what it is doing
+    # and when it last said so. /sheet/pull hands it to the add-on's sidebar.
+    # Optional: a store without it just shows no progress.
+    def set_sheet_progress(self, sheet_id: str, fields: dict) -> None:
+        return None
+
+    def get_sheet_progress(self, sheet_id: str) -> Optional[dict]:
+        return None
+
     # --- jobs / rows / audit --------------------------------------------
     @abstractmethod
     def update_job(self, run_id: str, fields: dict) -> None: ...
@@ -188,6 +197,7 @@ class MemoryStore(Store):
         self.hitl: dict[str, dict] = {}
         self.sheet_snapshots: dict[str, dict] = {}
         self.sheet_op_queue: dict[str, list[dict]] = {}
+        self.sheet_progress: dict[str, dict] = {}
 
     def put_sheet_snapshot(self, sheet_id: str, tabs: dict) -> None:
         with self._lock:
@@ -214,6 +224,14 @@ class MemoryStore(Store):
         with self._lock:
             self.sheet_op_queue[sheet_id] = [o for o in self.sheet_op_queue.get(sheet_id, [])
                                              if o["id"] not in done]
+
+    def set_sheet_progress(self, sheet_id: str, fields: dict) -> None:
+        with self._lock:
+            self.sheet_progress.setdefault(sheet_id, {}).update(copy.deepcopy(fields))
+
+    def get_sheet_progress(self, sheet_id: str) -> Optional[dict]:
+        with self._lock:
+            return copy.deepcopy(self.sheet_progress.get(sheet_id))
 
     def acquire_lock(self, name: str, holder: str, ttl_seconds: int) -> bool:
         with self._lock:
@@ -533,6 +551,13 @@ class FirestoreStore(Store):
             for op_id in ids[start:start + 400]:
                 batch.delete(self.db.collection("sheet_ops").document(op_id))
             batch.commit()
+
+    def set_sheet_progress(self, sheet_id: str, fields: dict) -> None:
+        self.db.collection("sheet_progress").document(sheet_id).set(fields, merge=True)
+
+    def get_sheet_progress(self, sheet_id: str) -> Optional[dict]:
+        snap = self.db.collection("sheet_progress").document(sheet_id).get()
+        return snap.to_dict() if snap.exists else None
 
     def audit(self, event: str, **fields: Any) -> None:
         self.db.collection("audit").document(uuid.uuid4().hex).set(

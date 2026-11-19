@@ -108,6 +108,34 @@ def test_values_not_on_the_parts_own_data_are_removed():
     assert flags == "LEAD_TIME_NOT_ON_PAGE,CONDITION_NOT_ON_PAGE"
 
 
+def test_in_stock_lead_time_kept_when_the_page_shows_a_stock_status_only():
+    """Aircraft Spruce shows "In Stock" and "Expected to Ship: Wednesday, Nov. 18",
+    no count: the lead time was removed on every in-stock line (2026-11-18)."""
+    from sourcing.extract import _verify
+    from sourcing.models import Offer
+
+    page = ("Part# 03-28130\n$206.95/Each\nIn Stock\nExpected to Ship: Wednesday, Nov. 18")
+    o = Offer("03-28130", "206.95", "USD", "In stock", None,
+              "In stock (expected to ship Wednesday, Nov. 18)")
+    assert _verify(o, page) is None and o.lead_time.startswith("In stock")
+    # ... but not when the page says nothing about stock
+    o = Offer("03-28130", "206.95", "USD", "In stock", None, "In stock (expected Nov. 18)")
+    assert _verify(o, "Part# 03-28130 $206.95/Each Nov. 18") == "QTY_NOT_ON_PAGE,LEAD_TIME_NOT_ON_PAGE"
+
+
+def test_uom_detail_kept_only_with_the_pages_numbers():
+    from sourcing.extract import _verify
+    from sourcing.models import Offer
+
+    page = "$289.00/Sheet\nIn Stock\n0.032 0.461 Alclad 4’ x 12’ 03-28010"
+    o = Offer("03-28010", "289.00", "USD", "In stock", uom="SHEET",
+              uom_detail="4’ x 12’ sheet, .032 thick, Alclad")
+    assert _verify(o, page) is None and o.uom_detail.startswith("4’ x 12’")
+    o = Offer("03-28010", "289.00", "USD", "In stock", uom="SHEET",
+              uom_detail="4’ x 10’ sheet, .040 thick")
+    assert _verify(o, page) == "UOM_DETAIL_NOT_ON_PAGE" and o.uom_detail is None
+
+
 @pytest.mark.asyncio
 async def test_not_present_on_website_is_read_as_no_value():
     missing = "Not Present on website"
