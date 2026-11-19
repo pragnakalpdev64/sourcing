@@ -64,6 +64,7 @@ def test_unbuilt_endpoints_say_so(client):
     resp = c.get("/credentials/update", follow_redirects=False)
     assert resp.status_code == 401 and "Sign in with Google" in resp.text
     assert c.get("/healthz").json() == {"ok": True}
+    assert c.get("/health").json() == {"ok": True}
 
 
 def test_trigger_says_why_when_the_job_cannot_start(client, monkeypatch):

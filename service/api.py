@@ -257,6 +257,9 @@ async def _caller(request: Request, x_trigger_secret: str) -> str:
     raise refuse("no add-on token and no trigger secret")
 
 
+# /health: Cloud Run's front end answers /healthz itself with a Google 404, so the
+# app never sees it (seen on sourcing-ai-dev 2026-11-19). /healthz kept for local use.
+@app.get("/health")
 @app.get("/healthz")
 def healthz() -> dict:
     return {"ok": True}
