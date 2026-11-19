@@ -1,12 +1,26 @@
+# The image holds only what runs on Cloud Run: sourcing/, service/ and
+# scripts/check_access.py (Dockerfile). Everything else stays out of the build
+# context: secrets, local state, run logs, vendor pages, docs, the add-on.
 .venv
-__pycache__
-*.pyc
+.git
+**/__pycache__
+**/*.pyc
+.pytest_cache
 .env
+.env.*
+!.env.example
 infra
 tests
-.pytest_cache
-.git
+test_runs
+debug_pages*
+docs
+apps_script
+samples
+.playwright-mcp
+*.log
+*.md
+*.docx
 .local_store.json*
 .local_login*.json
-debug_pages
-test_runs
+.local_passkey*.json
+.claude

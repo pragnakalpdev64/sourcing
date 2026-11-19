@@ -58,7 +58,6 @@ from typing import Optional
 from urllib.parse import quote, urlsplit
 
 from ..conditions import CONDITION_CODES, normalize_condition
-from ..config import captcha_solving_allowed
 from ..credentials.base import VendorCredential
 from ..extract import NOT_PRESENT
 from ..models import RequestRow, SearchOutcome
@@ -102,8 +101,6 @@ SIGN_IN_STATE_JS = """() => {
   return b.disabled ? 'waiting' : 'ready';
 }"""
 SIGN_IN_WAIT_SECONDS = 25
-# DEV_ALLOW_CAPTCHA_SOLVING only: Browserbase's docs say solving takes 5-30s.
-SOLVER_WAIT_SECONDS = 45
 # The 2FA page after Log In (team, 2026-11-12): choose Email, click Send Code, then a
 # code box; the person types only the code. Its markup isn't seen yet: the usual
 # forms of the choice and the button, then the LLM (assist.py), checked by the code
@@ -648,7 +645,7 @@ class TextronAdapter(GenericAdapter):
         await self._type_login_field(page, user, cred.username)
         await self._type_login_field(page, password, cred.password)
         state = await self._sign_in_state(page)
-        if state == "captcha" and not await self._solver_cleared(page):
+        if state == "captcha":
             logger.warning("Login: Textron shows the 'I'm not a robot' box; asking a person")
             raise MfaRequired("captcha", "Textron Aviation shows Google's 'I'm not a robot' "
                                          "check: a person must tick it and log in")
@@ -678,24 +675,6 @@ class TextronAdapter(GenericAdapter):
                 logger.info("Login: Log In button state %s", state)
                 return state
             await page.wait_for_timeout(500)
-
-    async def _solver_cleared(self, page) -> bool:
-        """REMOVE-AFTER-CAPTCHA-TRIAL (2026-11-05): with DEV_ALLOW_CAPTCHA_SOLVING=1 the
-        browser service may tick the box. True once Log In is enabled."""
-        if not captcha_solving_allowed():
-            return False
-        logger.info("Login: checkbox shown; waiting up to %ss for the CAPTCHA solver",
-                    SOLVER_WAIT_SECONDS)
-        deadline = time.time() + SOLVER_WAIT_SECONDS
-        while time.time() < deadline:
-            await page.wait_for_timeout(1000)
-            try:
-                if await page.evaluate("() => { const b = document.querySelector('#btnSignIn');"
-                                       " return !!b && !b.disabled; }"):
-                    return True
-            except Exception:
-                return False
-        return False
 
     async def _after_submit(self, page, cred, *, totp_tried: bool,
                             code_given: bool = False) -> None:

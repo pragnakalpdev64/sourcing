@@ -414,7 +414,6 @@ async def test_image_challenge_goes_to_a_person_not_a_retry(spruce_page, monkeyp
     await page.context.route("https://www.google.com/**",          # never the real Google
                              lambda r: r.fulfill(status=200, body="<p>images</p>"))
     monkeypatch.setattr(aircraft_spruce, "CHALLENGE_WAIT_SECONDS", 1)
-    monkeypatch.delenv("DEV_ALLOW_CAPTCHA_SOLVING", raising=False)
     adapter = AircraftSpruceAdapter(extractor=Reader())
     await page.set_content(LOGIN_PAGE.format(nav=portal.nav()) + CHALLENGE.format(vis="visible"))
     with pytest.raises(MfaRequired) as err:
@@ -428,26 +427,3 @@ async def test_image_challenge_goes_to_a_person_not_a_retry(spruce_page, monkeyp
     assert await adapter._image_challenge(page) is False
 
 
-@pytest.mark.asyncio
-async def test_dev_switch_waits_for_the_solver_then_a_person(spruce_page, monkeypatch):
-    # REMOVE-AFTER-CAPTCHA-TRIAL (2026-11-05): DEV_ALLOW_CAPTCHA_SOLVING=1.
-    from sourcing.vendors import aircraft_spruce
-    from sourcing.vendors.base import MfaRequired
-    page, portal = spruce_page
-    await page.context.route("https://www.google.com/**",
-                             lambda r: r.fulfill(status=200, body="<p>images</p>"))
-    monkeypatch.setattr(aircraft_spruce, "CHALLENGE_WAIT_SECONDS", 1)
-    monkeypatch.setattr(aircraft_spruce, "SOLVER_WAIT_SECONDS", 2)
-    monkeypatch.setenv("DEV_ALLOW_CAPTCHA_SOLVING", "1")
-    adapter = AircraftSpruceAdapter(extractor=Reader())
-    html = LOGIN_PAGE.format(nav=portal.nav()) + CHALLENGE.format(vis="visible")
-    # The solver clears it (frame hidden after ~1s): no person asked.
-    await page.set_content(html.replace("<div style", "<div id='c' style"))
-    await page.evaluate("setTimeout(() => document.getElementById('c')"
-                        ".style.visibility = 'hidden', 800)")
-    assert await adapter._image_challenge(page) is True
-    assert await adapter._solver_cleared(page) is True
-    # Still shown when the wait ends: a person, as before.
-    await page.set_content(html)
-    with pytest.raises(MfaRequired):
-        await adapter._after_submit(page, None, totp_tried=False)

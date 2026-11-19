@@ -22,7 +22,9 @@ RUN pip install -r requirements.txt \
 
 COPY sourcing ./sourcing
 COPY service ./service
-COPY scripts ./scripts
+# Only the access check runs on Cloud Run (as the service account); the other
+# scripts are admin / onboarding tools run on a laptop.
+COPY scripts/check_access.py ./scripts/check_access.py
 
 RUN useradd --create-home --uid 10001 app
 USER app

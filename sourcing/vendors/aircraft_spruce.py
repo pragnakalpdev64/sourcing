@@ -47,7 +47,6 @@ from typing import Optional
 from urllib.parse import quote, urlsplit
 
 from ..conditions import CONDITION_CODES
-from ..config import captcha_solving_allowed
 from ..models import RequestRow, SearchOutcome
 from . import web
 from .aircraft_spruce_prompt import AIRCRAFT_SPRUCE_EXTRACT_SYSTEM
@@ -90,8 +89,6 @@ CHALLENGE_JS = """() => [...document.querySelectorAll('iframe')].some(f =>
   /recaptcha\\/(api2|enterprise)\\/bframe/.test(f.src || '')
   && getComputedStyle(f).visibility === 'visible' && f.getBoundingClientRect().width > 50)"""
 CHALLENGE_WAIT_SECONDS = 6
-# DEV_ALLOW_CAPTCHA_SOLVING only: Browserbase's docs say solving takes 5-30s.
-SOLVER_WAIT_SECONDS = 45
 _NEVER_OPEN = re.compile(r"cart|checkout|wishlist|account|logout|login", re.I)
 
 HEADER = "--- Product {n}: {link} ({how}) ---"
@@ -324,32 +321,11 @@ class AircraftSpruceAdapter(GenericAdapter):
         worse. MfaRequired("captcha") sends it through the Live View handoff
         (a person picks the images; the run carries on once signed in), or stops
         the login with no retry when nobody can be asked."""
-        if await self._image_challenge(page) and not await self._solver_cleared(page):
+        if await self._image_challenge(page):
             logger.warning("Login: Google's reCAPTCHA image challenge is shown; asking a person")
             raise MfaRequired("captcha", "Aircraft Spruce shows Google's reCAPTCHA image "
                                          "challenge: a person must pick the images")
         await super()._after_submit(page, cred, totp_tried=totp_tried, code_given=code_given)
-
-    async def _solver_cleared(self, page) -> bool:
-        """REMOVE-AFTER-CAPTCHA-TRIAL (2026-11-05): with DEV_ALLOW_CAPTCHA_SOLVING=1 the
-        browser service may solve the challenge (Browserbase: 5-30s by its docs).
-        True once the challenge is gone; still shown at the end -> a person, as before."""
-        if not captcha_solving_allowed():
-            return False
-        logger.info("Login: image challenge shown; waiting up to %ss for the CAPTCHA solver",
-                    SOLVER_WAIT_SECONDS)
-        deadline = time.time() + SOLVER_WAIT_SECONDS
-        while time.time() < deadline:
-            await page.wait_for_timeout(1000)
-            try:
-                if not await page.evaluate(CHALLENGE_JS):
-                    logger.info("Login: the image challenge is gone (solver)")
-                    return True
-            except Exception:
-                return True                   # navigating: the form was sent
-        logger.warning("Login: the solver didn't clear the image challenge in %ss",
-                       SOLVER_WAIT_SECONDS)
-        return False
 
     async def _image_challenge(self, page) -> bool:
         """The challenge shown, waited for a few seconds while the page stays on the

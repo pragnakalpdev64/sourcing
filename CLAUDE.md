@@ -127,12 +127,9 @@ Full command and flag reference: `COMMANDS.md`.
 
 ## Known gaps / gotchas
 
-- **CAPTCHA rule paused for development (client, 2026-11-05, a few days only).**
-  `DEV_ALLOW_CAPTCHA_SOLVING=1` (`config.captcha_solving_allowed`, default off) turns on
-  Browserbase's `solve_captchas` and makes Aircraft Spruce wait up to 45s for the image
-  challenge to clear before asking a person. Our Browserbase account is the free plan, which
-  has no solver (Developer, $20/mo, has one); Steel.dev's free tier needs a $10 paid deposit
-  first. Code marked `REMOVE-AFTER-CAPTCHA-TRIAL` goes when the trial ends; never set it on Cloud Run.
+- **CAPTCHA trial ended (2026-11-19).** The development-only switch `DEV_ALLOW_CAPTCHA_SOLVING`
+  (2026-11-05) was removed while cleaning the code for Cloud Run: Browserbase's
+  `solve_captchas` is always off again, and a CAPTCHA goes to a person (Live View).
 
 - CAPTCHA wording on a login page (AAR: "reCAPTCHA verification failed.") is, **for now
   (2026-11-03), retried**, not a stop: `CaptchaFailed` (vendors/base.py), tried again up to

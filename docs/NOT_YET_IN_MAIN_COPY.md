@@ -592,7 +592,7 @@ New in this copy (the main copy has none of it):
 
 ## CAPTCHA solving trial switch (2026-11-05, development only)
 
-- [ ] `DEV_ALLOW_CAPTCHA_SOLVING` (`config.captcha_solving_allowed`, default off): Browserbase
+- [x] REMOVED 2026-11-19 (trial ended), nothing to port. `DEV_ALLOW_CAPTCHA_SOLVING` (`config.captcha_solving_allowed`, default off): Browserbase
       `solve_captchas` on, Aircraft Spruce waits up to 45s for the solver before asking a person.
       Client paused the "never solve a CAPTCHA" rule for a few days. **don't port** unless the
       client keeps it; code marked `REMOVE-AFTER-CAPTCHA-TRIAL`.
