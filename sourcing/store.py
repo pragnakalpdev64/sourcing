@@ -364,6 +364,31 @@ class MemoryStore(Store):
             self.audit_log.append({"event": event, "at": time.time(), **fields})
 
 
+# Firestore deletes a document by itself once its EXPIRE_FIELD date has passed, when
+# the collection has a TTL policy on that field (infra/firestore_ttl.sh; team,
+# 2026-11-20: "clean the data in 30 days"). Each write moves the date on, so a
+# document lives this long after its last write. Settings, accounts, vendors and
+# locks get none: they must stay.
+EXPIRE_FIELD = "expire_at"
+EXPIRE_DAYS = {
+    "rows": 30, "jobs": 30, "hitl": 30, "audit": 30, "sheet_ops": 30,
+    # A copy of the Requests tab (part numbers, who asked) and the sidebar's
+    # heartbeat: a run only needs the copy sent with its own request.
+    "sheet_snapshots": 7, "sheet_progress": 7,
+}
+
+
+def expiry(collection: str, now: Optional[float] = None) -> dict:
+    """{EXPIRE_FIELD: date} for a write to `collection` (a datetime: TTL needs a
+    timestamp, not a number); {} for a collection that never expires."""
+    from datetime import datetime, timedelta, timezone
+    days = EXPIRE_DAYS.get(collection)
+    if not days:
+        return {}
+    start = datetime.fromtimestamp(now if now is not None else time.time(), timezone.utc)
+    return {EXPIRE_FIELD: start + timedelta(days=days)}
+
+
 class FirestoreStore(Store):
     def __init__(self, project: Optional[str] = None, client=None) -> None:
         from google.cloud import firestore
@@ -497,10 +522,10 @@ class FirestoreStore(Store):
         self.db.collection("selectors").document(vendor_id).set(selectors, merge=True)
 
     def update_job(self, run_id: str, fields: dict) -> None:
-        self.db.collection("jobs").document(run_id).set(fields, merge=True)
+        self.db.collection("jobs").document(run_id).set({**fields, **expiry("jobs")}, merge=True)
 
     def record_row(self, row_id: str, fields: dict) -> None:
-        self.db.collection("rows").document(row_id).set(fields, merge=True)
+        self.db.collection("rows").document(row_id).set({**fields, **expiry("rows")}, merge=True)
 
     def rows_with_unsaved_results(self, sheet_id: str) -> list[tuple[str, dict]]:
         docs = self.db.collection("rows").where("unsaved_sheet", "==", sheet_id).stream()
@@ -512,7 +537,7 @@ class FirestoreStore(Store):
         return snap.to_dict() if snap.exists else None
 
     def update_hitl(self, hitl_id: str, fields: dict) -> None:
-        self.db.collection("hitl").document(hitl_id).set(fields, merge=True)
+        self.db.collection("hitl").document(hitl_id).set({**fields, **expiry("hitl")}, merge=True)
 
     # Sheet values are lists of lists, which Firestore can't store: kept as JSON text.
     def put_sheet_snapshot(self, sheet_id: str, tabs: dict, title: str = "") -> None:
@@ -521,7 +546,7 @@ class FirestoreStore(Store):
             raise ValueError(f"sheet copy is {len(text) // 1000} KB; at most "
                              f"{MAX_SNAPSHOT_BYTES // 1000} KB fit (archive old Requests rows)")
         self.db.collection("sheet_snapshots").document(sheet_id).set(
-            {"tabs_json": text, "at": time.time(), "title": title})
+            {"tabs_json": text, "at": time.time(), "title": title, **expiry("sheet_snapshots")})
 
     def get_sheet_snapshot(self, sheet_id: str) -> Optional[dict]:
         snap = self.db.collection("sheet_snapshots").document(sheet_id).get()
@@ -538,7 +563,7 @@ class FirestoreStore(Store):
                 seq = _op_seq()
                 batch.set(self.db.collection("sheet_ops").document(seq),
                           {"sheet_id": sheet_id, "seq": seq,
-                           "op_json": json.dumps(op, ensure_ascii=False)})
+                           "op_json": json.dumps(op, ensure_ascii=False), **expiry("sheet_ops")})
             batch.commit()
 
     def sheet_ops(self, sheet_id: str) -> list[dict]:
@@ -555,7 +580,8 @@ class FirestoreStore(Store):
             batch.commit()
 
     def set_sheet_progress(self, sheet_id: str, fields: dict) -> None:
-        self.db.collection("sheet_progress").document(sheet_id).set(fields, merge=True)
+        self.db.collection("sheet_progress").document(sheet_id).set(
+            {**fields, **expiry("sheet_progress")}, merge=True)
 
     def get_sheet_progress(self, sheet_id: str) -> Optional[dict]:
         snap = self.db.collection("sheet_progress").document(sheet_id).get()
@@ -563,7 +589,7 @@ class FirestoreStore(Store):
 
     def audit(self, event: str, **fields: Any) -> None:
         self.db.collection("audit").document(uuid.uuid4().hex).set(
-            {"event": event, "at": time.time(), **fields}
+            {"event": event, "at": time.time(), **fields, **expiry("audit")}
         )
 
 
