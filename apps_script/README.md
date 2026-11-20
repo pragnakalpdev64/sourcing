@@ -5,7 +5,13 @@ offers go back into the same sheet, so each person can work in their own sheet.
 Requested By is filled in with the editor's email when it's empty. The Cloud
 Scheduler sweep stays as the backstop for rows that were missed.
 
-Two ways to put it in a sheet:
+Two ways to put it in a sheet (only the add-on works now):
+
+> **Retired (2026-11-20). Don't install the per-sheet script in any sheet.** The service is
+> behind Google sign-in (IAP), which only lets in a Skylink person's sign-in from the
+> add-on. This script signs its calls with `TRIGGER_SECRET` only, so IAP refuses every one
+> ("Could not start the search (401)"). A sheet that still has it: delete its triggers
+> (Extensions > Apps Script > Triggers), then use Extensions > SourcingAI > Turn on for this sheet.
 
 | | `addon/` (Sheets add-on, the plan) | `per_sheet/` (script inside one sheet) |
 |---|---|---|
@@ -105,7 +111,15 @@ SDK at it. People don't install anything again.
    offers appear as they come. **Search new rows now** starts at once, **Get results
    now** writes whatever is waiting.
 
-## Per-sheet script (`per_sheet/`)
+## Per-sheet script (`per_sheet/`): retired
+
+> **Retired (2026-11-20). Don't install the per-sheet script in any sheet.** The service is
+> behind Google sign-in (IAP), which only lets in a Skylink person's sign-in from the
+> add-on. This script signs its calls with `TRIGGER_SECRET` only, so IAP refuses every one
+> ("Could not start the search (401)"). A sheet that still has it: delete its triggers
+> (Extensions > Apps Script > Triggers), then use Extensions > SourcingAI > Turn on for this sheet.
+
+Kept for reference only:
 
 1. Open the sheet, then **Extensions > Apps Script**.
 2. Replace `Code.gs` with `per_sheet/Code.gs`.

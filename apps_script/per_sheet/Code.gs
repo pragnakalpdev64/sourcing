@@ -1,4 +1,8 @@
 /**
+ * RETIRED 2026-11-20: don't install. The service is behind Google sign-in (IAP), which
+ * refuses this script's calls (secret only, no Skylink sign-in): "Could not start the
+ * search (401)". Use the add-on (apps_script/addon). See apps_script/README.md.
+ *
  * SourcingAI: start a search when a team member adds a row to the Requests tab.
  *
  * Installed in one request sheet (Extensions > Apps Script), set up once with
