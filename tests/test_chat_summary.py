@@ -25,7 +25,11 @@ def test_message_has_totals_vendor_and_llm():
     assert "52 part(s) in 5m 49s (6.7s per part)" in text
     assert "<https://docs.google.com/spreadsheets/d/1V-S8J4bFqw1w_aF7CVqak|" in text
     assert "DONE 51 · NOT_FOUND 1" in text and "Offers written to Results: 78" in text
-    assert "• Proponent: 52 part(s), bulk search, up to 25 per search" in text
+    table = text.split("*By vendor*")[1].split("```")[1].splitlines()
+    assert table[1].split() == ["Vendor", "Parts", "Mode", "DONE", "Not", "sold", "Not", "found",
+                                "Attention", "Offers", "LLM", "$"]
+    assert table[2].split() == ["Proponent", "52", "bulk", "x25", "51", "-", "1", "-", "78",
+                                "0.35"]
     assert "• Model: anthropic claude-sonnet-5-5, effort medium" in text
     assert "• Calls: 6" in text and "113,964 in + 12,043 out (avg 2,191 + 231 per part)" in text
     assert "• Cost: $0.3484 total, $0.0067 per part" in text
@@ -90,3 +94,17 @@ def test_page_change_warnings_are_one_line_per_vendor():
     text = summary_message(_summary([]), _result({"DONE": 52}), "test.xlsx", "",
                            warnings={"proponent": ["not-found 40% (usual 5%)", "grid fallback 30%"]})
     assert "• Proponent: not-found 40% (usual 5%); grid fallback 30%" in text
+
+
+def test_vendor_table_lines_up_and_has_a_total():
+    """Team, 2026-11-20: the per-vendor list as a table."""
+    s = _summary([])
+    aar = s.vendors["aar"]
+    aar.parts, aar.offers, aar.mode = 10, 3, "bulk search, up to 10 per search"
+    aar.counts.update({"DONE": 3, "NOT_SOLD": 7})
+    s.vendor_names["aar"] = "AAR"
+    text = summary_message(s, _result({"DONE": 54, "NOT_SOLD": 7, "NOT_FOUND": 1}), "t.xlsx", "")
+    block = text.split("*By vendor*")[1].split("```")[1].strip("\n").splitlines()
+    assert len({len(l.rstrip()) for l in block[1:]}) <= 2       # columns line up
+    assert block[1].startswith("AAR") and "bulk x10" in block[1]
+    assert block[-1].split()[:2] == ["Total", "62"]

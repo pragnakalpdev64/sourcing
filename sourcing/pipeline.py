@@ -205,6 +205,46 @@ def _sheet_link(sheet_id: str, title: str = "") -> str:
     return f"<https://docs.google.com/spreadsheets/d/{sheet_id}|{name}>"
 
 
+def _short_mode(mode: str) -> str:
+    """"bulk search, up to 25 per search" -> "bulk x25"; "one by one" as it is."""
+    m = re.search(r"bulk.*?(\d+)", mode or "")
+    return f"bulk x{m.group(1)}" if m else (mode or "-")
+
+
+def _vendor_table(summary: "RunSummary") -> list[str]:
+    """Per vendor counts as a table in a code block: Chat shows it in a fixed-width
+    font, so the columns line up (team, 2026-11-20: the one-line-per-vendor list
+    was hard to read)."""
+    head = ["Vendor", "Parts", "Mode", "DONE", "Not sold", "Not found", "Attention",
+            "Offers", "LLM $"]
+    rows, total = [], [0] * 6 + [0.0]
+    for vendor_id, v in sorted(summary.vendors.items()):
+        if not v.parts:
+            continue
+        done = v.counts.get(RowStatus.DONE.value, 0)
+        sold = v.counts.get(RowStatus.NOT_SOLD.value, 0)
+        found = v.counts.get(RowStatus.NOT_FOUND.value, 0)
+        attention = sum(n for st, n in v.counts.items() if st not in (
+            RowStatus.DONE.value, RowStatus.NOT_SOLD.value, RowStatus.NOT_FOUND.value))
+        nums = [v.parts, done, sold, found, attention, v.offers, v.usage.cost_usd]
+        total = [a + b for a, b in zip(total, nums)]
+        rows.append([_vendor_name(vendor_id, summary.vendor_names), str(v.parts),
+                     _short_mode(v.mode), *(str(n or "-") for n in nums[1:6]),
+                     f"{v.usage.cost_usd:.2f}"])
+    if not rows:
+        return ["no vendor searched"]
+    if len(rows) > 1:
+        rows.append(["Total", str(total[0]), "", *(str(n or "-") for n in total[1:6]),
+                     f"{total[6]:.2f}"])
+    widths = [max(len(r[i]) for r in [head, *rows]) for i in range(len(head))]
+
+    def line(cells):
+        return "  ".join(c.ljust(w) if i in (0, 2) else c.rjust(w)
+                         for i, (c, w) in enumerate(zip(cells, widths))).rstrip()
+
+    return ["```", line(head), *(line(r) for r in rows), "```"]
+
+
 def summary_message(summary: RunSummary, result: dict, sheet_id: str, llm_label: str,
                     warnings: Optional[dict] = None, sheet_title: str = "",
                     missing_headings: Optional[dict] = None) -> str:
@@ -238,14 +278,8 @@ def summary_message(summary: RunSummary, result: dict, sheet_id: str, llm_label:
         f"Offers written to Results: {offers}",
         "",
         "*By vendor*",
+        *_vendor_table(summary),
     ]
-    for vendor_id, v in sorted(summary.vendors.items()):
-        if not v.parts:
-            continue
-        vcounts = ", ".join(f"{s} {n}" for s, n in sorted(v.counts.items(), key=lambda kv: -kv[1]))
-        lines.append(f"• {_vendor_name(vendor_id, summary.vendor_names)}: {v.parts} part(s)"
-                     + (f", {v.mode}" if v.mode else "") + f" · {vcounts}"
-                     + f" · {v.offers} offer(s) · LLM ${v.usage.cost_usd:.4f}")
     actions = {v_id: v.page_actions for v_id, v in summary.vendors.items() if v.page_actions}
     if actions:
         lines += ["", "*⚠ Page actions the code couldn't do alone (the vendor's page changed?)*"]
