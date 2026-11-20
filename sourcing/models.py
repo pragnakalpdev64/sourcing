@@ -535,3 +535,6 @@ class SearchOutcome:
     # text, None if the adapter doesn't read a grid. Both default to "unknown".
     page_kind: str = ""
     grid_used: Optional[bool] = None
+    # Nothing for the sheet's Results / RFQ tabs, only the row's Status and note
+    # (AAR "$RFQ" parts, client 2026-11-19: "Remove them").
+    no_line: bool = False

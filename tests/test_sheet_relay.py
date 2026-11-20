@@ -284,3 +284,60 @@ def test_worker_uses_the_add_on_copy_in_relay_mode(monkeypatch):
     get_settings.cache_clear()
     assert result["rows_total"] == 2 and seen["rows"] == ["35010-38", "620-1-200"]
     assert store.sheet_ops("sheet-1")[-1]["op"]["updates"][0]["values"] == [["DONE"]]
+
+
+def test_a_missing_rfq_heading_is_noted_and_the_sheet_name_kept():
+    """2026-11-19: RFQ A1 said "CERTS"; the run notes "Vendor Reference" missing for
+    the Chat message, and the add-on's sheet name reaches the worker."""
+    from sourcing.models import RFQ_HEADER, ResultRow
+    store = MemoryStore()
+    store.put_sheet_snapshot("sheet-1", {**SNAPSHOT, "RFQ": [["CERTS", *RFQ_HEADER[1:]]]},
+                             title="Skylink RFQs")
+    s = sheet(store)
+    assert s.title == "Skylink RFQs"
+    s.append_rfq([ResultRow("r", "Textron Aviation", "P1").as_rfq_record()])
+    assert s.missing_headings == {"RFQ": ["Vendor Reference"]}
+    s2 = sheet(store)
+    s2.append_rfq([ResultRow("r", "Textron Aviation", "P1").as_rfq_record()])
+    assert s2.missing_headings == {}           # put back at the end: found from now on
+
+
+def test_a_confirmed_status_stays_in_the_copy_for_the_next_pass():
+    """2026-11-19: a second pass read the stored copy (sent before the run) and
+    took all 40 rows as NEW again, their confirmed DONE no longer queued."""
+    from sourcing.sheet_relay import keep_copy_current
+    store = MemoryStore()
+    store.put_sheet_snapshot("sheet-1", SNAPSHOT, title="Skylink RFQs")
+    s = sheet(store)
+    rows = s.read_new_rows()
+    s.set_status(rows, RowStatus.DONE, "run-1")
+    ids = [o["id"] for o in store.sheet_ops("sheet-1")]
+    keep_copy_current(store, "sheet-1", ids)          # what /sheet/ack does
+    store.ack_sheet_ops("sheet-1", ids)
+    assert sheet(store).read_new_rows() == []          # the next pass finds nothing
+    assert store.get_sheet_snapshot("sheet-1")["title"] == "Skylink RFQs"
+
+
+def test_a_heading_twice_gets_the_value_in_its_first_column():
+    """2026-11-19: "Vendor Reference" in A (fixed by hand) and Y (added while A1
+    said "CERTS"); the vendor name went to Y and A stayed empty."""
+    from sourcing.models import RFQ_HEADER, ResultRow
+    store = MemoryStore()
+    store.put_sheet_snapshot("sheet-1", {**SNAPSHOT, "RFQ": [[*RFQ_HEADER, "Vendor Reference"]]})
+    s = sheet(store)
+    s.append_rfq([ResultRow("r", "Textron Aviation", "P1").as_rfq_record()])
+    rows = [o["op"]["rows"][0] for o in store.sheet_ops("sheet-1") if o["op"]["kind"] == "append"]
+    assert rows[0][0] == "Textron Aviation" and rows[0][len(RFQ_HEADER)] == ""
+    assert s.missing_headings == {
+        "RFQ": ["Vendor Reference (twice: values go to the first, delete the other)"]}
+
+
+def test_pull_says_queued_while_another_sheets_search_runs(client):
+    """Team, 2026-11-19: say the sheet is in line, so nobody clicks Search again."""
+    from sourcing.store import RERUN_FLAG, RERUN_HOLDER
+    c, store = client
+    store.acquire_lock(WORKER_LOCK, "run-1", 600)            # sheet "other" being searched
+    store.acquire_lock(RERUN_FLAG, RERUN_HOLDER, 600)        # this sheet asked meanwhile
+    reply = c.post("/sheet/pull", headers=H, json={"sheet_id": "s"}).json()
+    assert reply["busy"] is True and reply["progress"]["state"] == "queued"
+    assert "this sheet is next" in reply["progress"]["steps"][0]

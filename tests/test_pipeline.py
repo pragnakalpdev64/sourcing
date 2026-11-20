@@ -211,7 +211,10 @@ async def test_shared_account_2fa_notifies_each_requester():
 
 
 @pytest.mark.asyncio
-async def test_busy_account_puts_rows_back_to_new():
+async def test_busy_account_puts_rows_back_to_new(monkeypatch):
+    import sourcing.pipeline as pipeline_mod
+    monkeypatch.setattr(pipeline_mod, "LEASE_POLL_SECONDS", 0.05)
+    monkeypatch.setattr(pipeline_mod, "LEASE_WAIT_SECONDS", 0.2)   # waited for, then given back
     store = MemoryStore()
     store.acquire_lease(f"proponent__{JANE}", "someone-else", 600)
     deps, sheet, portal = make([{"vendor": "Proponent", "part": "P1", "by": JANE}], store=store)
@@ -721,6 +724,16 @@ async def test_a_part_the_portal_does_not_sell_is_not_sold_with_a_results_row():
     assert r["Qty Available"] == "This product is restricted for sale."   # the portal's words
     assert r["Unit Price"] == "" and r["Flag"] == "NOT_SOLD"
     assert r["Source URL"] == "https://portal/r?id=P1"
+
+
+@pytest.mark.asyncio
+async def test_an_rfq_only_part_gets_a_status_and_no_line():
+    """AAR "$RFQ" (client, 2026-11-19): removed from the sheet; the row says why."""
+    deps, sheet, portal = _scripted(["P1"], {"P1": ["rfq_only"]})
+    await run(deps)
+    assert portal.searches == ["P1"]                      # a clear answer: not retried
+    assert sheet.status_of("P1") == "NOT_SOLD" and "contact AAR by email" in sheet.notes[2]
+    assert _results(sheet) == []
 
 
 @pytest.mark.asyncio
@@ -1486,3 +1499,34 @@ def test_incora_ships_in_7_days_by_default():
     assert IncoraAdapter().delivery_days == "7"
     assert IncoraAdapter(vendor_config={"delivery_days": 5}).delivery_days == "5"
     assert ProponentAdapter().delivery_days == ""
+
+
+@pytest.mark.asyncio
+async def test_a_login_in_use_by_another_search_is_waited_for(monkeypatch):
+    """2026-11-19: two sheets at once both needed one login; the second sheet's
+    rows went back to NEW. Now the second search waits for the login."""
+    import asyncio
+
+    import sourcing.pipeline as pipeline_mod
+    monkeypatch.setattr(pipeline_mod, "LEASE_POLL_SECONDS", 0.05)
+    deps, sheet, portal = make([{"vendor": "Proponent", "part": "P1", "by": JANE}])
+    aid = f"proponent__{JANE}"
+    assert deps.store.acquire_lease(aid, "other-sheet-run", 600)
+
+    async def other_search_ends():
+        await asyncio.sleep(0.3)
+        deps.store.release_lease(aid, "other-sheet-run")
+
+    await asyncio.gather(run(deps), other_search_ends())
+    assert sheet.rows[0].status == "DONE"
+
+
+@pytest.mark.asyncio
+async def test_a_login_that_stays_busy_gives_the_rows_back(monkeypatch):
+    import sourcing.pipeline as pipeline_mod
+    monkeypatch.setattr(pipeline_mod, "LEASE_POLL_SECONDS", 0.05)
+    monkeypatch.setattr(pipeline_mod, "LEASE_WAIT_SECONDS", 0.2)
+    deps, sheet, portal = make([{"vendor": "Proponent", "part": "P1", "by": JANE}])
+    deps.store.acquire_lease(f"proponent__{JANE}", "stuck-run", 600)
+    await run(deps)
+    assert sheet.rows[0].status == "NEW"

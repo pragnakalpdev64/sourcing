@@ -11,7 +11,7 @@ import pytest
 from sourcing.config import get_settings
 
 _LOCAL_ONLY = ("SHEET_ACCESS", "TRIGGER_RUN_LOCAL", "TRIGGER_LOCAL_ARGS", "INFRA_SECRETS",
-               "ADDON_OAUTH_PROJECT_NUMBERS")
+               "ADDON_OAUTH_PROJECT_NUMBERS", "CAPTCHA_SOLVING")
 
 
 @pytest.fixture(autouse=True)

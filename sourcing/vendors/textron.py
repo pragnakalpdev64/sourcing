@@ -50,6 +50,7 @@ Kit to Cart, Parts List Upload.
 from __future__ import annotations
 
 import asyncio
+import json
 import logging
 import os
 import re
@@ -119,6 +120,8 @@ CODE_BOXES = ("form#frmVerifyCode input#Code", *web.MFA_INPUT_SELECTORS, "input[
               "input[type='tel']", "input[type='number']")
 CODE_BOX_WAIT_SECONDS = 30
 SEND_CHECK_SECONDS = 15
+# The code page's "Remember this device (60 days)" (seen 2026-11-13 and 11-18).
+REMEMBER_DEVICE = "input#RememberBrowser[type='checkbox'], input[type='checkbox'][name='RememberBrowser']"
 # The Send Code button's onclick is Processing() -> $("#frmSendCode").submit()
 # (seen 2026-11-18). Email is picked with the custom drop-down's hidden <select>.
 SEND_CODE_FORM_JS = """() => {
@@ -646,6 +649,12 @@ class TextronAdapter(GenericAdapter):
         await self._type_login_field(page, password, cred.password)
         state = await self._sign_in_state(page)
         if state == "captcha":
+            async def enabled() -> bool:
+                return await page.evaluate("() => { const b = document.querySelector("
+                                           "'#btnSignIn'); return !!b && !b.disabled; }")
+            if await web.wait_for_captcha_solver(page, enabled, "Textron login"):
+                state = "ready"
+        if state == "captcha":
             logger.warning("Login: Textron shows the 'I'm not a robot' box; asking a person")
             raise MfaRequired("captcha", "Textron Aviation shows Google's 'I'm not a robot' "
                                          "check: a person must tick it and log in")
@@ -710,6 +719,7 @@ class TextronAdapter(GenericAdapter):
         send = await web.first_visible_button(page, list(SEND_CODE_BUTTONS))
         if box and not send:
             logger.info("Login 2FA: the code box is already shown (%s)", box)
+            await self._remember_device(page)
             return box
         chose = await self._choose_email(page)
         send = await web.first_visible_button(page, list(SEND_CODE_BUTTONS))
@@ -739,6 +749,7 @@ class TextronAdapter(GenericAdapter):
         if box:
             self._code_page_seen = True
             logger.info("Login 2FA: code sent by email; code box %s", box)
+            await self._remember_device(page)
         else:
             logger.warning("Login 2FA: Send Code not done by the program (no code box shown); "
                            "the person does it in Live View")
@@ -771,6 +782,38 @@ class TextronAdapter(GenericAdapter):
             except Exception as exc:
                 logger.debug("Email choice %s: %r", choice, exc)
         return None
+
+    async def _remember_device(self, page) -> None:
+        """Tick "Remember this device (60 days)" on the code page (team, 2026-11-19:
+        with it Textron asks no code at the next logins). It sets a cookie in this
+        browser; the account's saved Browserbase Context keeps it between runs, so
+        one code from a person covers the next 60 days (seen 2026-11-19: ticked at
+        12:18, the 12:27 login went straight to the dashboard). A local browser
+        starts empty each run, so there it only helps within the run.
+        The real checkbox is hidden by the site's styling (12:17 the agent's check
+        failed: "Element is not visible"); a person clicks its label, so do the
+        same, then set it from the page if the click didn't take."""
+        try:
+            box = page.locator(REMEMBER_DEVICE).first
+            if not await box.count():
+                logger.info("Login 2FA: no 'Remember this device' box on %s", page.url)
+                return
+            how = "already ticked"
+            if not await box.is_checked():
+                label = page.locator("label[for='RememberBrowser']").first
+                how = "label clicked"
+                try:
+                    await label.click(timeout=5000)
+                except Exception as exc:
+                    logger.info("Login 2FA: 'Remember this device' label not clicked (%r)", exc)
+                if not await box.is_checked():
+                    how = "set from the page"
+                    await box.evaluate("el => { el.checked = true; el.dispatchEvent("
+                                       "new Event('change', {bubbles: true})); }")
+            logger.info("Login 2FA: 'Remember this device' %s (%s)",
+                        "ticked" if await box.is_checked() else "NOT ticked", how)
+        except Exception as exc:
+            logger.info("Login 2FA: 'Remember this device' not ticked (%r)", exc)
 
     async def _send_code_by_form(self, page) -> bool:
         """No visible Send Code button found (2026-11-18, Browserbase: neither the
@@ -1226,6 +1269,11 @@ class TextronAdapter(GenericAdapter):
         outcomes: dict[str, SearchOutcome] = {}
         usage = type(self.usage)()
         found: dict[str, list] = {}
+        if not assigned and _dumping():
+            # 2026-11-19 13:15 / 13:21: every part "Part Not Found." (they were found
+            # at 12:29) and nothing was saved to see why: the page and what was read.
+            await _save_page(page, "nothing-found")
+            _dump("nothing-found", json.dumps(found_blocks, default=str, indent=1)[:200000])
         if assigned:
             text = self._text(assigned)
             if _dumping():

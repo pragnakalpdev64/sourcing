@@ -50,7 +50,7 @@ from ..conditions import CONDITION_CODES
 from ..models import RequestRow, SearchOutcome
 from . import web
 from .aircraft_spruce_prompt import AIRCRAFT_SPRUCE_EXTRACT_SYSTEM
-from .base import MfaRequired, SessionExpired, host_allowed
+from .base import CaptchaFailed, MfaRequired, SessionExpired, host_allowed
 from .generic import GenericAdapter
 from .web import _settle, accept_cookies
 
@@ -89,7 +89,20 @@ CHALLENGE_JS = """() => [...document.querySelectorAll('iframe')].some(f =>
   /recaptcha\\/(api2|enterprise)\\/bframe/.test(f.src || '')
   && getComputedStyle(f).visibility === 'visible' && f.getBoundingClientRect().width > 50)"""
 CHALLENGE_WAIT_SECONDS = 6
+# The form's reCAPTCHA answer: empty until Google (or Browserbase's solver) answers.
+TOKEN_EMPTY_JS = """() => { const f = document.querySelectorAll('[name=g-recaptcha-response]');
+  return f.length > 0 && [...f].every(e => !e.value); }"""
 _NEVER_OPEN = re.compile(r"cart|checkout|wishlist|account|logout|login", re.I)
+
+async def _settle_after_solver(page) -> None:
+    """Once the challenge is solved, the page's reCAPTCHA callback sends the
+    Sign In form itself: give it a moment to load the next page."""
+    try:
+        await page.wait_for_load_state("domcontentloaded", timeout=15000)
+    except Exception:
+        pass
+    await page.wait_for_timeout(2000)
+
 
 HEADER = "--- Product {n}: {link} ({how}) ---"
 FACTS_HEADER = "--- What the program read on product {n} ---"
@@ -322,10 +335,43 @@ class AircraftSpruceAdapter(GenericAdapter):
         (a person picks the images; the run carries on once signed in), or stops
         the login with no retry when nobody can be asked."""
         if await self._image_challenge(page):
+            async def cleared() -> bool:
+                return not await page.evaluate(CHALLENGE_JS)
+            if await web.wait_for_captcha_solver(page, cleared, "Aircraft Spruce login"):
+                await _settle_after_solver(page)
+                await super()._after_submit(page, cred, totp_tried=totp_tried,
+                                            code_given=code_given)
+                return
             logger.warning("Login: Google's reCAPTCHA image challenge is shown; asking a person")
             raise MfaRequired("captcha", "Aircraft Spruce shows Google's reCAPTCHA image "
                                          "challenge: a person must pick the images")
+        if await self._captcha_pending(page):
+            # 2026-11-19 17:51: no challenge shown, the reCAPTCHA token still empty:
+            # Browserbase's solver was at work. The login gave up after ~40s as "still
+            # on the sign-in form"; the solver then signed in, and a person was asked
+            # to log out a session the run could have used.
+            async def left_form() -> bool:
+                return not await page.locator(KNOWN_SELECTORS["password_input"]).count()
+            await web.wait_for_captcha_solver(page, left_form, "Aircraft Spruce login")
+            await _settle_after_solver(page)
+            if await self._captcha_pending(page):
+                # Still no reCAPTCHA answer: a CAPTCHA, not an unknown failure. A
+                # plain "still on the sign-in form" put the account in NEEDS_ATTENTION
+                # (2026-11-19 17:52), which stopped every later run (18:40) until
+                # reset by hand; a CAPTCHA is tried again and the next run logs in.
+                raise CaptchaFailed("Aircraft Spruce's reCAPTCHA gave no answer after "
+                                    "Sign In (still on the sign-in form)")
         await super()._after_submit(page, cred, totp_tried=totp_tried, code_given=code_given)
+
+    async def _captcha_pending(self, page) -> bool:
+        """Still on the sign-in form with no reCAPTCHA answer yet (the form is only
+        sent once its callback gets a token)."""
+        try:
+            if not await page.locator(KNOWN_SELECTORS["password_input"]).count():
+                return False
+            return await page.evaluate(TOKEN_EMPTY_JS)
+        except Exception:
+            return False
 
     async def _image_challenge(self, page) -> bool:
         """The challenge shown, waited for a few seconds while the page stays on the

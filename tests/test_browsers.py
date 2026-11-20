@@ -60,7 +60,7 @@ async def test_stealth_sessions_only_for_vendors_that_ask(vendor, config, stealt
     with pytest.raises(RuntimeError, match="stop after create"):
         await client.open("00000000-0000-4000-8000-000000000001", **adapter.browser_options)
     settings = calls[0]["browser_settings"]
-    assert settings["solve_captchas"] is False
+    assert settings["solve_captchas"] is True       # client allowed it, 2026-11-19
     assert "advanced_stealth" not in settings
     assert calls[0].get("proxies", False) is stealth
     assert adapter_class(vendor)(vendor_config={"browser_stealth": False}).browser_options == {}

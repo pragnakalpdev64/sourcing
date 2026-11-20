@@ -1033,7 +1033,15 @@ class GenericAdapter(VendorAdapter):
 
     # -- logout -------------------------------------------------------------
     async def logout(self, page) -> bool:
-        link = await self._logout_link(page) or await self._logout_in_menu(page)
+        link = await self._logout_link(page)
+        if not link and await self._signed_out_here(page):
+            # The sign-in form (or a Login link and no logout link) on the page:
+            # nothing to log out of. 2026-11-19 Aircraft Spruce: after a login that
+            # gave up, the page was its sign-in form, yet a person was asked to log out.
+            logger.info("Logout: no logout link and the sign-in form is shown on %s -> "
+                        "signed out", page.url)
+            return True
+        link = link or await self._logout_in_menu(page)
         if not link:
             logger.info("Logout: no logout link on %s", page.url)
             return False

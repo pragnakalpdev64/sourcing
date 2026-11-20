@@ -356,7 +356,8 @@ function callTrigger_(edited) {
   if (body.started) return edited ? 'Search starts once the sheet is quiet for 90 seconds.'
                                   : 'Search started.';
   if (body.waiting) return 'Search starts once the sheet is quiet for 90 seconds.';
-  if (body.rerun) return 'A search is running; it picks up the new rows when it finishes.';
+  if (body.rerun) return 'Another search is running. This sheet is in line and starts when ' +
+                         'it ends: no need to click again (Show progress follows it).';
   return 'Not started: ' + (body.reason || text);
 }
 

@@ -93,8 +93,18 @@ def _start_job() -> str:
 # Local mode (TRIGGER_RUN_LOCAL=1): the worker is a child process of this API.
 # The file store keeps no locks between processes, so this process tracks its
 # own child and runs it once more when rows came in meanwhile.
-_local = {"proc": None, "again": False, "sheet_id": None, "start_at": 0.0, "waiting": False}
+_local = {"proc": None, "sheet_id": None, "start_at": 0.0, "waiting": False,
+          "waiting_sheet": None, "queued": []}
+# "queued": sheets that asked while the worker searched another one. 2026-11-19
+# two sheets were started together: the second one only set "again", which then
+# searched the first sheet again and never the second.
 _local_lock = threading.Lock()
+
+
+def _queue_local(sheet_id: str | None) -> None:
+    """Search this sheet after the running one (each sheet once in the queue)."""
+    if sheet_id not in _local["queued"]:
+        _local["queued"].append(sheet_id)
 
 
 def _start_local_when_quiet() -> None:
@@ -104,11 +114,12 @@ def _start_local_when_quiet() -> None:
             left = _local["start_at"] - time.time()
             if left <= 0:
                 _local["waiting"] = False
+                sheet_id = _local["waiting_sheet"]
                 proc = _local["proc"]
                 if proc is not None and proc.poll() is None:
-                    _local["again"] = True   # "Search now" started one meanwhile
+                    _queue_local(sheet_id)   # "Search now" started one meanwhile
                 else:
-                    _start_local_job(_local["sheet_id"])
+                    _start_local_job(sheet_id)
                 return
         time.sleep(min(left, 1.0))
 
@@ -120,7 +131,7 @@ def _start_local_job(sheet_id: str | None) -> str:
         cmd += ["--sheet", sheet_id]
     root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     proc = subprocess.Popen(cmd, cwd=root)  # its log goes to this terminal
-    _local.update(proc=proc, again=False, sheet_id=sheet_id)
+    _local.update(proc=proc, sheet_id=sheet_id)
     threading.Thread(target=_after_local_job, args=(proc,), daemon=True).start()
     logger.info("Started local worker (pid %d): %s", proc.pid, " ".join(cmd))
     return f"local-{proc.pid}"
@@ -133,21 +144,28 @@ def _after_local_job(proc) -> None:
             return
         logger.info("Local worker (pid %d) ended with %s", proc.pid, code)
         _local["proc"] = None
-        if _local["again"]:
-            logger.info("Rows were added during the run: starting the worker again")
-            _start_local_job(_local["sheet_id"])
+        if _local["queued"]:
+            sheet_id = _local["queued"].pop(0)
+            logger.info("Sheet %s asked during the run: searching it now (%d more waiting)",
+                        sheet_id, len(_local["queued"]))
+            _start_local_job(sheet_id)
 
 
 def _trigger_local(sheet_id: str | None, registered: bool, wait: int = 0) -> dict:
     with _local_lock:
         proc = _local["proc"]
         if proc is not None and proc.poll() is None:
-            _local["again"] = True
+            _queue_local(sheet_id)
             return {"started": False, "registered": registered, "rerun": True,
-                    "reason": "worker already running; it runs again when done"}
+                    "reason": "another search is running; this sheet is searched when it ends"}
         if wait > 0:
+            if _local["waiting"] and _local["waiting_sheet"] != sheet_id:
+                # Another sheet is in its quiet wait: this one goes after it.
+                _queue_local(sheet_id)
+                return {"started": False, "registered": registered, "rerun": True,
+                        "reason": "another sheet starts first; this one is searched next"}
             # Each edit moves the start back: it starts `wait` s after the last one.
-            _local.update(start_at=time.time() + wait, sheet_id=sheet_id)
+            _local.update(start_at=time.time() + wait, waiting_sheet=sheet_id)
             if not _local["waiting"]:
                 _local["waiting"] = True
                 threading.Thread(target=_start_local_when_quiet, daemon=True).start()
@@ -274,14 +292,14 @@ def _relay_store():
     return store()
 
 
-def _save_snapshot(sheet_id: str, snapshot) -> None:
+def _save_snapshot(sheet_id: str, snapshot, title: str = "") -> None:
     ok = isinstance(snapshot, dict) and snapshot and all(
         isinstance(k, str) and isinstance(v, list) and all(isinstance(r, list) for r in v)
         for k, v in snapshot.items())
     if not ok:
         raise HTTPException(status_code=400, detail="snapshot: {tab: [[cell, ...], ...]}")
     try:
-        _relay_store().put_sheet_snapshot(sheet_id, snapshot)
+        _relay_store().put_sheet_snapshot(sheet_id, snapshot, title)
     except ValueError as exc:
         raise HTTPException(status_code=413, detail=str(exc)) from exc
     logger.info("Sheet %s: copy received (%s)", sheet_id,
@@ -327,10 +345,28 @@ async def sheet_pull(request: Request, x_trigger_secret: str = Header(default=""
     st = _relay_store()
     with _local_lock:
         proc = _local["proc"]
-        local_busy = _local["waiting"] or (proc is not None and proc.poll() is None)
-    busy = bool(local_busy or st.is_locked(WORKER_LOCK) or st.is_locked(TRIGGER_LOCK))
+        alive = proc is not None and proc.poll() is None
+        local_busy = _local["waiting"] or alive
+        in_line = (_local["queued"].index(sheet_id) + 1 if sheet_id in _local["queued"]
+                   else 1 if alive and _local["sheet_id"] not in (None, sheet_id) else 0)
+    worker_busy = st.is_locked(WORKER_LOCK)
+    busy = bool(local_busy or in_line or worker_busy or st.is_locked(TRIGGER_LOCK))
     progress = describe(st.get_sheet_progress(sheet_id), time.time())
-    if busy and (progress is None or progress["state"] in ("done", "failed")):
+    searching_here = bool(progress and progress["state"] == "running")
+    # Cloud Run: one job searches every waiting sheet; a request made during its
+    # pass sets the run-again flag and is searched by the next pass.
+    next_pass = (worker_busy and not get_settings().trigger_run_local
+                 and st.is_locked(RERUN_FLAG))
+    if not searching_here and (in_line or next_pass):
+        # Another sheet is being searched: this one waits its turn (2026-11-19, team:
+        # say so, or people keep clicking Search new rows).
+        place = (f"this sheet is number {in_line} in line" if in_line > 1
+                 else "this sheet is next")
+        progress = {"state": "queued",
+                    "steps": [f"Another sheet's search is running; {place}"],
+                    "rows_done": 0, "rows_total": 0, "counts": {}, "elapsed_seconds": None,
+                    "alive_seconds_ago": None, "finished_seconds_ago": None}
+    elif busy and (progress is None or progress["state"] in ("done", "failed")):
         # Started but not reading the sheet yet (waiting for a quiet sheet, job
         # starting); an earlier run's "done" is not this one's.
         # Nothing of the earlier run: 2026-11-18 the sidebar said "Starting for 13 min,
@@ -359,7 +395,14 @@ async def sheet_ack(request: Request, x_trigger_secret: str = Header(default="")
     body = await _sheet_body(request)
     ids = [i for i in body.get("ids") or [] if isinstance(i, str)]
     if ids:
-        _relay_store().ack_sheet_ops(body["sheet_id"], ids)
+        from sourcing.sheet_relay import keep_copy_current
+        st = _relay_store()
+        try:
+            keep_copy_current(st, body["sheet_id"], ids)
+        except Exception as exc:      # the ack itself must still go through
+            logger.warning("Sheet %s: copy not updated with the confirmed writes (%r)",
+                           body["sheet_id"], exc)
+        st.ack_sheet_ops(body["sheet_id"], ids)
     return {"acked": len(ids)}
 
 
@@ -381,7 +424,8 @@ async def trigger(request: Request, x_trigger_secret: str = Header(default="")) 
     quiet = get_settings().trigger_quiet_seconds
     # The add-on sends a copy of the sheet: the worker may not open it (sheet_relay).
     if sheet_id and body.get("snapshot") is not None:
-        _save_snapshot(sheet_id, body["snapshot"])
+        label = body.get("label") if isinstance(body.get("label"), str) else ""
+        _save_snapshot(sheet_id, body["snapshot"], label[:200])
 
     if get_settings().trigger_run_local:
         # Not registered: the local worker searches only this sheet (--sheet), and

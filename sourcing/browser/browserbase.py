@@ -17,6 +17,11 @@ from playwright.async_api import async_playwright
 from .base import BrowserHandle, ContextNotFound  # noqa: F401
 from .local import LOCAL_CONTEXT_PREFIX
 
+
+def _captcha_solving() -> bool:
+    from ..config import get_settings
+    return get_settings().captcha_solving
+
 logger = logging.getLogger("sourcing.browser")
 
 
@@ -107,9 +112,9 @@ class BrowserbaseClient:
             # Off by default: login sessions must not be recorded (plan 6.5).
             # BROWSERBASE_RECORD_SESSIONS=1 turns it on for local debugging.
             "record_session": self._record,
-            # Client rule: Browserbase never solves a CAPTCHA for us (stealth or not).
-            # (A development-only pause, 2026-11-05 to 11-19, has ended.)
-            "solve_captchas": False,
+            # Browserbase solves CAPTCHAs: the client allowed it on 2026-11-19
+            # (before: a person through Live View only). CAPTCHA_SOLVING=0 turns it off.
+            "solve_captchas": _captcha_solving(),
         }
         extra = {}
         if stealth:

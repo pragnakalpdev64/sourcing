@@ -18,6 +18,36 @@ from typing import Optional
 
 from playwright.async_api import TimeoutError as PlaywrightTimeoutError
 
+# How long Browserbase's solver gets before a CAPTCHA goes to a person (Live View).
+CAPTCHA_SOLVER_WAIT_SECONDS = 60
+
+
+async def wait_for_captcha_solver(page, solved, what: str) -> bool:
+    """A CAPTCHA is shown: on Browserbase with solving on (client allowed it,
+    2026-11-19) give its solver up to CAPTCHA_SOLVER_WAIT_SECONDS. True once
+    `solved()` says so; False at once on a local browser (no solver) or with
+    CAPTCHA_SOLVING=0, so the caller asks a person as before."""
+    from ..config import get_settings
+    s = get_settings()
+    if not (s.captcha_solving and s.browser_backend == "browserbase"):
+        return False
+    logger.info("%s: CAPTCHA shown; waiting up to %ds for Browserbase's solver",
+                what, CAPTCHA_SOLVER_WAIT_SECONDS)
+    deadline = time.time() + CAPTCHA_SOLVER_WAIT_SECONDS
+    while time.time() < deadline:
+        await asyncio.sleep(2)
+        try:
+            if await solved():
+                logger.info("%s: CAPTCHA solved by Browserbase", what)
+                return True
+        except Exception:
+            # The page moved on (the solver submitted it): let the caller look.
+            logger.info("%s: page changed while the CAPTCHA was being solved", what)
+            return True
+    logger.warning("%s: CAPTCHA not solved in %ds; asking a person", what,
+                   CAPTCHA_SOLVER_WAIT_SECONDS)
+    return False
+
 logger = logging.getLogger("sourcing.vendors.web")
 
 PAGE_SCRIPT_TIMEOUT = 30      # seconds; page.evaluate has no timeout of its own

@@ -157,7 +157,10 @@ REAL_CHOICE_PAGE = """<h1>Two-Step Verification Code</h1>
   setTimeout(() => document.getElementById('frmSendCode').submit(), 1500); }</script>"""
 CODE_PAGE = """<form action="/Account/VerifyCode" method="post"><h2>Verify your identity</h2>
 <p>Enter the verification code we sent to your email.</p>
-<input type="text" id="Code" name="Code"><button type="submit">Verify</button></form>
+<input type="text" id="Code" name="Code">
+<input type="checkbox" id="RememberBrowser" name="RememberBrowser" value="true"
+ style="position:absolute;opacity:0;width:0;height:0"><input name="RememberBrowser" type="hidden" value="false">
+<label for="RememberBrowser">Remember this device (60 days)</label><button type="submit">Verify</button></form>
 <a href="/Account/SendCode">I didn't receive the code. Take me to the previous step.</a>"""
 
 
@@ -522,6 +525,9 @@ async def test_send_code_on_the_real_2fa_page(textron, button_style):
         await adapter().login(page, cred())
     assert portal.codes_sent == ["Email"]
     assert asked.value.input_selector and "/Account/VerifyCode" in page.url
+    # Ticked for the person, so Textron asks no code for 60 days (team, 2026-11-19);
+    # the real box is hidden by the site's styling, as in the mock.
+    assert await page.locator("#RememberBrowser").is_checked()
 
 
 @pytest.mark.asyncio
@@ -534,7 +540,11 @@ async def test_login_without_2fa_is_signed_in(textron):
 
 
 @pytest.mark.asyncio
-async def test_not_a_robot_box_goes_to_a_person(textron):
+async def test_not_a_robot_box_goes_to_a_person(textron, monkeypatch):
+    """The solver gets its time first (client allowed solving, 2026-11-19); a box
+    it doesn't solve still goes to a person."""
+    from sourcing.vendors import web
+    monkeypatch.setattr(web, "CAPTCHA_SOLVER_WAIT_SECONDS", 3)
     page, portal = textron
     portal.signed_in, portal.captcha = False, True
     with pytest.raises(MfaRequired) as asked:
@@ -647,7 +657,9 @@ async def test_a_2fa_that_ends_without_signing_in_stops_the_wait(textron, monkey
 
 
 @pytest.mark.asyncio
-async def test_captcha_handoff_on_the_login_form_keeps_waiting(textron):
+async def test_captcha_handoff_on_the_login_form_keeps_waiting(textron, monkeypatch):
+    from sourcing.vendors import web
+    monkeypatch.setattr(web, "CAPTCHA_SOLVER_WAIT_SECONDS", 3)
     # "I'm not a robot": the person signs in on the login form; that isn't an ended sign-in.
     page, portal = textron
     portal.signed_in, portal.captcha = False, True

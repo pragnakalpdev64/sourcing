@@ -116,6 +116,25 @@ def _parse_requests(values: list[list[str]], sheet_id: str,
     return cols, rows
 
 
+def note_missing_headings(found: dict, tab: str, header: list, columns: list[str]) -> None:
+    """Our headings missing from a tab that has headings: values for them go into
+    new columns at the end, so a person sees nothing under the old place. Seen
+    2026-11-19: RFQ A1 overwritten with a part number ("CERTS"), the vendor name
+    never showed. Kept for the run's Chat message (found: {tab: [headings]})."""
+    present = {str(h or "").strip().lower() for h in header if str(h or "").strip()}
+    if not present:
+        return                                     # a new / empty tab: headings written
+    renamed = {v.lower() for v in RENAMED_RESULTS_HEADINGS.values()}
+    gone = [c for c in columns if c.lower() not in present and c.lower() not in renamed]
+    # Twice: values go to the first one, the other stays empty (2026-11-19).
+    names = [str(h or "").strip().lower() for h in header]
+    gone += [f"{c} (twice: values go to the first, delete the other)"
+             for c in columns if names.count(c.lower()) > 1]
+    if gone:
+        listed = found.setdefault(tab, [])
+        listed += [c for c in gone if c not in listed]
+
+
 def align_results(header: list[str], rows: list, columns: list[str] = RESULTS_HEADER,
                   renamed: Optional[dict[str, str]] = None
                   ) -> tuple[list[str], bool, list[list[str]]]:
@@ -141,7 +160,13 @@ def align_results(header: list[str], rows: list, columns: list[str] = RESULTS_HE
         new = renamed.get(h.lower())
         if new and new.lower() not in present:
             header[i], changed = new, True
-    index = {h.lower(): i for i, h in enumerate(header) if h}
+    # The first column of a heading: 2026-11-19 the RFQ tab had "Vendor Reference"
+    # twice (A, fixed by hand, and Y, added while A1 said "CERTS"); the last one
+    # won, so every vendor name went to Y and A stayed empty.
+    index: dict[str, int] = {}
+    for i, h in enumerate(header):
+        if h:
+            index.setdefault(h.lower(), i)
     for label in columns:
         if label.lower() not in index:
             index[label.lower()] = len(header)
@@ -248,6 +273,12 @@ class SheetsClient:
             gc = gspread.authorize(creds)
         self.sheet_id = sheet_id
         self._book = gc.open_by_key(sheet_id)
+        # The spreadsheet's name for the Chat message (relay: sent by the add-on).
+        try:
+            self.title = str(getattr(self._book, "title", "") or "")
+        except Exception:
+            self.title = ""
+        self.missing_headings: dict[str, list] = {}    # tab -> our headings not found
         self._requests = self._book.worksheet(requests_tab)
         self._results_tab = results_tab
         self._results = None
@@ -342,6 +373,7 @@ class SheetsClient:
         read_at, known = self._headers.get(tab, (0.0, None))
         if known is None or time.time() - read_at > HEADER_SECONDS:
             read_at, known = time.time(), ws.row_values(1)
+        note_missing_headings(self.missing_headings, getattr(ws, "title", tab), known, columns)
         header, changed, values = align_results(known, rows, columns)
         if changed:
             if ws.col_count < len(header):
@@ -435,6 +467,8 @@ class ExcelSheet:
 
         self.path = path
         self.sheet_id = path
+        self.title = ""
+        self.missing_headings: dict[str, list] = {}    # tab -> our headings not found
         self._lock = threading.Lock()  # the pipeline writes from several threads
         self._wb = openpyxl.load_workbook(path)
         if requests_tab not in self._wb.sheetnames:
@@ -498,6 +532,7 @@ class ExcelSheet:
             else:
                 ws = self._wb.create_sheet(tab)
             current = [_excel_text(c.value) for c in ws[1]] if ws.max_row >= 1 else []
+            note_missing_headings(self.missing_headings, tab, current, columns)
             header, changed, values = align_results(current, rows, columns)
             if changed:
                 for col, label in enumerate(header, start=1):

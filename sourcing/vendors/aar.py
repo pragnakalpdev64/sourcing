@@ -28,6 +28,9 @@ The team calls bulk search "not available": AAR has no bulk form, but the
 multi-part address above lists several parts on one page, so search_many
 uses it (vendor config `bulk_batch_size`, 0/1 = one part per search).
 Some parts show a unit price, others only an RFQ button (team, 2026-11-03).
+Client, 2026-11-19: "$RFQ" lines are removed (the row is NOT_SOLD with a note to
+email AAR, nothing in the RFQ tab); a part listed by several OEMs keeps every
+OEM's line that has a price (without_rfq_only).
 
 Never opened: cart, checkout, quote, wishlist, compare, account links. A run
 with --dump-pages saves each results page and the text read
@@ -307,7 +310,13 @@ class AarAdapter(GenericAdapter):
             raise RuntimeError("AAR search needs an LLM to read the results page")
         self.apply_timeouts(page)
         url = await self._open_results(page, [row.part_number])
-        return await self._read_results(page, row, url)
+        outcome = await self._read_results(page, row, url)
+        if outcome.found and outcome.offers:
+            kept = without_rfq_only(row.row_id, outcome.offers, outcome.page_url or url)
+            if kept is not None:
+                kept.usage, kept.alternates = outcome.usage, outcome.alternates
+                return kept
+        return outcome
 
     async def _open_results(self, page, part_numbers: list[str]) -> str:
         """Opens the search address. Raises SearchAddressFailed when it doesn't open
@@ -469,10 +478,39 @@ class AarAdapter(GenericAdapter):
         for r in rows:
             offers = found.get(r.part_number) or []
             if offers:
-                outcomes[r.row_id] = SearchOutcome(found=True, offers=offers, page_url=url)
                 self._search_ok = self._search_ok or has_real_offer(offers)
+                outcome = without_rfq_only(r.row_id, offers, url)
+                if outcome is not None:
+                    outcomes[r.row_id] = outcome
         logger.info("AAR multi-part search: offers for %d of %d parts", len(outcomes), len(rows))
         return outcomes, usage
+
+
+# Client, 2026-11-19 (asked about "$RFQ" parts): "Remove them - the Skylink user will
+# have to connect with AAR via email instead." And for one part number listed by
+# several OEMs: "add all three so long as they have stock availability / pricing".
+RFQ_ONLY_NOTE = "price on request only ($RFQ): contact AAR by email"
+_PRICE = re.compile(r"\d[\d,]*(?:\.\d+)?")
+
+
+def _priced(offer) -> bool:
+    match = _PRICE.search(str(offer.price or ""))
+    return bool(match) and float(match.group(0).replace(",", "")) > 0
+
+
+def without_rfq_only(row_id: str, offers: list, url: str):
+    """The part's lines that have a price. None of them priced but some listed
+    ($RFQ only): no line, the row says why (NOT_SOLD with RFQ_ONLY_NOTE)."""
+    priced = [o for o in offers if _priced(o)]
+    if len(priced) < len(offers):
+        logger.info("AAR row %s: %d $RFQ line(s) left out (client: removed)", row_id,
+                    len(offers) - len(priced))
+    if priced:
+        return SearchOutcome(found=True, offers=priced, page_url=url)
+    if offers:
+        return SearchOutcome(found=False, not_sold=RFQ_ONLY_NOTE, page_url=url,
+                             page_kind="results", no_line=True)
+    return None
 
 
 def _dumping() -> bool:

@@ -139,6 +139,11 @@ class FakeAdapter(VendorAdapter):
             raise RateLimited("Portal says 'too many requests'")
         if step == "empty":
             return SearchOutcome(found=False, empty_page=True)
+        if step == "rfq_only":
+            # AAR "$RFQ": nothing for the sheet, only the row's status (client 2026-11-19).
+            return SearchOutcome(found=False, not_sold="price on request only ($RFQ): "
+                                 "contact AAR by email", page_url=f"https://portal/r?id={row.part_number}",
+                                 no_line=True)
         if step == "not_sold":
             return SearchOutcome(found=False, not_sold="This product is restricted for sale.",
                                  page_url=f"https://portal/r?id={row.part_number}")

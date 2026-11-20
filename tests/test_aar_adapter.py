@@ -343,3 +343,18 @@ async def test_home_page_after_submit_is_signed_in_when_account_page_opens(monke
     finally:
         await browser.close()
         await pw.stop()
+
+
+def test_rfq_only_lines_are_removed_and_every_priced_oem_kept():
+    """Client, 2026-11-19: "$RFQ" parts removed (the team emails AAR instead); one
+    part listed by several OEMs: all of them, when they have stock / pricing."""
+    from sourcing.models import Offer
+    from sourcing.vendors.aar import RFQ_ONLY_NOTE, without_rfq_only
+    oems = [Offer("1806D0000-01", price="1250.00", qty_available="1", condition="SV"),
+            Offer("1806D0000-01", price="980.50", qty_available="2", condition="SV"),
+            Offer("1806D0000-01", price="Not Present on website", qty_available="1")]
+    kept = without_rfq_only("r1", oems, "https://shop.aarcorp.com/x")
+    assert kept.found and [o.price for o in kept.offers] == ["1250.00", "980.50"]
+    rfq = without_rfq_only("r2", [Offer("C100-013080", price=None, qty_available="938")], "u")
+    assert not rfq.found and rfq.no_line and rfq.not_sold == RFQ_ONLY_NOTE
+    assert without_rfq_only("r3", [], "u") is None          # nothing listed: not found

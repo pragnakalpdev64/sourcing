@@ -144,6 +144,8 @@ class RunSummary:
     # vendor id -> secret it was set up from this run; vendors whose first run worked
     new_vendors: dict = field(default_factory=dict)
     first_runs: set = field(default_factory=set)
+    # Requested By -> rows: who used the service in this run (team, 2026-11-19).
+    requesters: dict = field(default_factory=lambda: defaultdict(int))
 
     def as_dict(self) -> dict:
         return {
@@ -154,6 +156,10 @@ class RunSummary:
             "seconds": round(time.time() - self.started_at, 1),
         }
 
+
+# A login used by another search (another sheet, another run): wait this long for it.
+LEASE_WAIT_SECONDS = 20 * 60
+LEASE_POLL_SECONDS = 10
 
 # Rows listed by name in the Chat message; the rest are counted.
 CHAT_MAX_LISTED_ROWS = 10
@@ -185,16 +191,18 @@ def _duration(seconds: float) -> str:
     return f"{minutes}m {secs:02d}s" if minutes else f"{secs}s"
 
 
-def _sheet_link(sheet_id: str) -> str:
+def _sheet_link(sheet_id: str, title: str = "") -> str:
     if not sheet_id:
         return "(unknown sheet)"
     if sheet_id.lower().endswith(".xlsx"):
         return f"`{sheet_id.replace(chr(92), '/').rsplit('/', 1)[-1]}` (local file)"
-    return f"<https://docs.google.com/spreadsheets/d/{sheet_id}|Google Sheet …{sheet_id[-8:]}>"
+    name = re.sub(r"[<>|]", " ", title).strip() or f"Google Sheet …{sheet_id[-8:]}"
+    return f"<https://docs.google.com/spreadsheets/d/{sheet_id}|{name}>"
 
 
 def summary_message(summary: RunSummary, result: dict, sheet_id: str, llm_label: str,
-                    warnings: Optional[dict] = None) -> str:
+                    warnings: Optional[dict] = None, sheet_title: str = "",
+                    missing_headings: Optional[dict] = None) -> str:
     """The end-of-run Chat message: totals, per vendor, LLM use and the rows that
     didn't end DONE. Google Chat formatting: *bold*, `code`, <url|text>.
 
@@ -213,7 +221,11 @@ def summary_message(summary: RunSummary, result: dict, sheet_id: str, llm_label:
         f"*SourcingAI run {title}*",
         f"{rows} part(s) in {_duration(seconds)}"
         + (f" ({seconds / rows:.1f}s per part)" if rows else ""),
-        f"Sheet: {_sheet_link(sheet_id)}",
+        f"Sheet: {_sheet_link(sheet_id, sheet_title)}",
+        "Requested by: " + (", ".join(
+            f"{who} ({n} row{'s' if n != 1 else ''})"
+            for who, n in sorted(summary.requesters.items(), key=lambda kv: (-kv[1], kv[0])))
+            or "(no rows)"),
         f"Run: `{summary.run_id}`",
         "",
         "*Results*",
@@ -236,6 +248,12 @@ def summary_message(summary: RunSummary, result: dict, sheet_id: str, llm_label:
             lines.append(f"• {_vendor_name(vendor_id, summary.vendor_names)}:")
             lines += [f"   - {line}" for line in vlines]
         lines.append("Lines with a gap say so in their Flag; update the adapter's selectors.")
+    if missing_headings:
+        lines += ["", "*⚠ Column headings missing or doubled in the sheet*"]
+        for tab, names in sorted(missing_headings.items()):
+            lines.append(f"• {tab}: " + ", ".join(f"\"{n}\"" for n in names))
+        lines.append("A missing heading's values went into a new column at the end of the "
+                     "tab: put the heading back in its column (row 1) and delete the extra one.")
     if warnings:
         lines += ["", "*⚠ Possible page change*"]
         for vendor_id, vlines in sorted(warnings.items()):
@@ -267,14 +285,36 @@ def summary_message(summary: RunSummary, result: dict, sheet_id: str, llm_label:
                          + "; ".join(parts))
     if summary.not_done:
         lines += ["", f"*Not DONE* ({len(summary.not_done)})"]
-        for sheet_row, part, vendor_id, status, note in summary.not_done[:CHAT_MAX_LISTED_ROWS]:
-            lines.append(f"• Row {sheet_row} `{part}` "
-                         f"({_vendor_name(vendor_id, summary.vendor_names)}): {status}"
-                         + (f": {note[:100]}" if note else ""))
-        if len(summary.not_done) > CHAT_MAX_LISTED_ROWS:
-            lines.append(f"• … and {len(summary.not_done) - CHAT_MAX_LISTED_ROWS} more "
-                         f"(see the Status column)")
+        groups = _not_done_groups(summary.not_done)
+        for rows in groups[:CHAT_MAX_LISTED_ROWS]:
+            sheet_row, part, vendor_id, status, note = rows[0]
+            vendor = _vendor_name(vendor_id, summary.vendor_names)
+            reason = f"{status}" + (f": {note[:100]}" if note else "")
+            if len(rows) == 1:
+                lines.append(f"• Row {sheet_row} `{part}` ({vendor}): {reason}")
+            else:
+                lines.append(f"• {vendor}: {len(rows)} parts {reason} "
+                             f"(rows {_row_numbers([r[0] for r in rows])})")
+        if len(groups) > CHAT_MAX_LISTED_ROWS:
+            left = sum(len(g) for g in groups[CHAT_MAX_LISTED_ROWS:])
+            lines.append(f"• … and {left} more (see the Status column)")
     return "\n".join(lines)
+
+
+def _not_done_groups(not_done: list) -> list[list]:
+    """Rows with the same vendor, status and reason as one Chat line (team, 2026-11-20: AAR's
+    "price on request only" was listed once per part and made the message long). Kept in the
+    order the rows came in."""
+    groups: dict[tuple, list] = {}
+    for row in not_done:
+        groups.setdefault((row[2], row[3], row[4] or ""), []).append(row)
+    return list(groups.values())
+
+
+def _row_numbers(rows: list, shown: int = 8) -> str:
+    """'42, 43, 51' or '42, 43, … (+5 more)': the person finds them in the sheet."""
+    text = ", ".join(str(r) for r in rows[:shown])
+    return text + (f", … (+{len(rows) - shown} more)" if len(rows) > shown else "")
 
 
 def default_adapter_factory(extractor, max_page_chars: int = 60000) -> AdapterFactory:
@@ -848,6 +888,8 @@ class Pipeline:
                 seen.update(r.sheet_row for r in rows)
                 logger.info("Run %s picked up %d NEW rows", self.run_id, len(rows))
                 self._progress("rows_picked", len(rows))
+                for r in rows:
+                    self.summary.requesters[(r.requested_by or "").strip() or "(not filled in)"] += 1
                 await asyncio.to_thread(self.d.sheets.set_status, rows, RowStatus.RUNNING, self.run_id)
                 await self._process_batch(rows)
             await self._save_default_limits()
@@ -870,7 +912,8 @@ class Pipeline:
         if any(status != RowStatus.NEW.value for status in result["counts"]):
             await self.d.notifier.send(summary_message(
                 self.summary, result, getattr(self.d.sheets, "sheet_id", ""), self.d.llm_label,
-                warnings))
+                warnings, getattr(self.d.sheets, "title", "") or "",
+                getattr(self.d.sheets, "missing_headings", None) or None))
         return result
 
     def _check_page_changes(self) -> dict:
@@ -1012,7 +1055,7 @@ class Pipeline:
         if stop:
             await self._wait_for_limit(adapter, vendor_id, rows, str(stop), stop.kind)
             return
-        if not self.d.store.acquire_lease(aid, self.run_id, self.d.lease_seconds):
+        if not await self._lease_when_free(aid, adapter.display_name):
             await self._set(rows, RowStatus.NEW, f"Account {aid} is busy; will retry")
             return
 
@@ -1276,6 +1319,27 @@ class Pipeline:
                 f"{limits['max_searches_per_day']} per day. Please get {adapter.display_name}'s "
                 "real rules (how many failed logins lock the account, any search limits) and "
                 f"set them: python scripts/vendor_limits.py set {vendor_id} KEY=VALUE ...")
+
+    async def _lease_when_free(self, aid: str, vendor: str) -> bool:
+        """The account's lease, waiting while another search uses the login.
+        2026-11-19: two sheets searched at once both needed Textron; the second
+        sheet's rows went back to NEW ("busy") and waited for the next sweep. One
+        login can't be used by two browsers (a logout ends both), so the second
+        waits its turn: other vendors of its sheet go on meanwhile. Gives up after
+        LEASE_WAIT_SECONDS (a stuck holder); its rows then go back to NEW."""
+        if self.d.store.acquire_lease(aid, self.run_id, self.d.lease_seconds):
+            return True
+        holder = (self.d.store.get_account(aid) or {}).get("lease_holder") or "?"
+        logger.info("[%s] Login in use by %s; waiting up to %d min for it", aid, holder,
+                    LEASE_WAIT_SECONDS // 60)
+        self._progress("step", aid, f"{vendor}: waiting, the login is in use by another search")
+        deadline = time.time() + LEASE_WAIT_SECONDS
+        while time.time() < deadline:
+            await asyncio.sleep(LEASE_POLL_SECONDS)
+            if self.d.store.acquire_lease(aid, self.run_id, self.d.lease_seconds):
+                logger.info("[%s] Login free now; going on", aid)
+                return True
+        return False
 
     async def _notify_requesters(self, rows: list[RequestRow], text: str) -> None:
         requesters = sorted({r.requester for r in rows if r.requester})
@@ -1635,5 +1699,5 @@ class Pipeline:
             fetched_at=datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M:%SZ"),
             requested_by=row.requester, flag=self._flag(adapter, "NOT_SOLD"), **request_details(row),
         )
-        await self._write_results(row, [result], RowStatus.NOT_SOLD,
-                                  f"{vendor}: {outcome.not_sold}", timing)
+        await self._write_results(row, [] if outcome.no_line else [result],
+                                  RowStatus.NOT_SOLD, f"{vendor}: {outcome.not_sold}", timing)

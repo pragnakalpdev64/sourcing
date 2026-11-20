@@ -9,6 +9,7 @@
   .state { display: inline-block; padding: 2px 8px; border-radius: 10px; font-weight: 600;
            font-size: 12px; background: #e8eaed; }
   .running, .starting { background: #e8f0fe; color: #174ea6; }
+  .queued { background: #fef7e0; color: #b06000; }
   .done { background: #e6f4ea; color: #137333; }
   .failed, .stopped { background: #fce8e6; color: #a50e0e; }
   ul { padding-left: 18px; margin: 8px 0; }
@@ -41,7 +42,7 @@
   // followed and its results are written as they come (one run stops at 6 min).
   var BUSY_MS = 15000, IDLE_MS = 60000, IDLE_STOP_MS = 20 * 60000;
   var timer = null, idleSince = null, inFlight = false;
-  var LABELS = {starting: 'Starting', running: 'Searching', done: 'Finished',
+  var LABELS = {starting: 'Starting', queued: 'Queued', running: 'Searching', done: 'Finished',
                 failed: 'Failed', stopped: 'Not responding'};
 
   function el(id) { return document.getElementById(id); }
@@ -64,13 +65,14 @@
     var state = p.state;
     el('state').className = 'state ' + (state || '');
     el('state').textContent = state ? LABELS[state] || state : 'No search yet';
-    el('time').textContent = state === 'running' || state === 'starting'
+    var waiting = state === 'running' || state === 'starting' || state === 'queued';
+    el('time').textContent = waiting
       ? (p.elapsed_seconds ? 'for ' + minutes(p.elapsed_seconds) : '')
       : (p.finished_seconds_ago != null ? minutes(p.finished_seconds_ago) + ' ago' : '');
 
     var steps = el('steps');
     steps.innerHTML = '';
-    (state === 'running' || state === 'starting' ? p.steps || [] : []).forEach(function (s) {
+    (waiting ? p.steps || [] : []).forEach(function (s) {
       var li = document.createElement('li');
       li.textContent = s;
       steps.appendChild(li);
@@ -86,7 +88,10 @@
     el('alive').textContent = state === 'running'
       ? 'Last sign of life ' + minutes(p.alive_seconds_ago) + ' ago' : '';
 
-    if (state === 'stopped') {
+    if (state === 'queued') {
+      note('Your search is saved and starts by itself when the current one ends. ' +
+           'No need to click Search new rows again.', false);
+    } else if (state === 'stopped') {
       note('The search stopped answering ' + minutes(p.alive_seconds_ago) + ' ago. Rows ' +
            'still RUNNING were not finished: set their Status to NEW to search them again.', true);
     } else if (state === 'failed') {
@@ -102,7 +107,7 @@
         new Date().toLocaleTimeString();
     }
     if (r.error) note(r.error, true);
-    return state === 'running' || state === 'starting' || r.busy || r.writing || r.written;
+    return waiting || r.busy || r.writing || r.written;
   }
 
   function schedule(active) {

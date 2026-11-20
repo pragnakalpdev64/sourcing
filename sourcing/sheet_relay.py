@@ -221,12 +221,34 @@ class RelayClient:
             raise SheetNotSent(f"no copy of sheet {sheet_id}: the add-on sends one with "
                                "each search")
         book = RelayBook(self._store, sheet_id, snap["tabs"], self._requests_tab)
+        book.title = snap.get("title") or ""          # the spreadsheet's name, from the add-on
         pending = self._store.sheet_ops(sheet_id)
         if pending:
             logger.info("Sheet %s: %d write(s) not yet confirmed by the add-on, applied to "
                         "its copy", sheet_id, len(pending))
             book.replay(pending)
         return book
+
+
+def keep_copy_current(store, sheet_id: str, ids: list[str]) -> None:
+    """Apply the writes the add-on just confirmed to the stored copy before they
+    leave the queue. Without it the copy kept the Status the sheet had when it
+    was sent: 2026-11-19 a second pass of the same sheet read all 40 rows as NEW
+    again (their DONE / NOT_FOUND were written and confirmed, so no longer in
+    the queue) and searched every part a second time. Status / header writes
+    only: appended RFQ / Results rows aren't kept in the copy (headers only)."""
+    snap = store.get_sheet_snapshot(sheet_id)
+    if not snap or not snap.get("tabs"):
+        return
+    wanted = set(ids)
+    done = [o for o in store.sheet_ops(sheet_id)
+            if o["id"] in wanted and o["op"].get("kind") in ("cells", "add_sheet")]
+    if not done:
+        return
+    book = RelayBook(store, sheet_id, snap["tabs"], None)
+    book.replay(done)
+    tabs = {name: ws.get_all_values() for name, ws in book._tabs.items()}
+    store.put_sheet_snapshot(sheet_id, tabs, snap.get("title") or "")
 
 
 def open_relay_sheet(store, sheet_id: str, requests_tab: str, results_tab: str):

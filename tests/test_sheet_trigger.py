@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import asyncio
 import threading
+import time
 
 import pytest
 from fastapi.testclient import TestClient
@@ -147,8 +148,8 @@ def local(monkeypatch, client):
         return procs[-1]
 
     monkeypatch.setattr(api.subprocess, "Popen", popen)
-    monkeypatch.setattr(api, "_local", {"proc": None, "again": False, "sheet_id": None,
-                                      "start_at": 0.0, "waiting": False})
+    monkeypatch.setattr(api, "_local", {"proc": None, "sheet_id": None, "start_at": 0.0,
+                                      "waiting": False, "waiting_sheet": None, "queued": []})
     yield c, store, started, procs
     for p in procs:
         p.finish()
@@ -178,6 +179,23 @@ def test_local_mode_runs_again_once_when_rows_came_in(local):
     procs[1].finish()
     threading.Event().wait(0.2)
     assert len(procs) == 2                      # nothing new came in: no third run
+
+
+def test_local_mode_searches_a_second_sheet_after_the_first(local):
+    """2026-11-19: sheet B asked while sheet A was searched; the worker then ran
+    sheet A again and never sheet B."""
+    c, _, _, procs = local
+    c.post("/trigger", headers=H, json={"sheet_id": "sheetA"})
+    assert c.post("/trigger", headers=H, json={"sheet_id": "sheetB"}).json()["rerun"] is True
+    procs[0].finish()
+    for _ in range(50):
+        if len(procs) == 2:
+            break
+        threading.Event().wait(0.05)
+    assert len(procs) == 2 and procs[1].cmd[-1] == "sheetB"
+    procs[1].finish()
+    threading.Event().wait(0.2)
+    assert len(procs) == 2                      # sheet A isn't searched again
 
 
 def test_local_mode_still_needs_the_secret(local):
@@ -452,3 +470,14 @@ def test_iap_token_is_checked_with_googles_es256_keys(monkeypatch):
     other = jwt.encode(signer, dict(claims, iss="https://accounts.google.com")).decode()
     with pytest.raises(iap_mod.IapRefused):
         iap_mod.verified_email({iap_mod.ASSERTION_HEADER: other}, IAP_AUD)
+
+
+def test_local_mode_two_sheets_in_the_quiet_wait_are_both_searched(local, monkeypatch):
+    """The second sheet edited during the first one's quiet wait used to replace it."""
+    c, _, _, procs = local
+    monkeypatch.setattr(api, "_start_local_when_quiet", lambda: None)   # no timer thread
+    with api._local_lock:
+        api._local.update(waiting=True, waiting_sheet="sheetA", start_at=time.time() + 90)
+    reply = api._trigger_local("sheetB", False, wait=90)
+    assert reply["rerun"] is True and api._local["queued"] == ["sheetB"]
+    assert api._local["waiting_sheet"] == "sheetA"

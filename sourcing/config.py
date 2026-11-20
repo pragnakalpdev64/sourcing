@@ -78,6 +78,8 @@ class Settings:
     # "local" (Chromium inside this container / on this machine). Both are run
     # on Cloud Run to compare them (client request 2026-10-15).
     browser_backend: str
+    # Browserbase solves CAPTCHAs (client allowed it, 2026-11-19). CAPTCHA_SOLVING=0 turns it off.
+    captcha_solving: bool
     # Local browser only: false opens a visible window (local debugging).
     local_browser_headless: bool
     # Local browser only: a DevTools live view on 127.0.0.1 for the 2FA handoff
@@ -182,6 +184,7 @@ class Settings:
                                                  / ".local_store.json"),
             vendor_secret_overrides=_env("VENDOR_SECRET_OVERRIDES"),
             browser_backend=_env("BROWSER_BACKEND", "browserbase").lower(),
+            captcha_solving=_env_bool("CAPTCHA_SOLVING", True),
             local_browser_headless=_env_bool("LOCAL_BROWSER_HEADLESS", True),
             local_browser_live_view=_env_bool("LOCAL_BROWSER_LIVE_VIEW"),
             browserbase_api_key=_env("BROWSERBASE_API_KEY"),

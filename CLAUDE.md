@@ -127,9 +127,10 @@ Full command and flag reference: `COMMANDS.md`.
 
 ## Known gaps / gotchas
 
-- **CAPTCHA trial ended (2026-11-19).** The development-only switch `DEV_ALLOW_CAPTCHA_SOLVING`
-  (2026-11-05) was removed while cleaning the code for Cloud Run: Browserbase's
-  `solve_captchas` is always off again, and a CAPTCHA goes to a person (Live View).
+- **CAPTCHA solving allowed (client, 2026-11-19).** Browserbase's `solve_captchas` is on
+  (`CAPTCHA_SOLVING`, default 1; 0 = always a person). Aircraft Spruce's image challenge and
+  Textron's "I'm not a robot" box get up to 60s for the solver (`web.wait_for_captcha_solver`),
+  then go to a person through Live View as before. Local browsers have no solver.
 
 - CAPTCHA wording on a login page (AAR: "reCAPTCHA verification failed.") is, **for now
   (2026-11-03), retried**, not a stop: `CaptchaFailed` (vendors/base.py), tried again up to

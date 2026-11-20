@@ -131,7 +131,7 @@ class Store(ABC):
     # the service account; the add-on does every read and write). The add-on sends
     # a copy of the sheet; the worker's writes wait here until the add-on has
     # written them into the sheet and confirmed (ack).
-    def put_sheet_snapshot(self, sheet_id: str, tabs: dict) -> None:
+    def put_sheet_snapshot(self, sheet_id: str, tabs: dict, title: str = "") -> None:
         raise NotImplementedError(f"{type(self).__name__} has no sheet relay")
 
     def get_sheet_snapshot(self, sheet_id: str) -> Optional[dict]:
@@ -199,9 +199,10 @@ class MemoryStore(Store):
         self.sheet_op_queue: dict[str, list[dict]] = {}
         self.sheet_progress: dict[str, dict] = {}
 
-    def put_sheet_snapshot(self, sheet_id: str, tabs: dict) -> None:
+    def put_sheet_snapshot(self, sheet_id: str, tabs: dict, title: str = "") -> None:
         with self._lock:
-            self.sheet_snapshots[sheet_id] = {"tabs": copy.deepcopy(tabs), "at": time.time()}
+            self.sheet_snapshots[sheet_id] = {"tabs": copy.deepcopy(tabs), "at": time.time(),
+                                              "title": title}
 
     def get_sheet_snapshot(self, sheet_id: str) -> Optional[dict]:
         with self._lock:
@@ -514,20 +515,21 @@ class FirestoreStore(Store):
         self.db.collection("hitl").document(hitl_id).set(fields, merge=True)
 
     # Sheet values are lists of lists, which Firestore can't store: kept as JSON text.
-    def put_sheet_snapshot(self, sheet_id: str, tabs: dict) -> None:
+    def put_sheet_snapshot(self, sheet_id: str, tabs: dict, title: str = "") -> None:
         text = json.dumps(tabs, ensure_ascii=False)
         if len(text.encode("utf-8")) > MAX_SNAPSHOT_BYTES:
             raise ValueError(f"sheet copy is {len(text) // 1000} KB; at most "
                              f"{MAX_SNAPSHOT_BYTES // 1000} KB fit (archive old Requests rows)")
         self.db.collection("sheet_snapshots").document(sheet_id).set(
-            {"tabs_json": text, "at": time.time()})
+            {"tabs_json": text, "at": time.time(), "title": title})
 
     def get_sheet_snapshot(self, sheet_id: str) -> Optional[dict]:
         snap = self.db.collection("sheet_snapshots").document(sheet_id).get()
         if not snap.exists:
             return None
         doc = snap.to_dict() or {}
-        return {"tabs": json.loads(doc.get("tabs_json") or "{}"), "at": doc.get("at")}
+        return {"tabs": json.loads(doc.get("tabs_json") or "{}"), "at": doc.get("at"),
+                "title": doc.get("title") or ""}
 
     def add_sheet_ops(self, sheet_id: str, ops: list[dict]) -> None:
         for start in range(0, len(ops), 400):      # Firestore: 500 writes per batch

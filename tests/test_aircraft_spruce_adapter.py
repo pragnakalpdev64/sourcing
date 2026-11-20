@@ -10,7 +10,11 @@ import re
 from types import SimpleNamespace
 from urllib.parse import parse_qs, urlparse
 
+import json
+
 import pytest
+
+from sourcing.config import get_settings
 import pytest_asyncio
 from playwright.async_api import async_playwright
 
@@ -414,6 +418,8 @@ async def test_image_challenge_goes_to_a_person_not_a_retry(spruce_page, monkeyp
     await page.context.route("https://www.google.com/**",          # never the real Google
                              lambda r: r.fulfill(status=200, body="<p>images</p>"))
     monkeypatch.setattr(aircraft_spruce, "CHALLENGE_WAIT_SECONDS", 1)
+    monkeypatch.setenv("CAPTCHA_SOLVING", "0")          # no solver: a person's job
+    get_settings.cache_clear()
     adapter = AircraftSpruceAdapter(extractor=Reader())
     await page.set_content(LOGIN_PAGE.format(nav=portal.nav()) + CHALLENGE.format(vis="visible"))
     with pytest.raises(MfaRequired) as err:
@@ -427,3 +433,81 @@ async def test_image_challenge_goes_to_a_person_not_a_retry(spruce_page, monkeyp
     assert await adapter._image_challenge(page) is False
 
 
+
+
+@pytest.mark.asyncio
+async def test_image_challenge_solved_by_browserbase_goes_on(spruce_page, monkeypatch):
+    """Client allowed CAPTCHA solving (2026-11-19): on Browserbase the solver gets
+    its time; once the challenge is gone and the page signed in, no person."""
+    from sourcing.vendors import aircraft_spruce, web
+    page, portal = spruce_page
+    await page.context.route("https://www.google.com/**",
+                             lambda r: r.fulfill(status=200, body="<p>images</p>"))
+    monkeypatch.setattr(aircraft_spruce, "CHALLENGE_WAIT_SECONDS", 1)
+    monkeypatch.setattr(web, "CAPTCHA_SOLVER_WAIT_SECONDS", 10)
+    monkeypatch.setenv("BROWSER_BACKEND", "browserbase")
+    monkeypatch.setenv("CAPTCHA_SOLVING", "1")
+    get_settings.cache_clear()
+    adapter = AircraftSpruceAdapter(extractor=Reader())
+    portal.signed_in = True                              # what the solved Sign In does
+    signed_in = f"<html><body>{portal.nav()}<p>My Account</p></body></html>"
+    await page.set_content(LOGIN_PAGE.format(nav="") + CHALLENGE.format(vis="visible")
+                           + "<script>setTimeout(() => { document.open(); document.write("
+                           + json.dumps(signed_in) + "); document.close(); }, 2500)</script>")
+    await adapter._after_submit(page, None, totp_tried=False)    # no MfaRequired
+
+
+@pytest.mark.asyncio
+async def test_a_recaptcha_still_answering_is_waited_for(spruce_page, monkeypatch):
+    """2026-11-19 17:51: no image challenge, the reCAPTCHA token still empty while
+    Browserbase's solver worked; the login gave up as "still on the sign-in form"
+    and the solver signed in afterwards. Now the solver gets its time."""
+    from sourcing.vendors import aircraft_spruce, web
+    page, portal = spruce_page
+    monkeypatch.setattr(aircraft_spruce, "CHALLENGE_WAIT_SECONDS", 1)
+    monkeypatch.setattr(web, "CAPTCHA_SOLVER_WAIT_SECONDS", 10)
+    monkeypatch.setenv("BROWSER_BACKEND", "browserbase")
+    monkeypatch.setenv("CAPTCHA_SOLVING", "1")
+    get_settings.cache_clear()
+    adapter = AircraftSpruceAdapter(extractor=Reader())
+    portal.signed_in = True
+    signed_in = f"<html><body>{portal.nav()}<p>My Account</p></body></html>"
+    await page.set_content(LOGIN_PAGE.format(nav="")
+                           + '<input type="hidden" name="g-recaptcha-response" value="">'
+                           + "<script>setTimeout(() => { document.open(); document.write("
+                           + json.dumps(signed_in) + "); document.close(); }, 3000)</script>")
+    await adapter._after_submit(page, None, totp_tried=False)    # signed in, no failure
+
+
+@pytest.mark.asyncio
+async def test_logout_on_the_sign_in_form_is_signed_out(spruce_page):
+    """2026-11-19: after a login that gave up, the sign-in form was shown and a
+    person was still asked to log out."""
+    page, portal = spruce_page
+    adapter = AircraftSpruceAdapter(extractor=Reader())
+    await page.set_content(LOGIN_PAGE.format(nav=""))
+    assert await adapter.logout(page) is True
+
+
+@pytest.mark.asyncio
+async def test_a_recaptcha_that_never_answers_is_a_captcha_not_a_stop(spruce_page, monkeypatch):
+    """2026-11-19: "still on the sign-in form" put the account in NEEDS_ATTENTION and
+    every later run stopped; an unanswered reCAPTCHA is retried instead."""
+    from sourcing.vendors import aircraft_spruce, web
+    from sourcing.vendors.base import CaptchaFailed
+    page, portal = spruce_page
+    monkeypatch.setattr(aircraft_spruce, "CHALLENGE_WAIT_SECONDS", 1)
+    monkeypatch.setattr(web, "CAPTCHA_SOLVER_WAIT_SECONDS", 3)
+    monkeypatch.setattr(aircraft_spruce, "_settle_after_solver", lambda page: _no_wait())
+    monkeypatch.setenv("BROWSER_BACKEND", "browserbase")
+    monkeypatch.setenv("CAPTCHA_SOLVING", "1")
+    get_settings.cache_clear()
+    adapter = AircraftSpruceAdapter(extractor=Reader())
+    await page.set_content(LOGIN_PAGE.format(nav="")
+                           + '<input type="hidden" name="g-recaptcha-response" value="">')
+    with pytest.raises(CaptchaFailed):
+        await adapter._after_submit(page, None, totp_tried=False)
+
+
+async def _no_wait():
+    return None
