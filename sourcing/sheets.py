@@ -116,6 +116,24 @@ def _parse_requests(values: list[list[str]], sheet_id: str,
     return cols, rows
 
 
+# Other headings a person may give our column (team, 2026-11-20: "what do we need as
+# the vendor column name"): any of these is used as that column.
+HEADING_ALIASES = {"vendor reference": ("vendor", "vendor name")}
+# Our column put in front, as a new column A, when the tab has no heading for it:
+# at the far end it went unnoticed (2026-11-19).
+FIRST_COLUMN = "Vendor Reference"
+
+
+def _known(name: str, present: set) -> bool:
+    return name.lower() in present or any(a in present for a in HEADING_ALIASES.get(name.lower(), ()))
+
+
+def needs_first_column(header: list, columns: list[str]) -> bool:
+    """The tab has headings, but none for FIRST_COLUMN (nor an alias): insert column A."""
+    present = {str(h or "").strip().lower() for h in header if str(h or "").strip()}
+    return bool(present) and FIRST_COLUMN in columns and not _known(FIRST_COLUMN, present)
+
+
 def note_missing_headings(found: dict, tab: str, header: list, columns: list[str]) -> None:
     """Our headings missing from a tab that has headings: values for them go into
     new columns at the end, so a person sees nothing under the old place. Seen
@@ -125,7 +143,8 @@ def note_missing_headings(found: dict, tab: str, header: list, columns: list[str
     if not present:
         return                                     # a new / empty tab: headings written
     renamed = {v.lower() for v in RENAMED_RESULTS_HEADINGS.values()}
-    gone = [c for c in columns if c.lower() not in present and c.lower() not in renamed]
+    gone = [c for c in columns if not _known(c, present) and c.lower() not in renamed
+            and c != FIRST_COLUMN]          # that one is put in as column A instead
     # Twice: values go to the first one, the other stays empty (2026-11-19).
     names = [str(h or "").strip().lower() for h in header]
     gone += [f"{c} (twice: values go to the first, delete the other)"
@@ -167,6 +186,10 @@ def align_results(header: list[str], rows: list, columns: list[str] = RESULTS_HE
     for i, h in enumerate(header):
         if h:
             index.setdefault(h.lower(), i)
+    for name, aliases in HEADING_ALIASES.items():
+        for alias in aliases:
+            if name not in index and alias in index:
+                index[name] = index[alias]
     for label in columns:
         if label.lower() not in index:
             index[label.lower()] = len(header)
@@ -374,6 +397,10 @@ class SheetsClient:
         if known is None or time.time() - read_at > HEADER_SECONDS:
             read_at, known = time.time(), ws.row_values(1)
         note_missing_headings(self.missing_headings, getattr(ws, "title", tab), known, columns)
+        if needs_first_column(known, columns):
+            ws.insert_cols([[FIRST_COLUMN]], col=1, value_input_option="RAW")
+            known = [FIRST_COLUMN, *known]
+            logger.info("%s: no %r column; put in as column A", tab, FIRST_COLUMN)
         header, changed, values = align_results(known, rows, columns)
         if changed:
             if ws.col_count < len(header):
@@ -533,6 +560,10 @@ class ExcelSheet:
                 ws = self._wb.create_sheet(tab)
             current = [_excel_text(c.value) for c in ws[1]] if ws.max_row >= 1 else []
             note_missing_headings(self.missing_headings, tab, current, columns)
+            if needs_first_column(current, columns):
+                ws.insert_cols(1)
+                ws.cell(row=1, column=1, value=FIRST_COLUMN)
+                current = [FIRST_COLUMN, *current]
             header, changed, values = align_results(current, rows, columns)
             if changed:
                 for col, label in enumerate(header, start=1):

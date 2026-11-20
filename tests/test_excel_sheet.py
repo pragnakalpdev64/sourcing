@@ -280,3 +280,19 @@ def test_requests_accept_the_clients_rfq_headings(tmp_path):
         "proponent", "AS1895/7-300", "300", "NE")
     assert (row.alternate_part_number, row.keyword, row.part_description, row.serialized,
             row.uom) == ("M83248/1-010", "seal", "SEAL, O-RING", "N", "EA")
+
+
+def test_rfq_without_a_vendor_column_gets_it_as_column_a(tmp_path):
+    """Team, 2026-11-20: a missing vendor column goes in front, not at the far end."""
+    from sourcing.models import RFQ_HEADER, ResultRow
+    path = tmp_path / "s.xlsx"
+    _book(path, [])
+    wb = openpyxl.load_workbook(path)
+    rfq = wb.create_sheet("RFQ")
+    rfq.append(["CERTS", *RFQ_HEADER[1:]])
+    wb.save(path)
+    sheet = ExcelSheet(str(path), "Requests", "Results")
+    sheet.append_rfq([ResultRow("r", "Textron Aviation", "P1").as_rfq_record()])
+    ws = openpyxl.load_workbook(path)["RFQ"]
+    assert ws.cell(1, 1).value == "Vendor Reference" and ws.cell(1, 2).value == "CERTS"
+    assert ws.cell(2, 1).value == "Textron Aviation"

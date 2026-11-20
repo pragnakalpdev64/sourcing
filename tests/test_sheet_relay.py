@@ -286,9 +286,9 @@ def test_worker_uses_the_add_on_copy_in_relay_mode(monkeypatch):
     assert store.sheet_ops("sheet-1")[-1]["op"]["updates"][0]["values"] == [["DONE"]]
 
 
-def test_a_missing_rfq_heading_is_noted_and_the_sheet_name_kept():
-    """2026-11-19: RFQ A1 said "CERTS"; the run notes "Vendor Reference" missing for
-    the Chat message, and the add-on's sheet name reaches the worker."""
+def test_a_missing_vendor_column_is_put_in_as_column_a_and_the_sheet_name_kept():
+    """2026-11-19: RFQ A1 said "CERTS"; the vendor name went to a column at the far
+    end. Team, 2026-11-20: put it in as column A instead, headed so people know it."""
     from sourcing.models import RFQ_HEADER, ResultRow
     store = MemoryStore()
     store.put_sheet_snapshot("sheet-1", {**SNAPSHOT, "RFQ": [["CERTS", *RFQ_HEADER[1:]]]},
@@ -296,10 +296,28 @@ def test_a_missing_rfq_heading_is_noted_and_the_sheet_name_kept():
     s = sheet(store)
     assert s.title == "Skylink RFQs"
     s.append_rfq([ResultRow("r", "Textron Aviation", "P1").as_rfq_record()])
-    assert s.missing_headings == {"RFQ": ["Vendor Reference"]}
-    s2 = sheet(store)
+    ops = [o["op"] for o in store.sheet_ops("sheet-1")]
+    assert ops[0] == {"kind": "insert_cols", "tab": "RFQ", "at": 1,
+                      "values": [["Vendor Reference"]]}
+    line = next(o for o in ops if o["kind"] == "append")["rows"][0]
+    assert line[0] == "Textron Aviation" and len(line) == len(RFQ_HEADER) + 1   # CERTS moved to B
+    assert s.missing_headings == {}
+    s2 = sheet(store)                       # the copy has the new column A too
     s2.append_rfq([ResultRow("r", "Textron Aviation", "P1").as_rfq_record()])
-    assert s2.missing_headings == {}           # put back at the end: found from now on
+    assert [o["op"]["kind"] for o in store.sheet_ops("sheet-1")].count("insert_cols") == 1
+
+
+def test_vendor_or_vendor_name_is_taken_as_the_vendor_column():
+    """Team, 2026-11-20: "what do we need as the vendor column name"."""
+    from sourcing.models import RFQ_HEADER, ResultRow
+    for heading in ("Vendor", "Vendor Name"):
+        store = MemoryStore()
+        store.put_sheet_snapshot("sheet-1", {**SNAPSHOT, "RFQ": [[heading, *RFQ_HEADER[1:]]]})
+        s = sheet(store)
+        s.append_rfq([ResultRow("r", "Textron Aviation", "P1").as_rfq_record()])
+        ops = [o["op"] for o in store.sheet_ops("sheet-1")]
+        assert [o["kind"] for o in ops] == ["append"] and ops[0]["rows"][0][0] == "Textron Aviation"
+        assert s.missing_headings == {}
 
 
 def test_a_confirmed_status_stays_in_the_copy_for_the_next_pass():

@@ -478,6 +478,14 @@ function applyOps_(ss, ops) {
       } else if (op.kind === 'cells') {
         var sheet = ss.getSheetByName(op.tab);
         if (sheet) writeCells_(sheet, op);
+      } else if (op.kind === 'insert_cols') {
+        // A new column (RFQ: "Vendor Reference" as column A when the tab had none,
+        // 2026-11-20); everything to its right moves one place.
+        var tabAt = ss.getSheetByName(op.tab);
+        if (tabAt) {
+          tabAt.insertColumnBefore(op.at || 1);
+          if (op.values.length) writeBlock_(tabAt, 1, op.at || 1, op.values);
+        }
       } else if (op.kind === 'append') {
         var target = ss.getSheetByName(op.tab) || ss.insertSheet(op.tab);
         if (op.rows.length) {

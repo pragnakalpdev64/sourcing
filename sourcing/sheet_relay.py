@@ -121,6 +121,18 @@ class RelayWorksheet:
                value_input_option: str = "RAW") -> None:
         self.batch_update([{"range": range_name, "values": values}], value_input_option)
 
+    def insert_cols(self, values: list[list], col: int = 1,
+                    value_input_option: str = "RAW") -> None:
+        """A new column at `col` (1 = A); `values` its cells from row 1. Everything to
+        its right moves one place, in the copy as in the sheet."""
+        self._insert(col, [str(v[0]) if v else "" for v in values])
+        self._book.queue({"kind": "insert_cols", "tab": self.title, "at": col,
+                          "values": [[str(v[0]) if v else ""] for v in values]})
+
+    def _insert(self, col: int, cells: list[str]) -> None:
+        for i, row in enumerate(self._grid):
+            row.insert(col - 1, cells[i] if i < len(cells) else "")
+
     def add_cols(self, n: int) -> None:
         # The add-on adds columns itself when a write needs them.
         self._min_cols = self.col_count + n
@@ -204,6 +216,8 @@ class RelayBook:
                                     self.sheet_id, sorted(stale))
                 elif op["kind"] == "append":
                     ws._grid.extend([[str(v) for v in line] for line in op["rows"]])
+                elif op["kind"] == "insert_cols":
+                    ws._insert(op.get("at", 1), [str(v[0]) if v else "" for v in op["values"]])
         finally:
             self._replaying = False
 
@@ -242,7 +256,7 @@ def keep_copy_current(store, sheet_id: str, ids: list[str]) -> None:
         return
     wanted = set(ids)
     done = [o for o in store.sheet_ops(sheet_id)
-            if o["id"] in wanted and o["op"].get("kind") in ("cells", "add_sheet")]
+            if o["id"] in wanted and o["op"].get("kind") in ("cells", "add_sheet", "insert_cols")]
     if not done:
         return
     book = RelayBook(store, sheet_id, snap["tabs"], None)
