@@ -734,6 +734,13 @@ async def test_an_rfq_only_part_gets_a_status_and_no_line():
     assert portal.searches == ["P1"]                      # a clear answer: not retried
     assert sheet.status_of("P1") == "NOT_SOLD" and "contact AAR by email" in sheet.notes[2]
     assert _results(sheet) == []
+    # The page answered: not "returned nothing" for the page-change check (2026-11-20,
+    # "Possible page change at AAR: 70% of parts returned nothing" after the rule).
+    from sourcing.pipeline import VendorTally
+    tally = VendorTally(parts=1)
+    tally.counts["NOT_SOLD"] = 1
+    tally.answered_no_line = 1
+    assert tally.health_metrics()["not_found"] == 0
 
 
 @pytest.mark.asyncio

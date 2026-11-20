@@ -110,6 +110,9 @@ class VendorTally:
     bad_page_kind: int = 0       #   ... that it couldn't read as a results page
     extracted_offers: int = 0    # offers the extractor returned (before verification)
     check_page_offers: int = 0   #   ... with a value verification removed ("Check page")
+    # Parts the page answered with nothing for the sheet (AAR "$RFQ" only, client
+    # 2026-11-20): the search worked, so not "returned nothing" for the health check.
+    answered_no_line: int = 0
     # Page actions the coded way couldn't do (assist.py): done by the LLM, with a
     # saved recipe, or not done (the lines say so in their Flag).
     page_actions: list = field(default_factory=list)
@@ -117,8 +120,10 @@ class VendorTally:
     def health_metrics(self) -> dict:
         """This vendor's run counters as the dict sourcing/health.py reads."""
         done = self.counts.get(RowStatus.DONE.value, 0)
+        answered = min(self.answered_no_line, self.counts.get(RowStatus.NOT_SOLD.value, 0))
+        done += answered
         not_found = self.counts.get(RowStatus.NOT_FOUND.value, 0) + \
-            self.counts.get(RowStatus.NOT_SOLD.value, 0)
+            self.counts.get(RowStatus.NOT_SOLD.value, 0) - answered
         return {
             "parts": self.parts,
             "searched": done + not_found,
@@ -1690,6 +1695,8 @@ class Pipeline:
         """The portal says it doesn't sell the part: one Results row with its own
         words and the results page, so a team member can check it, and Status NOT_SOLD."""
         vendor = adapter.display_name
+        if outcome.no_line:
+            self.summary.vendors[self._vendor_key(row)].answered_no_line += 1
         result = ResultRow(
             rfq_id=row.rfq_id, vendor=vendor, requested_part=row.part_number,
             qty_needed=row.qty_needed or "", part_number=row.part_number,

@@ -78,7 +78,7 @@ import re
 import time
 from datetime import date
 from typing import Optional
-from urllib.parse import unquote
+from urllib.parse import unquote, urlsplit
 
 from playwright.async_api import TimeoutError as PlaywrightTimeoutError
 
@@ -132,6 +132,9 @@ POLL_SECONDS = 0.3
 # a link: what it opens carries a one-time code_challenge made by the page's
 # own script (auth.boeing.com/as/authorization.oauth2?...&code_challenge=...).
 DISTRIBUTION_URL = "https://shop.boeing.com/distribution"
+# Boeing's sign-in hosts: a shop page that sends us here is a signed-out page
+# (2026-11-20: the bulk search went to accounts.boeing.com, then the passkey page).
+SIGN_IN_HOSTS = ("auth.boeing.com", "auth.boeingservices.com", "accounts.boeing.com")
 # Boeing's sign-in pages as seen in the run log 2026-11-02 (auth.boeing.com):
 # the username box and its "LOG IN" button (not a "Next", so the LLM was asked).
 # Used like selectors saved by an earlier run; one that stops fitting is skipped.
@@ -1182,11 +1185,29 @@ class AviallAdapter(GenericAdapter):
         await _settle(page, 3000)
         return menu
 
+    async def person_finished_login(self, page) -> bool:
+        """The shared check (off the sign-in form) and not signed out here: on
+        2026-11-20 the page went back to the shop's "Log in to Boeing Distribution"
+        after a passkey prompt nobody could answer, and that counted as signed in."""
+        try:
+            if await self._signed_out_here(page):
+                return False
+        except Exception:
+            return False                  # mid-navigation: look again later
+        return await super().person_finished_login(page)
+
     async def _signed_out_here(self, page) -> bool:
         """As the generic one, without opening the avatar menu on every results
         page: signed out with a hidden Log in link, the results show no prices,
         and NOT_FOUND only comes after the sign-in check (pipeline)."""
         if await self._password_field(page):
+            return True
+        # On Boeing's sign-in pages, or the shop's own "Log in to Boeing
+        # Distribution" prompt: signed out (2026-11-20, a person's passkey sign-in
+        # that didn't finish was taken as done, and the search then hung on it).
+        if (urlsplit(page.url).hostname or "") in SIGN_IN_HOSTS:
+            return True
+        if await _first_visible(page, DISTRIBUTION_LOGIN_SELECTORS):
             return True
         # Signed in, a result shows its price and Add to Cart; signed out the
         # site asks to log in to see them (team, 2026-11-02). Looked at before

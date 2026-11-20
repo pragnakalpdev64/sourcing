@@ -667,3 +667,20 @@ async def test_replacement_number_only_goes_to_the_note_when_substitutes_are_off
     on = adapter(show_substitutes=True)
     assert on.listed_alternates(RequestRow(sheet_row=2, rfq_id="", vendor_raw="Aviall",
                                            part_number="161A2114-1=IH")) == []
+
+
+@pytest.mark.asyncio
+async def test_back_on_the_shop_login_prompt_is_not_a_finished_person_login(page_for):
+    """2026-11-20: after a passkey prompt nobody could answer, the page went back to
+    the shop's "Log in to Boeing Distribution"; that counted as signed in and the
+    search then hung on Boeing's sign-in pages."""
+    class Shop:
+        async def handle(self, route):
+            await route.fulfill(status=200, content_type="text/html", body=(
+                "<html><body><button>Log in to Boeing Distribution</button></body></html>"))
+
+    page = await page_for(Shop())
+    await page.goto("https://shop.example.com/distribution")
+    a = adapter()
+    assert await a._signed_out_here(page) is True
+    assert await a.person_finished_login(page) is False
