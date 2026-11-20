@@ -481,3 +481,13 @@ def test_local_mode_two_sheets_in_the_quiet_wait_are_both_searched(local, monkey
     reply = api._trigger_local("sheetB", False, wait=90)
     assert reply["rerun"] is True and api._local["queued"] == ["sheetB"]
     assert api._local["waiting_sheet"] == "sheetA"
+
+
+def test_addon_token_in_its_own_header_when_iap_drops_authorization(addon):
+    """2026-11-20 on sourcing-ai-dev: behind IAP the Authorization header never
+    reached the service ("no add-on token"); the add-on's own header does."""
+    c, store, started, _ = addon
+    resp = c.post("/trigger", headers={"X-SourcingAI-Token": "ya29.token"},
+                  json={"sheet_id": "s1", "edited": False}).json()
+    assert resp["started"] is True and started == [1]
+    assert c.post("/trigger", json={"sheet_id": "s1"}).status_code == 401   # still needed

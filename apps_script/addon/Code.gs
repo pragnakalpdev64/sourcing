@@ -278,6 +278,9 @@ function post_(url, payload) {
     // The user's own token: the service asks Google whose it is and checks it
     // was made for this add-on (service/api.py, _addon_refusal).
     'Authorization': 'Bearer ' + ScriptApp.getOAuthToken(),
+    // The same token again: behind IAP on Cloud Run, Authorization doesn't reach
+    // the service (2026-11-20, "no add-on token"); this header does.
+    'X-SourcingAI-Token': ScriptApp.getOAuthToken(),
     // ngrok's free plan shows a warning page to unknown clients without it.
     'ngrok-skip-browser-warning': '1'
   };

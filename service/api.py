@@ -180,6 +180,7 @@ def _trigger_local(sheet_id: str | None, registered: bool, wait: int = 0) -> dic
 # sends the user's Google access token (ScriptApp.getOAuthToken), so it holds no
 # secret: Google tells us which OAuth client the token is for and whose it is.
 TOKENINFO_URL = "https://oauth2.googleapis.com/tokeninfo"
+ADDON_TOKEN_HEADER = "x-sourcingai-token"
 
 
 async def _token_info(token: str) -> dict | None:
@@ -261,8 +262,13 @@ async def _caller(request: Request, x_trigger_secret: str) -> str:
             return "secret"
         raise refuse("bad trigger secret")
     auth = request.headers.get("authorization", "")
-    if auth.lower().startswith("bearer ") and auth[7:].strip():
-        info = await _token_info(auth[7:].strip())
+    token = auth[7:].strip() if auth.lower().startswith("bearer ") else ""
+    # Behind IAP on Cloud Run the Authorization header never reached us (2026-11-20,
+    # sourcing-ai-dev: "no add-on token" though the add-on sent it); the add-on sends
+    # the same token in its own header too, which IAP passes on.
+    token = token or request.headers.get(ADDON_TOKEN_HEADER, "").strip()
+    if token:
+        info = await _token_info(token)
         refusal = _addon_refusal(info)
         if refusal:
             raise refuse(refusal)
