@@ -1,6 +1,6 @@
 """The end-of-run Chat message built by sourcing.pipeline.summary_message."""
 from sourcing.models import LlmUsage
-from sourcing.pipeline import CHAT_MAX_LISTED_ROWS, RunSummary, summary_message
+from sourcing.pipeline import CHAT_MAX_REASONS, RunSummary, summary_message
 
 
 def _summary(not_done=()):
@@ -29,7 +29,7 @@ def test_message_has_totals_vendor_and_llm():
     assert "• Model: anthropic claude-sonnet-5-5, effort medium" in text
     assert "• Calls: 6" in text and "113,964 in + 12,043 out (avg 2,191 + 231 per part)" in text
     assert "• Cost: $0.3484 total, $0.0067 per part" in text
-    assert "• Row 46 `0684-12-28` (Proponent): NOT_FOUND" in text
+    assert "• Proponent: 1 NOT_FOUND" in text and "0684-12-28" not in text
 
 
 def test_problems_in_title_and_long_lists_cut():
@@ -39,7 +39,8 @@ def test_problems_in_title_and_long_lists_cut():
     assert text.startswith("*SourcingAI run finished, 15 row(s) need attention*")
     assert "`test.xlsx` (local file)" in text
     assert "• Model:" not in text
-    assert f"… and {15 - CHAT_MAX_LISTED_ROWS} more" in text
+    assert text.split("*Not DONE*")[1].count("• Proponent:") == 1
+    assert f"{15 - CHAT_MAX_REASONS} other" in text
 
 
 def test_page_actions_are_in_the_summary():
@@ -70,21 +71,22 @@ def test_missing_rfq_headings_are_warned():
     assert "Column headings missing or doubled in the sheet" in text and '• RFQ: "Vendor Reference"' in text
 
 
-def test_rows_with_the_same_reason_are_one_line_with_a_count():
+def test_not_done_is_one_line_per_vendor_with_counts():
     """Team, 2026-11-20: AAR's "price on request only" once per part made the message long."""
     note = "price on request only ($RFQ): contact AAR by email"
     rows = [(42, "20138-1000-0101", "aar", "NOT_SOLD", note),
             (43, "35-0F5-1000", "aar", "NOT_SOLD", note),
+            (45, "AR1262", "aar", "NOT_FOUND", None),
             (44, "MS20995C32", "proponent", "NOT_FOUND", None)]
-    text = summary_message(_summary(rows), _result({"DONE": 49, "NOT_SOLD": 2, "NOT_FOUND": 1}),
+    text = summary_message(_summary(rows), _result({"DONE": 48, "NOT_SOLD": 2, "NOT_FOUND": 2}),
                            "test.xlsx", "")
-    assert f"2 parts NOT_SOLD: {note} (rows 42, 43)" in text
+    assert f"• AAR: 2 NOT_SOLD ({note}) · 1 NOT_FOUND" in text
+    assert "• Proponent: 1 NOT_FOUND" in text
+    assert "*Not DONE* (4)" in text and "Which rows: the Status column" in text
     assert "Row 42" not in text and "20138-1000-0101" not in text
-    assert "• Row 44 `MS20995C32` (Proponent): NOT_FOUND" in text
-    assert "*Not DONE* (3)" in text
 
 
-def test_a_long_group_shows_the_first_rows_and_how_many_more():
-    rows = [(i, f"P{i}", "aar", "NOT_SOLD", "price on request only") for i in range(10, 22)]
-    text = summary_message(_summary(rows), _result({"NOT_SOLD": 12}), "test.xlsx", "")
-    assert "12 parts NOT_SOLD: price on request only (rows 10, 11, 12, 13, 14, 15, 16, 17, … (+4 more))" in text
+def test_page_change_warnings_are_one_line_per_vendor():
+    text = summary_message(_summary([]), _result({"DONE": 52}), "test.xlsx", "",
+                           warnings={"proponent": ["not-found 40% (usual 5%)", "grid fallback 30%"]})
+    assert "• Proponent: not-found 40% (usual 5%); grid fallback 30%" in text

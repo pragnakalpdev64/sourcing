@@ -161,8 +161,8 @@ class RunSummary:
 LEASE_WAIT_SECONDS = 20 * 60
 LEASE_POLL_SECONDS = 10
 
-# Rows listed by name in the Chat message; the rest are counted.
-CHAT_MAX_LISTED_ROWS = 10
+# Different reasons listed per vendor under Not DONE; the rest are counted.
+CHAT_MAX_REASONS = 4
 
 
 class LlmKeyRejected(Exception):
@@ -245,8 +245,7 @@ def summary_message(summary: RunSummary, result: dict, sheet_id: str, llm_label:
     if actions:
         lines += ["", "*⚠ Page actions the code couldn't do alone (the vendor's page changed?)*"]
         for vendor_id, vlines in sorted(actions.items()):
-            lines.append(f"• {_vendor_name(vendor_id, summary.vendor_names)}:")
-            lines += [f"   - {line}" for line in vlines]
+            lines.append(f"• {_vendor_name(vendor_id, summary.vendor_names)}: " + "; ".join(vlines))
         lines.append("Lines with a gap say so in their Flag; update the adapter's selectors.")
     if missing_headings:
         lines += ["", "*⚠ Column headings missing or doubled in the sheet*"]
@@ -257,8 +256,7 @@ def summary_message(summary: RunSummary, result: dict, sheet_id: str, llm_label:
     if warnings:
         lines += ["", "*⚠ Possible page change*"]
         for vendor_id, vlines in sorted(warnings.items()):
-            lines.append(f"• {_vendor_name(vendor_id, summary.vendor_names)}:")
-            lines += [f"   - {line}" for line in vlines]
+            lines.append(f"• {_vendor_name(vendor_id, summary.vendor_names)}: " + "; ".join(vlines))
         lines.append("Re-run `scripts/onboard_vendor.py <vendor> --fresh` and compare the offers "
                      "with the portal; update the adapter if the pages moved.")
     lines += ["", "*LLM*"]
@@ -285,36 +283,36 @@ def summary_message(summary: RunSummary, result: dict, sheet_id: str, llm_label:
                          + "; ".join(parts))
     if summary.not_done:
         lines += ["", f"*Not DONE* ({len(summary.not_done)})"]
-        groups = _not_done_groups(summary.not_done)
-        for rows in groups[:CHAT_MAX_LISTED_ROWS]:
-            sheet_row, part, vendor_id, status, note = rows[0]
-            vendor = _vendor_name(vendor_id, summary.vendor_names)
-            reason = f"{status}" + (f": {note[:100]}" if note else "")
-            if len(rows) == 1:
-                lines.append(f"• Row {sheet_row} `{part}` ({vendor}): {reason}")
-            else:
-                lines.append(f"• {vendor}: {len(rows)} parts {reason} "
-                             f"(rows {_row_numbers([r[0] for r in rows])})")
-        if len(groups) > CHAT_MAX_LISTED_ROWS:
-            left = sum(len(g) for g in groups[CHAT_MAX_LISTED_ROWS:])
-            lines.append(f"• … and {left} more (see the Status column)")
+        for vendor_id, reasons in _not_done_by_vendor(summary.not_done):
+            lines.append(f"• {_vendor_name(vendor_id, summary.vendor_names)}: " + " · ".join(reasons))
+        lines.append("Which rows: the Status column in the sheet.")
     return "\n".join(lines)
 
 
-def _not_done_groups(not_done: list) -> list[list]:
-    """Rows with the same vendor, status and reason as one Chat line (team, 2026-11-20: AAR's
-    "price on request only" was listed once per part and made the message long). Kept in the
-    order the rows came in."""
-    groups: dict[tuple, list] = {}
-    for row in not_done:
-        groups.setdefault((row[2], row[3], row[4] or ""), []).append(row)
-    return list(groups.values())
+def _not_done_by_vendor(not_done: list) -> list[tuple[str, list[str]]]:
+    """One Chat line per vendor, each reason once with its count (team, 2026-11-20: AAR's
+    "price on request only" was listed once per part and made the message long; the rows
+    themselves are in the sheet's Status column). Vendors and reasons in the order the rows
+    came in; at most CHAT_MAX_REASONS reasons per vendor, the rest counted."""
+    by_vendor: dict[str, dict[tuple, int]] = {}
+    for _row, _part, vendor_id, status, note in not_done:
+        reasons = by_vendor.setdefault(vendor_id, {})
+        key = (status, (note or "").strip())
+        reasons[key] = reasons.get(key, 0) + 1
+    out = []
+    for vendor_id, reasons in by_vendor.items():
+        items = list(reasons.items())
+        texts = [f"{n} {status}" + (f" ({_short(note)})" if note else "")
+                 for (status, note), n in items[:CHAT_MAX_REASONS]]
+        rest = sum(n for _, n in items[CHAT_MAX_REASONS:])
+        if rest:
+            texts.append(f"{rest} other")
+        out.append((vendor_id, texts))
+    return out
 
 
-def _row_numbers(rows: list, shown: int = 8) -> str:
-    """'42, 43, 51' or '42, 43, … (+5 more)': the person finds them in the sheet."""
-    text = ", ".join(str(r) for r in rows[:shown])
-    return text + (f", … (+{len(rows) - shown} more)" if len(rows) > shown else "")
+def _short(text: str, limit: int = 90) -> str:
+    return text if len(text) <= limit else text[:limit - 1].rstrip() + "…"
 
 
 def default_adapter_factory(extractor, max_page_chars: int = 60000) -> AdapterFactory:
