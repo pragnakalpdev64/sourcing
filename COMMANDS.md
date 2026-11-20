@@ -1,7 +1,7 @@
 # Command reference
 
 The commands you need day to day, in one place. Run everything from the repo root.
-First-time install is in [SETUP.md](SETUP.md); how the code works is in
+Overview and first-time install: [README.md](README.md); how the code works:
 [docs/PIPELINE.md](docs/PIPELINE.md).
 
 ## Contents
@@ -293,46 +293,23 @@ TRIGGER_RUN_LOCAL=1 TRIGGER_LOCAL_ARGS="--dummy" .venv/bin/uvicorn service.api:a
 ngrok http 8080        # its https address + /trigger goes in the script's TRIGGER_URL
 ```
 
-**Vendor login update page** (`/credentials`, docs/CREDENTIAL_UPDATE_UI_PLAN.md). Saving writes a
-real new version to Secret Manager (the secret `VENDOR_SECRET_OVERRIDES` points at), so test with
-the test secret.
-
-```bash
-# Logins the page offers (the worker also adds one the first time it uses a login)
-.venv/bin/python scripts/manage_logins.py list
-.venv/bin/python scripts/manage_logins.py add proponent --owner shared --editors a@skylink.com
-.venv/bin/python scripts/manage_logins.py grant proponent shared b@skylink.com   # or revoke
-
-# Without an OAuth client: sign in as one email (refused on Cloud Run)
-SESSION_SECRET=dev DEV_SIGNIN_EMAIL=a@skylink.com .venv/bin/uvicorn service.api:app --port 8080
-# open http://localhost:8080/credentials
-```
-
-With Google sign-in: `GOOGLE_OAUTH_CLIENT_ID`, `GOOGLE_OAUTH_CLIENT_SECRET`, `SESSION_SECRET`,
-`ALLOWED_EMAIL_DOMAINS`, `CREDENTIAL_ADMINS`, and `PUBLIC_BASE_URL=http://localhost:8080` (the
-OAuth client needs redirect URI `http://localhost:8080/auth/callback`).
+**Vendor login update page** (`/credentials`): mie-agent's `sourcing_credentials_web`, run and
+tested from its own folder (its README). This service only links to it (`PUBLIC_BASE_URL`).
 
 ## 9. Deploy (Cloud Run)
 
-None of this has been run yet. Everything goes in Skylink's existing project; don't create a new
-project.
+Service `sourcing-ai-dev` (project `skylink-material-planning`, IAP). Never `--set-env-vars` /
+`--set-secrets`: they drop the login page's settings on the same service.
 
 ```bash
-export PROJECT_ID=skylink-material-planning REGION=us-central1
-cp infra/secrets.env.example infra/secrets.env    # fill in, run, then delete the file
-bash infra/setup_gcp.sh
-
-gcloud builds submit --config cloudbuild.yaml --substitutions=_SHEET_ID=<id>,_DUMMY_MODE=1
-# Login update page: add _PUBLIC_BASE_URL=<sourcing-api URL>,_OAUTH_CLIENT_ID=<id>,
-#   _ALLOWED_EMAIL_DOMAINS=skylink.com,_CREDENTIAL_ADMINS='a@skylink.com;b@skylink.com'
-gcloud run jobs execute sourcing-worker --region $REGION --args=scripts/check_access.py --wait
-gcloud run jobs execute sourcing-worker --region $REGION --wait
+infra/deploy_test_revision.sh          # no-traffic revision, tag "sourcing", dummy worker
+infra/deploy_test_revision.sh --real   # same, real searches (LLM_MODEL, LLM_EFFORT set)
 ```
 
-The rest of the deploy steps (real mode, Scheduler sweep) are in
-[README.md → Deploy](README.md#deploy).
+Moving into mie-agent replaces this with `deploy.sh` and `deploy_job.sh`
+([docs/MIE_AGENT_MOVE_PLAN.md](docs/MIE_AGENT_MOVE_PLAN.md)).
 
 ---
 
-Never commit `.env`, `infra/secrets.env`, `.local_store.json`, `debug_pages/` or
+Never commit `.env`, `.local_store.json`, `debug_pages/` or
 `test_runs/**/vendor_pages/`.

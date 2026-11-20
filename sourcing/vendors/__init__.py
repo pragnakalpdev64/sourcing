@@ -71,8 +71,3 @@ def adapter_class(vendor_id: str, record: Optional[dict] = None) -> Optional[typ
     if name and not ((record or {}).get("auto_created_from") and vendor_id in ADAPTERS):
         return ADAPTER_TYPES.get(name)
     return ADAPTERS.get(vendor_id)
-
-
-def canonical_vendor_id(vendor_id: str) -> str:
-    cls = ADAPTERS.get(vendor_id)
-    return cls.vendor_id if cls else vendor_id

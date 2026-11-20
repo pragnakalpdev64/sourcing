@@ -2,9 +2,9 @@
 
 Goal: the worker that searches vendor portals runs in `skylink-material-planning` on a
 schedule, for Proponent, DASI and Aviall, and writes offers to the team's sheet.
-Written 2026-10-30. Replaces `CLOUD_RUN_DEPLOY_PLAN.md`, which was for our own
-`sourcing-api` design (OAuth page, public `/trigger`, our own registry and service
-accounts). The login update page is already live on `sourcing-ai-dev` (mie-agent
+Written 2026-10-30, for our earlier design (a public `/trigger`, the worker opening the sheet).
+Since then: the add-on, the sheet relay and IAP on `sourcing-ai-dev`; the move into mie-agent
+is planned in `MIE_AGENT_MOVE_PLAN.md`. The login update page is already live on `sourcing-ai-dev` (mie-agent
 `sourcing_credentials_web/`, commit 4c6189b), so the worker only needs to search.
 
 ## Shape

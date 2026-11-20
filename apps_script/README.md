@@ -5,23 +5,17 @@ offers go back into the same sheet, so each person can work in their own sheet.
 Requested By is filled in with the editor's email when it's empty. The Cloud
 Scheduler sweep stays as the backstop for rows that were missed.
 
-Two ways to put it in a sheet (only the add-on works now):
+It is put in a sheet through the Sheets add-on (`addon/`): the admin installs it once for
+Skylink, and each person turns it on in their own sheet. It proves each call with the user's
+Google token (Skylink account, this add-on); the 90 s quiet wait is in the service, since
+add-ons may run a timer only once an hour. Its Marketplace listing is in its own small GCP
+project (no secrets, no billing).
 
-> **Retired (2026-11-20). Don't install the per-sheet script in any sheet.** The service is
-> behind Google sign-in (IAP), which only lets in a Skylink person's sign-in from the
-> add-on. This script signs its calls with `TRIGGER_SECRET` only, so IAP refuses every one
-> ("Could not start the search (401)"). A sheet that still has it: delete its triggers
-> (Extensions > Apps Script > Triggers), then use Extensions > SourcingAI > Turn on for this sheet.
+(A script pasted into each sheet, signing its calls with `TRIGGER_SECRET`, was retired
+2026-11-20: IAP refuses its calls. A sheet that still has it: delete its triggers in
+Extensions > Apps Script > Triggers, then Extensions > SourcingAI > Turn on for this sheet.)
 
-| | `addon/` (Sheets add-on, the plan) | `per_sheet/` (script inside one sheet) |
-|---|---|---|
-| Who sets it up | The admin installs it once for Skylink | Someone, in every sheet |
-| Each person | Extensions > SourcingAI > Turn on for this sheet | — |
-| Proves the call | The user's Google token (Skylink account, this add-on) | `TRIGGER_SECRET`, readable by anyone who can edit the script |
-| 90 s quiet wait | In the service (add-ons may run a timer only once an hour) | In the script (time trigger) |
-| Needs | Its own small GCP project for the Marketplace listing (no secrets, no billing) | Nothing |
-
-Either way, a search already running when the call comes reads the sheet once more
+A search already running when the call comes reads the sheet once more
 before it ends (`RERUN_FLAG`, `service/job_main.py`, at most 5 passes).
 
 **Add-on: the service never opens the sheet** (client, 2026-11-13: Skylink's org
@@ -42,7 +36,6 @@ Only one of them writes at a time (a lease in `/sheet/pull`), so RFQ lines are n
 doubled. The timer opens the sheet by id, so the add-on's scope is `spreadsheets`
 (was `spreadsheets.currentonly` until 2026-11-18): **the admin approves the new
 scope once** after the update.
-The per-sheet script still needs its sheet shared with the service account.
 
 ## Add-on (`addon/`)
 
@@ -111,36 +104,13 @@ SDK at it. People don't install anything again.
    offers appear as they come. **Search new rows now** starts at once, **Get results
    now** writes whatever is waiting.
 
-## Per-sheet script (`per_sheet/`): retired
-
-> **Retired (2026-11-20). Don't install the per-sheet script in any sheet.** The service is
-> behind Google sign-in (IAP), which only lets in a Skylink person's sign-in from the
-> add-on. This script signs its calls with `TRIGGER_SECRET` only, so IAP refuses every one
-> ("Could not start the search (401)"). A sheet that still has it: delete its triggers
-> (Extensions > Apps Script > Triggers), then use Extensions > SourcingAI > Turn on for this sheet.
-
-Kept for reference only:
-
-1. Open the sheet, then **Extensions > Apps Script**.
-2. Replace `Code.gs` with `per_sheet/Code.gs`.
-3. In **Project Settings**, tick "Show appsscript.json". Replace that file with `per_sheet/appsscript.json`.
-4. Still in **Project Settings > Script properties**, add:
-   - `TRIGGER_URL`: `https://<host>/trigger` (the Cloud Run URL, or the ngrok URL while testing)
-   - `TRIGGER_SECRET`: the service's `TRIGGER_SECRET`
-   - optional `REQUESTS_TAB` (default `Requests`) and `DELAY_SECONDS` (default `90`)
-5. In the editor, pick `setup` and press **Run**. Allow the permissions it asks for.
-   The trigger runs as the person who ran `setup`.
-6. Reload the sheet. A **SourcingAI > Search new rows now** menu appears. It calls `/trigger` without the wait.
-
-Anyone who can edit the script can read `TRIGGER_SECRET`. All it does is start a search run.
-
 ## Check that a sheet is set up
 
-In the script editor (the sheet's own, or the add-on's for a test deployment):
+In the add-on's script editor (test deployment):
 
 - **Triggers** (clock icon): one `onRequestsEdit`, "From spreadsheet – On edit".
 - **Executions**, after adding a row: `onRequestsEdit` with the log line
-  "SourcingAI /trigger: ..." (per-sheet script: `sendTrigger` about 90 s later).
+  "SourcingAI /trigger: ...".
 - **Project Settings > Script properties**: the properties above.
 
 On our side: `.venv/bin/python scripts/manage_sheets.py list` shows the sheet once it

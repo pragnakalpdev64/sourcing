@@ -92,7 +92,7 @@ from .base import (
     SessionExpired, check_rate_limited, has_real_offer, host_allowed,
 )
 from .generic import GenericAdapter
-from .web import _first_visible, _settle, accept_cookies
+from .web import _first_visible, _settle
 
 logger = logging.getLogger("sourcing.vendors.aviall")
 
@@ -340,9 +340,6 @@ STEP_ELEMENTS_JS = """() => {
             href: el.tagName === 'A' ? (el.getAttribute('href') || '').slice(0, 120) : null};
   });
 }"""
-# The Copy & Paste box (line numbers drawn beside it: may be an editor, not a
-# plain textarea). The Line-by-line boxes next to it take one part each.
-BULK_INPUT_IN_DIALOG = ["textarea", "[contenteditable='true']"]
 # A "Copy & Paste" tab may have to be opened before its box shows.
 COPY_PASTE_TAB = ["[role='tab']:has-text('Copy')", "button:has-text('Copy')", "a:has-text('Copy')",
                   "label:has-text('Copy')", "span:has-text('Copy & Paste')"]

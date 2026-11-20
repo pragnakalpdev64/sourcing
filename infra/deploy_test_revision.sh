@@ -39,6 +39,9 @@ if [[ "${1:-}" == "--real" ]]; then
   : "${LLM_EFFORT:?set LLM_EFFORT for a real run}"
 fi
 
+# 0. Tests must pass (all of them: about 25 minutes; a deploy is rare).
+"${PYTHON:-python3}" -m pytest -q -p no:cacheprovider
+
 # 1. Refuse a dirty tree: the revision is stamped with the commit it was built from.
 if [[ -n "$(git status --porcelain -- sourcing service scripts Dockerfile requirements.txt)" ]]; then
   echo "ERROR: uncommitted changes in the code that goes into the image. Commit first." >&2

@@ -11,11 +11,10 @@ import pytest
 import sourcing.auth.hitl as hitl
 from sourcing.auth.hitl import PersonHandoff, logout_with_handoff
 from sourcing.browser.base import LiveViewUnavailable
-from sourcing.credentials.base import MemoryCredentialProvider, secret_key
 from sourcing.store import MemoryStore
 from sourcing.vendors.aviall import AviallAdapter
 
-from .fakes import FakeAdapter, FakeBrowser, FakeNotifier
+from .fakes import FakeAdapter, FakeNotifier
 from .test_aviall_adapter import HOST, MockAviall, adapter, cred, page_for  # noqa: F401
 from .test_pipeline import JANE, make, run
 

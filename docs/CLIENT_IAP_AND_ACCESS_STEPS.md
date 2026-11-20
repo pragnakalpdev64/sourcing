@@ -127,8 +127,8 @@ Google Workspace Marketplace apps > Settings). If they allow only allowlisted ap
 SourcingAI there once: Apps list > **Allowlist** > **Add app to allowlist**.
 
 **IAP Step 1:** add each tester instead of the group, for example
-`chaitali@skylinkintl.com` in **Edit policy**, or with gcloud
-`--member=user:chaitali@skylinkintl.com`. Run it once per tester.
+`tester@skylinkintl.com` in **Edit policy**, or with gcloud
+`--member=user:tester@skylinkintl.com`. Run it once per tester.
 
 **IAP Step 2:** unchanged.
 

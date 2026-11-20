@@ -57,12 +57,11 @@ def test_trigger_skips_while_worker_runs(client):
     assert started == []
 
 
-def test_unbuilt_endpoints_say_so(client):
+def test_health_and_no_old_pages(client):
     c, _, _ = client
-    assert c.get("/hitl/view").status_code == 501
-    # Step 6 is built: signed-out visitors get the Google sign-in page.
-    resp = c.get("/credentials/update", follow_redirects=False)
-    assert resp.status_code == 401 and "Sign in with Google" in resp.text
+    # The login page is sourcing_credentials_web now; the old Google sign-in page is gone.
+    assert c.get("/credentials/update").status_code == 404
+    assert c.get("/hitl/view").status_code == 404
     assert c.get("/healthz").json() == {"ok": True}
     assert c.get("/health").json() == {"ok": True}
 

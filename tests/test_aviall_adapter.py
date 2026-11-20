@@ -16,7 +16,7 @@ from sourcing.models import LlmUsage, RequestRow
 from sourcing.vendors import adapter_class
 from sourcing.vendors.aviall import SEARCH_URL, AviallAdapter
 from sourcing.vendors.aviall_prompt import AVIALL_EXTRACT_SYSTEM
-from sourcing.vendors.base import CaptchaFailed, LoginBlocked, MfaRequired, fill_part_url
+from sourcing.vendors.base import CaptchaFailed, MfaRequired, fill_part_url
 
 HOST = "https://shop.boeing.example.com"
 

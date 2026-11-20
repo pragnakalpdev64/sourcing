@@ -148,7 +148,6 @@ LOGOUT_JS = """() => { const f = document.getElementById('logoutForm');
 # pop-up's form posts to the same address, so the form is the one holding #SearchRows.
 MULTIPLE_FORM = "form:has(#SearchRows)"
 PART_BOXES = "#SearchRows input[name='AddParts']"
-ROWS = "#SearchRows .form-group"
 SEARCH_BUTTON = f"{MULTIPLE_FORM} button[type='submit']"
 # The quantity box of a row, when the form has one (signed in; not seen signed out).
 QTY_IN_ROW = ("input[name*='qty' i]:not([type=hidden]), input[id*='qty' i]:not([type=hidden]), "

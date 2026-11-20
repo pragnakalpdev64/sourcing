@@ -2,7 +2,7 @@
 
 Secrets are read by name only: the Skylink IAM grant covers names starting
 with `sourcing-` but does not allow listing secrets in the project. New
-secrets are created only with an admin's own Google access (create_login_secret).
+secrets are created by Skylink's admin or on the login page (sourcing_credentials_web).
 """
 from __future__ import annotations
 
@@ -11,7 +11,7 @@ import json
 import logging
 from typing import Optional
 
-from .base import SECRET_PREFIX, CredentialError, CredentialProvider
+from .base import CredentialError, CredentialProvider
 
 logger = logging.getLogger("sourcing.credentials.gsm")
 
@@ -95,50 +95,3 @@ class SecretManagerProvider(CredentialProvider):
         await asyncio.to_thread(self._add_version, key, json.dumps(payload).encode("utf-8"))
         logger.info("Added a new version of secret %s", self.secret_name(key))
 
-
-def _create_as(project: str, name: str, data: bytes, client) -> str:
-    from google.api_core import exceptions
-
-    path = f"projects/{project}/secrets/{name}"
-    try:
-        client.create_secret(parent=f"projects/{project}", secret_id=name,
-                             secret={"replication": {"automatic": {}},
-                                     "labels": {"app": "sourcing"}})
-        state = "created"
-    except exceptions.AlreadyExists:
-        # A secret with no enabled version holds no login yet (e.g. a create that
-        # failed half way); filling it overwrites nothing.
-        # The filter only goes in `request` (the client has no filter= argument;
-        # 500 on /credentials/new for an existing secret, 2026-11-12).
-        versions = client.list_secret_versions(request={"parent": path,
-                                                        "filter": "state:ENABLED"})
-        if any(True for _ in versions):
-            return "exists"
-        state = "filled"
-    client.add_secret_version(parent=path, payload={"data": data})
-    return state
-
-
-async def create_login_secret(project: str, key: str, payload: dict, credentials=None,
-                              client=None) -> str:
-    """Create a new login's secret AS THE SIGNED-IN ADMIN (their Google token), so
-    Google's IAM decides who may create secrets; our service account still can't.
-    Returns "created", "filled" (existed without a value) or "exists" (left alone)."""
-    from google.api_core import exceptions
-
-    if not key.startswith(SECRET_PREFIX):
-        raise CredentialError(f"Only {SECRET_PREFIX}* secrets are created here")
-    if client is None:
-        from google.cloud import secretmanager
-
-        client = secretmanager.SecretManagerServiceClient(credentials=credentials)
-    try:
-        state = await asyncio.to_thread(_create_as, project, key,
-                                        json.dumps(payload).encode("utf-8"), client)
-    except exceptions.PermissionDenied as exc:
-        raise CredentialError(f"Your Google account may not create secrets in {project} "
-                              "(needs Secret Manager Admin)") from exc
-    except exceptions.GoogleAPICallError as exc:
-        raise CredentialError(f"Secret Manager refused: {type(exc).__name__}") from exc
-    logger.info("Secret %s: %s", key, state)
-    return state

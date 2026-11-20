@@ -16,7 +16,7 @@ from copy import deepcopy
 from dataclasses import asdict, dataclass, field
 from datetime import datetime, timezone
 from typing import Callable, Optional
-from urllib.parse import urlencode
+from urllib.parse import quote
 
 from .auth.hitl import hold_until_logged_out, logout_with_handoff, what_is_asked
 from .auth.manager import AuthManager, CannotLogin, LoginDeferred, NeedsHuman
@@ -87,7 +87,7 @@ class Deps:
     # go NEEDS_ATTENTION straight away.
     code_handoff: Optional[object] = None
     # The API's address: a rejected password's Chat message links to its login
-    # update page (service/credentials_ui.py). Empty = no link.
+    # update page (sourcing_credentials_web, /credentials/<vendor>). Empty = no link.
     public_base_url: str = ""
     # The worker's heartbeat for this sheet (sourcing/progress.py, sheet relay
     # only): the add-on's sidebar shows the current step. None = not reported.
@@ -180,7 +180,7 @@ class LlmKeyRejected(Exception):
 def llm_key_rejected(exc: BaseException) -> bool:
     """An authentication / permission error from an LLM provider's SDK."""
     module = type(exc).__module__.split(".")[0]
-    return (module in ("anthropic", "openai", "google")
+    return (module == "anthropic"
             and getattr(exc, "status_code", None) in (401, 403))
 
 
@@ -1250,8 +1250,8 @@ class Pipeline:
             fix = ""
             if exc.state == AccountState.NEEDS_CREDENTIAL_UPDATE and self.d.public_base_url:
                 fix = (" Update the password here, then set the parts' Status back to NEW: "
-                       f"{self.d.public_base_url.rstrip('/')}/credentials/update?"
-                       + urlencode({"vendor": cred.vendor_id, "owner": cred.owner}))
+                       f"{self.d.public_base_url.rstrip('/')}/credentials/"
+                       + quote(cred.vendor_id, safe=""))
             await self._notify_requesters(
                 pending, f"{adapter.display_name} login for {cred.owner} stopped: {exc.reason} "
                 f"(account is now {exc.state.value}). {len(pending)} part(s) are waiting.{fix}")

@@ -1,17 +1,16 @@
-"""Cloud Run service `sourcing-api`.
+"""SourcingAI API on Cloud Run (sourcing-ai-dev, behind IAP).
 
-  POST /trigger              the Sheets add-on (apps_script/, the user's Google
-                              token), an older per-sheet script or the Cloud
-                              Scheduler sweep (X-Trigger-Secret) -> register the caller's sheet (if
-                              it sent one) -> start the worker job (or have the
-                              running one read the sheet again)
+  POST /trigger              the Sheets add-on (apps_script/addon/, the user's Google
+                              token) or the Cloud Scheduler sweep (X-Trigger-Secret)
+                              -> register the caller's sheet (if it sent one) -> start
+                              the worker job (or have the running one read the sheet again)
+  POST /sheet/pull           the add-on: a copy of the sheet in, waiting results and progress out
+  POST /sheet/ack            the add-on: these results are written
   GET  /hitl/code?t=...      2FA code form (link sent in Chat, auth/hitl.py)
   POST /hitl/code            the person's code -> store -> the waiting worker
   POST /chat/events          Chat app events: the code card's "Send code"
-  GET  /hitl/view            Step 5 (2FA handoff Live View), not built
-  GET  /hitl/done            Step 5, not built
-  /credentials, /credentials/update   Step 6: vendor login update page, behind
-                              Google sign-in (/auth/*): credentials_ui.py, web_auth.py
+
+The vendor login update page (/credentials) is mie-agent's sourcing_credentials_web.
 
 Sheets join through scripts/manage_sheets.py add (or a /trigger call with a
 sheet_id) — no redeploy.
@@ -61,12 +60,6 @@ async def security_headers(request: Request, call_next):
     resp.headers["Permissions-Policy"] = "camera=(), microphone=(), geolocation=()"
     return resp
 
-
-def _add_pages() -> None:
-    from . import credentials_ui, web_auth
-
-    app.include_router(web_auth.router)
-    app.include_router(credentials_ui.router)
 
 TRIGGER_DEBOUNCE_SECONDS = 60
 
@@ -218,7 +211,7 @@ def _addon_refusal(info: dict | None) -> str | None:
         return "Google did not confirm the email address"
     domains = s.allowed_email_domains
     if "*" in domains and not os.environ.get("K_SERVICE"):
-        return None   # local tests only, as on the sign-in page (web_auth.email_allowed)
+        return None   # local tests only ("*" is refused on Cloud Run)
     # Only accounts of the listing's Workspace can authorize an Internal app;
     # the domain is checked too, in case the consent screen is ever made External.
     if email.rpartition("@")[2] not in domains:
@@ -244,6 +237,26 @@ async def _iap_email(request: Request) -> str | None:
         raise HTTPException(status_code=exc.status, detail=str(exc)) from exc
 
 
+def _addon_token(request: Request) -> str:
+    auth = request.headers.get("authorization", "")
+    token = auth[7:].strip() if auth.lower().startswith("bearer ") else ""
+    # Behind IAP on Cloud Run the Authorization header never reached us (2026-11-20,
+    # sourcing-ai-dev: "no add-on token" though the add-on sent it); the add-on sends
+    # the same token in its own header too, which IAP passes on.
+    return token or request.headers.get(ADDON_TOKEN_HEADER, "").strip()
+
+
+async def _check_sheet(request: Request, caller: str, sheet_id) -> str:
+    """The sheet id, if it is a Google Sheet id and (SHEET_ACCESS_CHECK) the caller
+    can open that sheet; else 400 / 403 (service/sheet_access.py)."""
+    from service.sheet_access import checked_sheet_id, require_sheet_access
+
+    sheet_id = checked_sheet_id(sheet_id)
+    if get_settings().sheet_access_check:
+        await require_sheet_access(caller, _addon_token(request), sheet_id)
+    return sheet_id
+
+
 async def _caller(request: Request, x_trigger_secret: str) -> str:
     """"secret" or the add-on user's email; anything else is refused.
     Behind IAP the request must also carry IAP's signed header, and an add-on
@@ -261,12 +274,7 @@ async def _caller(request: Request, x_trigger_secret: str) -> str:
         if secret and hmac.compare_digest(x_trigger_secret, secret):
             return "secret"
         raise refuse("bad trigger secret")
-    auth = request.headers.get("authorization", "")
-    token = auth[7:].strip() if auth.lower().startswith("bearer ") else ""
-    # Behind IAP on Cloud Run the Authorization header never reached us (2026-11-20,
-    # sourcing-ai-dev: "no add-on token" though the add-on sent it); the add-on sends
-    # the same token in its own header too, which IAP passes on.
-    token = token or request.headers.get(ADDON_TOKEN_HEADER, "").strip()
+    token = _addon_token(request)
     if token:
         info = await _token_info(token)
         refusal = _addon_refusal(info)
@@ -345,9 +353,9 @@ async def sheet_pull(request: Request, x_trigger_secret: str = Header(default=""
     add-on run is writing this sheet's results right now (no ops given)."""
     from sourcing.progress import describe
 
-    await _caller(request, x_trigger_secret)
+    caller = await _caller(request, x_trigger_secret)
     body = await _sheet_body(request)
-    sheet_id = body["sheet_id"]
+    sheet_id = await _check_sheet(request, caller, body["sheet_id"])
     st = _relay_store()
     with _local_lock:
         proc = _local["proc"]
@@ -397,8 +405,9 @@ async def sheet_pull(request: Request, x_trigger_secret: str = Header(default=""
 
 @app.post("/sheet/ack")
 async def sheet_ack(request: Request, x_trigger_secret: str = Header(default="")) -> dict:
-    await _caller(request, x_trigger_secret)
+    caller = await _caller(request, x_trigger_secret)
     body = await _sheet_body(request)
+    await _check_sheet(request, caller, body["sheet_id"])
     ids = [i for i in body.get("ids") or [] if isinstance(i, str)]
     if ids:
         from sourcing.sheet_relay import keep_copy_current
@@ -423,6 +432,10 @@ async def trigger(request: Request, x_trigger_secret: str = Header(default="")) 
         body = {}
     body = body if isinstance(body, dict) else {}
     sheet_id = body.get("sheet_id")
+    # A sheet named here gets a copy of its rows saved and is searched: it must be a
+    # Google Sheet id (a ".xlsx" id is a file path to the worker) the caller can open.
+    if sheet_id is not None and sheet_id != "":
+        sheet_id = await _check_sheet(request, caller, sheet_id)
     # The add-on calls on every edit ("edited": true) and leaves the wait to us:
     # add-ons may not run a timer more than once an hour. "edited": false is its
     # "Search now" (no wait); the older per-sheet script sends neither.
@@ -571,19 +584,3 @@ async def chat_events(request: Request, authorization: str = Header(default=""))
         return {"text": message}
     return {"text": "SourcingAI posts login code requests here."}
 
-
-def _not_built(step: str) -> None:
-    raise HTTPException(status_code=501, detail=f"Not built yet (plan {step})")
-
-
-@app.get("/hitl/view")
-def hitl_view() -> None:
-    _not_built("Step 5")
-
-
-@app.get("/hitl/done")
-def hitl_done() -> None:
-    _not_built("Step 5")
-
-
-_add_pages()

@@ -10,7 +10,7 @@ from __future__ import annotations
 
 import os
 import re
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from functools import lru_cache
 from pathlib import Path
 
@@ -39,7 +39,7 @@ def _env_int(name: str, default: int) -> int:
 
 
 def _env_list(name: str) -> tuple:
-    # ";" too: gcloud's --set-env-vars splits on commas (cloudbuild.yaml).
+    # ";" too: gcloud's --set-env-vars splits on commas.
     return tuple(v.lower() for v in re.split(r"[,;\s]+", _env(name)) if v)
 
 
@@ -87,7 +87,8 @@ class Settings:
     local_browser_live_view: bool
 
     # Browserbase
-    browserbase_api_key: str
+    # Keys: left out of repr(settings), so a stray log line can't print them.
+    browserbase_api_key: str = field(repr=False)
     browserbase_project_id: str
     # Session recordings show everything on screen, login pages included
     # (plan 6.5): off by default, turn on for local debugging only.
@@ -102,9 +103,7 @@ class Settings:
     llm_provider: str
     llm_model: str
     llm_effort: str
-    anthropic_api_key: str
-    openai_api_key: str
-    gemini_api_key: str
+    anthropic_api_key: str = field(repr=False)
 
     @property
     def store_project(self) -> str:
@@ -112,12 +111,11 @@ class Settings:
 
     @property
     def llm_api_key(self) -> str:
-        return {"anthropic": self.anthropic_api_key, "openai": self.openai_api_key,
-                "gemini": self.gemini_api_key}.get(self.llm_provider, "")
+        return {"anthropic": self.anthropic_api_key}.get(self.llm_provider, "")
 
     # Notifications / service
-    chat_webhook_url: str
-    trigger_secret: str
+    chat_webhook_url: str = field(repr=False)     # the URL holds the webhook's key
+    trigger_secret: str = field(repr=False)
     # Local testing of the sheet's Apps Script (through ngrok): /trigger starts
     # `python -m service.job_main` on this machine instead of the Cloud Run job,
     # with TRIGGER_LOCAL_ARGS added (e.g. "--dummy"). Never set on Cloud Run.
@@ -150,16 +148,13 @@ class Settings:
     chat_app_audience: str
     hitl_code_wait_seconds: int
 
-    # Login update page (service/credentials_ui.py): Google sign-in with an OAuth
-    # client the client makes in their project; redirect URI
-    # <PUBLIC_BASE_URL>/auth/callback.
-    google_oauth_client_id: str
-    google_oauth_client_secret: str
-    session_secret: str              # signs the session cookie and form tokens
-    allowed_email_domains: tuple     # who may sign in, e.g. ("skylink.com",)
-    credential_admins: tuple         # may change every login, shared ones included
-    # Local testing only (refused on Cloud Run): sign in as this email without Google.
-    dev_signin_email: str
+    allowed_email_domains: tuple     # whose add-on calls are accepted, e.g. ("skylinkintl.com",)
+    # The add-on sends a sheet id with each call; on, the service asks Google with the
+    # caller's own token whether they can open that sheet (service/sheet_access.py),
+    # so nobody can send rows to, or read / clear the results of, someone else's sheet.
+    # Off by default: it needs the Sheets API on in the add-on's Google Cloud project
+    # (sourcing-skylink-addon), which isn't on yet (checked 2026-11-20).
+    sheet_access_check: bool
 
     # Behaviour
     dummy_mode: bool
@@ -195,8 +190,6 @@ class Settings:
             llm_model=_env("LLM_MODEL"),
             llm_effort=_env("LLM_EFFORT").lower(),
             anthropic_api_key=_env("ANTHROPIC_API_KEY"),
-            openai_api_key=_env("OPENAI_API_KEY"),
-            gemini_api_key=_env("GEMINI_API_KEY"),
             chat_webhook_url=_env("CHAT_WEBHOOK_URL"),
             trigger_secret=_env("TRIGGER_SECRET"),
             trigger_run_local=_env_bool("TRIGGER_RUN_LOCAL"),
@@ -209,12 +202,8 @@ class Settings:
             chat_app_space=_env("CHAT_APP_SPACE"),
             chat_app_audience=_env("CHAT_APP_AUDIENCE"),
             hitl_code_wait_seconds=_env_int("HITL_CODE_WAIT_SECONDS", 600),
-            google_oauth_client_id=_env("GOOGLE_OAUTH_CLIENT_ID"),
-            google_oauth_client_secret=_env("GOOGLE_OAUTH_CLIENT_SECRET"),
-            session_secret=_env("SESSION_SECRET"),
             allowed_email_domains=_env_list("ALLOWED_EMAIL_DOMAINS"),
-            credential_admins=_env_list("CREDENTIAL_ADMINS"),
-            dev_signin_email=_env("DEV_SIGNIN_EMAIL").lower(),
+            sheet_access_check=_env_bool("SHEET_ACCESS_CHECK"),
             dummy_mode=_env_bool("DUMMY_MODE"),
             max_login_attempts=_env_int("MAX_LOGIN_ATTEMPTS", 2),
             lease_seconds=_env_int("ACCOUNT_LEASE_SECONDS", 1800),

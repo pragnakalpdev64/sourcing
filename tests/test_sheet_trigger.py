@@ -13,7 +13,7 @@ from fastapi.testclient import TestClient
 import service.api as api
 import service.job_main as job_main
 from sourcing.config import get_settings
-from sourcing.store import RERUN_FLAG, RERUN_HOLDER, TRIGGER_LOCK, WORKER_LOCK, MemoryStore
+from sourcing.store import RERUN_FLAG, RERUN_HOLDER, WORKER_LOCK, MemoryStore
 
 H = {"X-Trigger-Secret": "s3"}
 

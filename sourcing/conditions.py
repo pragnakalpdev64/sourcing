@@ -44,9 +44,3 @@ def normalize_condition(raw: Optional[str]) -> Optional[str]:
         if re.search(rf"\b{re.escape(wording)}\b", text):
             return code
     return None
-
-
-def prompt_table() -> str:
-    """The code list as the extraction prompt shows it."""
-    return "; ".join(f"{code} = {meaning} ({', '.join(repr(w) for w in words)})"
-                     for code, (meaning, words) in CONDITION_CODES.items())

@@ -34,8 +34,7 @@ registry. Commands and flags: [COMMANDS.md](../COMMANDS.md).
 - `POST /trigger` needs header `X-Trigger-Secret`, or the Sheets add-on's `Authorization: Bearer
   <user's Google token>` (2026-11-12): Google's tokeninfo must name an OAuth client in
   `ADDON_OAUTH_CLIENT_IDS` and a verified email in `ALLOWED_EMAIL_DOMAINS`. The Scheduler sweep
-  sends no body. The per-sheet script (`apps_script/per_sheet/Code.gs`, 2026-11-06) sends
-  `{sheet_id, label, requests_tab}` once the Requests tab has had no edits for 90s.
+  sends no body. (A per-sheet script with only the secret was retired 2026-11-20: IAP refuses it.)
 - The add-on (`apps_script/addon/Code.gs`) calls on every edit with `"edited": true`: the sheet's
   `last_edit_at` is noted and the job waits until every sheet has been quiet for
   `TRIGGER_QUIET_SECONDS` (default 90, at most 10 min) before a pass (`job_main.wait_until_quiet`;
@@ -49,9 +48,8 @@ registry. Commands and flags: [COMMANDS.md](../COMMANDS.md).
   redeploy. A caller that sends `{sheet_id, label}` to `/trigger` registers that sheet too.
 - If a worker is already running (`WORKER_LOCK`) or a run was started seconds ago (`TRIGGER_LOCK`
   debounce), it returns `started: false`. Otherwise it starts the Cloud Run Job.
-- `/hitl/view`, `/hitl/done` return 501 (plan step 5, not built).
-- `/credentials` (login update page, plan step 6, built 2026-10-23): Google sign-in
-  (`service/web_auth.py`), then vendor → login → new password (`service/credentials_ui.py`); see §4.
+- `/credentials` (login update page, plan step 6) is mie-agent's `sourcing_credentials_web`, on
+  the same service behind IAP; see §4.
 
 ## 2. Worker job (`service/job_main.py`)
 
@@ -104,33 +102,13 @@ read would load everyone's password, and the audit log couldn't say whose login 
 - Rows are then grouped by the **account** actually used, so two people sharing one login queue
   on it instead of racing.
 
-**Who writes the secrets** (plan step 6, `docs/CREDENTIAL_UPDATE_UI_PLAN.md`):
-
-- *Password change* (built 2026-10-23): the team member signs in with Google at `/credentials`,
-  picks the vendor and a login they may change (own login; a shared one only as its editor;
-  admins in `CREDENTIAL_ADMINS` all; `sourcing/credentials/access.py`). The runtime account adds a
-  new version (`secretVersionAdder` on `sourcing-vendor-*` only), merged into the current JSON so
-  `totp_secret` and `url` are kept (`CredentialProvider.update(must_exist=True)`: never creates a
-  secret). Account `NEEDS_CREDENTIAL_UPDATE` → `NEEDS_LOGIN`; its `NO_CREDENTIALS` rows are set
-  back to `NEW` by hand (the page and the Chat message say so). The wrong-password Chat message
-  links to the page when `PUBLIC_BASE_URL` is set. Editors: `scripts/manage_logins.py`.
-- *New login* (planned, not built): a Skylink admin uses the admin page: pick a vendor (only vendors with an adapter),
-  shared or personal, and the team member. The secret is created **with the admin's own Google access**
-  (OAuth), so our service account gets no create permission and Secret Manager's audit log names the
-  admin (IAP alone gives no such token, so this needs a Google OAuth sign-in on the admin page; a
-  name-prefix condition can't limit `secrets.create`, which is checked on the project). Labels:
-  `app=sourcing`, `vendor=<id>`, `login-type=shared|personal`. The admin may leave the
-  password empty: the team member then gets a Chat link to set it, and rows stay `NO_CREDENTIALS`
-  until then. What reading a secret with no version returns is not documented; to test before
-  building (`gsm.py` maps only NotFound / PermissionDenied to "no login"). An existing secret is
-  never overwritten.
-- Our account can't list secrets, so the `accounts/<vendor>__<owner>` record is the list of logins:
-  owner email (exact), login type, secret name, state, version written / last version that logged
-  in, created/changed by and when. Never a password. Every change also goes to `audit_log`.
-- Later, if the client agrees: disable the previous version once the new one has logged in, destroy
-  it after N days (needs `secretVersionManager` on the prefix). Never disable the latest version:
-  `latest` doesn't skip it, so reads would fail.
-- API check against Google's docs (2026-10-21): `docs/CREDENTIAL_UPDATE_UI_PLAN.md`, last section.
+**Who writes the secrets** (plan step 6): mie-agent's `sourcing_credentials_web` (`/credentials`,
+behind IAP). A team member listed in `CREDENTIAL_EDITORS` picks a vendor and saves a new
+password; the page adds a new secret version, keeping `totp_secret` and `url`. Admins
+(`CREDENTIAL_ADMINS`) add a new vendor login (`/credentials/new`). The worker only reads secrets
+and takes the latest version at its next login. After a password change, the vendor's
+`NO_CREDENTIALS` rows go back to `NEW` by hand; the wrong-password Chat message links to
+`/credentials/<vendor>` when `PUBLIC_BASE_URL` is set.
 
 ## 5. Session and login (`sourcing/auth/manager.py`, `sourcing/browser/browserbase.py`)
 
@@ -247,8 +225,8 @@ Timeouts: 300s per single search, 600s per bulk batch; 60s per page action (Proc
   records carry the vendor's "not sold" wording (`not_sold_phrases`; Proponent: "not recognized in
   Proponent system", "not supported by Proponent", "restricted for sale") → `NOT_SOLD`, with the
   portal's own sentences. Checked in code, not by the LLM.
-- Provider-agnostic: `LLM_PROVIDER=anthropic|openai|gemini` + `LLM_MODEL` + `LLM_EFFORT`. Only Anthropic
-  has been run on real pages and only its price table is filled in.
+- `LLM_PROVIDER=anthropic` + `LLM_MODEL` + `LLM_EFFORT`. Other providers can be added behind
+  `sourcing/llm/base.py` `LlmClient` (OpenAI / Gemini clients removed 2026-11-20, never run on real pages).
 - Vendor passwords never go to the LLM, only page text.
 
 ## 8. Writing results (`sourcing/pipeline.py` `_record`, `sourcing/sinks/sheet.py`)

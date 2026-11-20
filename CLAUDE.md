@@ -17,11 +17,11 @@ layout; the `Results` tab too only with `--results`, 2026-10-29).
   Other portals: the generic adapter (ported from the main copy 2026-10-22), set up from the
   vendor's login secret or a vendor record; checked with `scripts/onboard_vendor.py`.
 - Runs on **Google Cloud Run** (API service + worker job), browser in **Browserbase**, state in
-  **Firestore**, vendor logins in **GCP Secret Manager**, LLM = **Anthropic Claude** (OpenAI/Gemini pluggable).
+  **Firestore**, vendor logins in **GCP Secret Manager**, LLM = **Anthropic Claude**.
 - Prototype stage: everything has been run locally against the real portal; **nothing is deployed yet**.
 - History: an earlier MCP/Stagehand prototype (separate repo, `stagehand-browser-mcp/src`) proved the
-  idea; this is the rewrite. `docs/old_mcp_prototype_proponent_results.json` is that prototype's output.
-  The client has said SourcingAI should eventually live in their `mie-agent` repo.
+  idea; this is the rewrite. The client has said SourcingAI should live in their `mie-agent` repo:
+  move plan `docs/MIE_AGENT_MOVE_PLAN.md` (clean-up on branch `sourcing-vendor-automation-agent`, 2026-11-20).
 
 ## Client rules (do not break these)
 
@@ -38,13 +38,13 @@ layout; the `Results` tab too only with `--results`, 2026-10-29).
 
 | Step | State |
 |---|---|
-| 0 GCP setup | `infra/setup_gcp.sh` + `scripts/check_access.py` ready, not run in the client project |
-| 1 Skeleton on Cloud Run | Done in code (Dockerfile, cloudbuild.yaml, `--dummy`); not deployed |
+| 0 GCP setup | Client's project, set up by their admin (`docs/CLIENT_IAP_AND_ACCESS_STEPS.md`); `scripts/check_access.py` checks it. Our own `infra/setup_gcp.sh` removed 2026-11-20 |
+| 1 Skeleton on Cloud Run | Dockerfile, `--dummy`; test revision on `sourcing-ai-dev` (no traffic, tag `sourcing`) via `infra/deploy_test_revision.sh` 2026-11-19 (`cloudbuild.yaml` removed 2026-11-20) |
 | 2 Proponent search | **Done and tested on the real portal** (see `test_runs/`): login, direct-URL search, jqGrid reading, extraction, verification, Results writing, per-row cost |
-| 3 Automatic trigger | `/trigger` + Cloud Scheduler sweep; not deployed. **Apps Script back (2026-11-06)**: `apps_script/Code.gs` calls `/trigger` after 90s without edits, fills Requested By; rows added during a run → the worker reads the sheet again (`RERUN_FLAG`, at most 5 passes); `TRIGGER_RUN_LOCAL=1` runs the worker on this machine for testing through ngrok. Tested with mocks and a local dummy run, not yet from a real sheet. **Sheets add-on (2026-11-12)**: `apps_script/addon/` (Editor add-on, admin install; each person: Extensions > SourcingAI > Turn on for this sheet), calls `/trigger` on every edit with the user's Google token (checked: `ADDON_OAUTH_CLIENT_IDS` + `ALLOWED_EMAIL_DOMAINS`, no secret in the add-on), the 90s quiet wait moved to the worker (`wait_until_quiet`, `TRIGGER_QUIET_SECONDS`; add-on timers may run only hourly); listing in its own small GCP project (client's, no secrets/billing; Google won't share `skylink-material-planning`'s MIE Assistant listing project). Per-sheet script kept in `apps_script/per_sheet/`. **Sheet relay (2026-11-16)**: the service never opens the sheet (client: org blocks the service account); the add-on sends a copy with each call, the worker's writes wait in the store (`sourcing/sheet_relay.py`, `SHEET_ACCESS=relay`, Firestore only), the add-on writes them (`/sheet/pull`, `/sheet/ack`, rows checked by part number). Firestore for testing in `sourcing-skylink-addon` (`STORE_PROJECT`). Add-on test deployment: Search now + dummy run OK 2026-11-16 (before the relay); dummy run through the relay OK 2026-11-16 with the service account removed from the sheet. A person's Status edit wins over a worker write not yet written (`sheet_relay.stale_rows`, 2026-11-16). **Long searches (2026-11-18)**: Apps Script stops a run at 6 min (AAR 11 parts took 15, results stayed waiting); the worker saves a heartbeat + current step per sheet (`sourcing/progress.py`), the add-on's sidebar (Show progress) checks every 15 s and writes results as they come, an hourly timer writes them while the sheet is closed (scope `spreadsheets` now, admin re-approves), one writer at a time via a lease in `/sheet/pull`; tested with fakes and Node mocks only. Add-on sign-in also by project number (`ADDON_OAUTH_PROJECT_NUMBERS`): Apps Script made a third OAuth client after that scope change and it was refused. **IAP (2026-11-16)**: add-on sends the user's ID token in `Proxy-Authorization`; service checks IAP's signed header (`service/iap.py`, `IAP_AUDIENCE`) and that it's the same person as the add-on token; tested with fake and locally signed tokens only, not behind the real IAP |
+| 3 Automatic trigger | `/trigger` + Cloud Scheduler sweep; not deployed. **Apps Script back (2026-11-06)**: `apps_script/Code.gs` calls `/trigger` after 90s without edits, fills Requested By; rows added during a run → the worker reads the sheet again (`RERUN_FLAG`, at most 5 passes); `TRIGGER_RUN_LOCAL=1` runs the worker on this machine for testing through ngrok. Tested with mocks and a local dummy run, not yet from a real sheet. **Sheets add-on (2026-11-12)**: `apps_script/addon/` (Editor add-on, admin install; each person: Extensions > SourcingAI > Turn on for this sheet), calls `/trigger` on every edit with the user's Google token (checked: `ADDON_OAUTH_CLIENT_IDS` + `ALLOWED_EMAIL_DOMAINS`, no secret in the add-on), the 90s quiet wait moved to the worker (`wait_until_quiet`, `TRIGGER_QUIET_SECONDS`; add-on timers may run only hourly); listing in its own small GCP project (client's, no secrets/billing; Google won't share `skylink-material-planning`'s MIE Assistant listing project). Per-sheet script retired and removed 2026-11-20 (IAP refuses its secret-only calls). **Sheet relay (2026-11-16)**: the service never opens the sheet (client: org blocks the service account); the add-on sends a copy with each call, the worker's writes wait in the store (`sourcing/sheet_relay.py`, `SHEET_ACCESS=relay`, Firestore only), the add-on writes them (`/sheet/pull`, `/sheet/ack`, rows checked by part number). Firestore for testing in `sourcing-skylink-addon` (`STORE_PROJECT`). Add-on test deployment: Search now + dummy run OK 2026-11-16 (before the relay); dummy run through the relay OK 2026-11-16 with the service account removed from the sheet. A person's Status edit wins over a worker write not yet written (`sheet_relay.stale_rows`, 2026-11-16). **Long searches (2026-11-18)**: Apps Script stops a run at 6 min (AAR 11 parts took 15, results stayed waiting); the worker saves a heartbeat + current step per sheet (`sourcing/progress.py`), the add-on's sidebar (Show progress) checks every 15 s and writes results as they come, an hourly timer writes them while the sheet is closed (scope `spreadsheets` now, admin re-approves), one writer at a time via a lease in `/sheet/pull`; tested with fakes and Node mocks only. Add-on sign-in also by project number (`ADDON_OAUTH_PROJECT_NUMBERS`): Apps Script made a third OAuth client after that scope change and it was refused. **IAP (2026-11-16)**: add-on sends the user's ID token in `Proxy-Authorization`; service checks IAP's signed header (`service/iap.py`, `IAP_AUDIENCE`) and that it's the same person as the add-on token; tested with fake and locally signed tokens only, not behind the real IAP |
 | 4 Session robustness | Partly: expiry detection, re-login once, NOT_FOUND only after auth probe, leases, login cap. Missing: morning warm-up, session-lifetime measurement |
 | 5 Human 2FA handoff | TOTP typed automatically. **Chat handoff built (2026-10-22, generic adapter, `auth/hitl.py`)**: Live View link in Chat, the person logs in, run carries on (Browserbase, or local DevTools with `--live-view`); fallback code form `/hitl/code`; Chat-app card (`/chat/events`) waits for the client's Chat app. Tested on Notion 2026-10-22: Browserbase Live View OK, local live view OK, code form OK; Notion's logout (in a menu) not found. `/hitl/view` (sign-in check in front of the link) not built. **Logout handoff (2026-11-02)**: logout not confirmed after 2 tries → requesters get the Live View link to log out by hand (an open session blocks the team's sign-in elsewhere); checked in a second tab; tested with mocks only |
-| 6 Credential update form | **Built 2026-10-23, tested with fakes only**: `/credentials` behind Google OAuth sign-in → pick vendor → pick a login you may change (own / shared as editor / admin) → new Secret Manager version; Chat link after a wrong password; `scripts/manage_logins.py`. Needs the client's OAuth client + admin list (`docs/CREDENTIAL_UPDATE_UI_PLAN.md`). 2026-10-28: admins add a login (`/credentials/new`, secret created with the admin's own Google access) and choose a shared login's editors (`/credentials/editors`); creating tested locally on the real Secret Manager 2026-10-28 (as the developer's gcloud login), Google consent step not yet |
+| 6 Credential update form | **Live on `sourcing-ai-dev`** (IAP) from mie-agent `sourcing_credentials_web/` (branch `feat/sourcing-credentials-update-page`, not on their `main` yet): editors (`CREDENTIAL_EDITORS`) save a new password, admins (`CREDENTIAL_ADMINS`) add a vendor login. Chat link after a wrong password goes to `/credentials/<vendor>`. Our own Google OAuth page (`web_auth.py`, `credentials_ui.py`, `manage_logins.py`) removed 2026-11-20 |
 | 7 Passkey spike | Not started |
 
 Latest findings (2026-10-14): one-by-one search via direct URL, ~20s per part; LLM cost per part
@@ -77,7 +77,7 @@ sourcing/            the library
   vendors/assist.py    PageAssist: a page action the coded way couldn't do (pick a dropdown entry, open a pop-up) is done by the LLM, checked by the adapter, saved as a recipe; still not done -> the line's Flag says so (2026-11-04, team: complete results or a visible gap)
   onboarding.py        onboarding run for a vendor (scripts/onboard_vendor.py): login, 1-3 parts, report
   extract.py           LLM prompt, JSON schema, value verification, stock rule
-  llm/                 provider clients (anthropic, openai, gemini) + price tables
+  llm/                 Anthropic client + price table (LlmClient interface for others)
   auth/manager.py      Context reuse, login ladder, account states
   browser/browserbase.py, local.py   BROWSER_BACKEND=browserbase | local (Chromium in the container)
   credentials/         Secret Manager provider; access.py = who may change which login
@@ -85,13 +85,13 @@ sourcing/            the library
   sheet_relay.py, progress.py   add-on relay (service never opens the sheet) + worker heartbeat for the sidebar
   store.py             Firestore / file / memory store
   sinks/, notify/      Results writer, Google Chat
-service/api.py       FastAPI: /trigger (+ run-again flag, TRIGGER_RUN_LOCAL), 2FA code form (+ 501 stubs)
-apps_script/         addon/ (Sheets add-on) and per_sheet/ (script in one sheet): row added -> /trigger; README: setup, checks, ngrok
-service/web_auth.py, credentials_ui.py   Google sign-in + vendor login update page (/credentials)
+service/api.py       FastAPI: /trigger (+ run-again flag, TRIGGER_RUN_LOCAL), /sheet/pull, /sheet/ack, 2FA code form
+service/iap.py       checks IAP's signed header
+apps_script/addon/   Sheets add-on: row added -> /trigger; README: setup, checks, ngrok
 service/job_main.py  worker entrypoint
-infra/, cloudbuild.yaml, Dockerfile   deploy
-scripts/             check_access, manage_sheets, manage_vendors, manage_logins, onboard_vendor, vendor_limits, run_report
-tests/               133 tests with fakes and mock pages (no network)
+infra/, Dockerfile   deploy (deploy_test_revision.sh), Firestore TTL
+scripts/             check_access, manage_sheets, manage_vendors, onboard_vendor, vendor_limits, run_report, check_page_health, passkey_*
+tests/               tests with fakes and mock pages (no network)
 samples/             clean 20-part request sheet for local runs
 test_runs/           logs + reports of every real run, named by outcome
 docs/                plan docs + PIPELINE.md
@@ -158,11 +158,12 @@ Full command and flag reference: `COMMANDS.md`.
   logout. The worker's logout still ends with the Live View handoff's 10-minute wait.
 - A rejected LLM key (401/403 from the provider) stops that account's searches at once (`pipeline.LlmKeyRejected`, 2026-11-05): rows FAILED "LLM API key rejected". Before, it counted as a failed search: bulk again, then one by one, then again before logout (~40 live Incora searches in run 22).
 - Row ids are sheet row numbers; deleting rows mid-sheet shifts them (accepted for the prototype).
-- `/trigger` is public, protected only by `X-Trigger-Secret`.
-- The login update page's register is the account records: a login shows up there after the worker
-  used it once, after it was added on `/credentials/new`, found on `/credentials/find` (secret made
-  with gcloud; looked up by name, we can't list), or `manage_logins.py add`. `NO_CREDENTIALS` rows go back to `NEW` by hand.
-- OpenAI/Gemini clients are untested on real pages and their price tables are empty.
+- The service is behind IAP. `/trigger`, `/sheet/pull`, `/sheet/ack` take only a Google Sheet id
+  (`service/sheet_access.py`, 2026-11-20); with `SHEET_ACCESS_CHECK=1` the caller must also be
+  able to open that sheet (asked from Google with their add-on token). **Off until the Sheets API
+  is on in `sourcing-skylink-addon`**: until then any Skylink user who knows a sheet id could send
+  rows to it or read / clear its waiting results. Turn it on before going live.
+- `NO_CREDENTIALS` rows go back to `NEW` by hand after a password change on `/credentials`.
 - Page-change detector (`sourcing/health.py`, 2026-10-30): each run records per-vendor health
   rates (grid-fallback, unrecognised page, Check-page, not-found, needs-attention) to the store
   and warns in the Chat summary when a run deviates far from that vendor's recent runs — a cue

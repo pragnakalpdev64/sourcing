@@ -151,7 +151,7 @@ async def test_wrong_password_message_links_to_the_update_page():
     deps.public_base_url = "https://api.example/"
     await run(deps)
     texts = [text for to, text in deps.notifier.messages if to == JANE]
-    assert any("https://api.example/credentials/update?vendor=proponent&owner=jane%40co.com"
+    assert any("https://api.example/credentials/proponent"
                in t for t in texts)
     assert not any("WRONG" in t for _, t in deps.notifier.messages)
 
@@ -266,7 +266,7 @@ async def test_a_context_that_never_logged_in_always_logs_in_even_if_the_probe_p
 
 
 # -- bulk search and logout -------------------------------------------------------
-from sourcing.models import LlmUsage, SearchOutcome  # noqa: E402
+from sourcing.models import LlmUsage  # noqa: E402
 from sourcing.vendors.base import (  # noqa: E402
     BulkResultsIncomplete, BulkSearchUnavailable, SessionExpired)
 

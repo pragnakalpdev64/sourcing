@@ -69,11 +69,6 @@ class Store(ABC):
     @abstractmethod
     def update_account(self, account_id: str, fields: dict) -> None: ...
 
-    # Our account can't list secrets, so the account records are the list of
-    # logins the login update page offers (service/credentials_ui.py).
-    @abstractmethod
-    def list_accounts(self) -> dict[str, dict]: ...
-
     @abstractmethod
     def acquire_lease(self, account_id: str, holder: str, ttl_seconds: int) -> bool: ...
 
@@ -261,10 +256,6 @@ class MemoryStore(Store):
         with self._lock:
             self.accounts.setdefault(account_id, {}).update(copy.deepcopy(fields))
 
-    def list_accounts(self) -> dict[str, dict]:
-        with self._lock:
-            return copy.deepcopy(self.accounts)
-
     def acquire_lease(self, account_id: str, holder: str, ttl_seconds: int) -> bool:
         with self._lock:
             now = time.time()
@@ -444,9 +435,6 @@ class FirestoreStore(Store):
 
     def update_account(self, account_id: str, fields: dict) -> None:
         self.db.collection("accounts").document(account_id).set(fields, merge=True)
-
-    def list_accounts(self) -> dict[str, dict]:
-        return {snap.id: snap.to_dict() or {} for snap in self.db.collection("accounts").stream()}
 
     def acquire_lease(self, account_id: str, holder: str, ttl_seconds: int) -> bool:
         ref = self.db.collection("accounts").document(account_id)

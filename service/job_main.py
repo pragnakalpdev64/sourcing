@@ -133,6 +133,12 @@ def build_shared_deps(settings: Settings, store: Store, *, dummy: bool,
 
 async def run_one_sheet(shared: Deps, sheet: dict, run_id: str) -> dict:
     sheet_id = sheet["sheet_id"]
+    if sheet_id.lower().endswith(".xlsx") and (os.environ.get("K_SERVICE")
+                                               or os.environ.get("CLOUD_RUN_JOB")):
+        # A ".xlsx" id is a file on this machine: for local runs only. On Cloud Run
+        # every sheet is a Google Sheet; a file path here came from a bad sheet id.
+        logger.error("Sheet %r: a local .xlsx file, refused on Cloud Run", sheet_id)
+        return {"sheet_id": sheet_id, "error": "local .xlsx sheets are refused on Cloud Run"}
     relay = get_settings().sheet_access == "relay" and not sheet_id.lower().endswith(".xlsx")
     try:
         if relay:

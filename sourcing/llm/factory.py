@@ -9,10 +9,10 @@ def _register():
     if _BUILDERS:
         return
     from .anthropic_client import AnthropicClient
-    from .gemini_client import GeminiClient
-    from .openai_client import OpenAIClient
 
-    _BUILDERS.update(anthropic=AnthropicClient, openai=OpenAIClient, gemini=GeminiClient)
+    # Only Anthropic was ever run on real pages; OpenAI / Gemini clients were removed
+    # 2026-11-20 (untested, empty price tables). A new provider implements LlmClient.
+    _BUILDERS.update(anthropic=AnthropicClient)
 
 
 # Anthropic's output effort levels. No default: model and effort must be set in
