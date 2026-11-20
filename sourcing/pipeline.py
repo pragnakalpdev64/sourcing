@@ -236,6 +236,11 @@ def _vendor_table(summary: "RunSummary") -> list[str]:
     if len(rows) > 1:
         rows.append(["Total", str(total[0]), "", *(str(n or "-") for n in total[1:6]),
                      f"{total[6]:.2f}"])
+    # A count column with nothing in it for any vendor is left out (team, 2026-11-20).
+    keep = [i for i in range(len(head))
+            if i not in (4, 5, 6) or any(r[i] != "-" for r in rows)]
+    head = [head[i] for i in keep]
+    rows = [[r[i] for i in keep] for r in rows]
     widths = [max(len(r[i]) for r in [head, *rows]) for i in range(len(head))]
 
     def line(cells):

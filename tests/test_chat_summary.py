@@ -26,10 +26,10 @@ def test_message_has_totals_vendor_and_llm():
     assert "<https://docs.google.com/spreadsheets/d/1V-S8J4bFqw1w_aF7CVqak|" in text
     assert "DONE 51 · NOT_FOUND 1" in text and "Offers written to Results: 78" in text
     table = text.split("*By vendor*")[1].split("```")[1].splitlines()
-    assert table[1].split() == ["Vendor", "Parts", "Mode", "DONE", "Not", "sold", "Not", "found",
-                                "Attention", "Offers", "LLM", "$"]
-    assert table[2].split() == ["Proponent", "52", "bulk", "x25", "51", "-", "1", "-", "78",
-                                "0.35"]
+    # Not sold and Attention have nothing for any vendor: left out.
+    assert table[1].split() == ["Vendor", "Parts", "Mode", "DONE", "Not", "found", "Offers",
+                                "LLM", "$"]
+    assert table[2].split() == ["Proponent", "52", "bulk", "x25", "51", "1", "78", "0.35"]
     assert "• Model: anthropic claude-sonnet-5-5, effort medium" in text
     assert "• Calls: 6" in text and "113,964 in + 12,043 out (avg 2,191 + 231 per part)" in text
     assert "• Cost: $0.3484 total, $0.0067 per part" in text
